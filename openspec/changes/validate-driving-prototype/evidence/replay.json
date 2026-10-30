@@ -1,0 +1,183 @@
+{
+  "parameterVersion": "baseline-1",
+  "config": {
+    "maxSpeed": 12,
+    "bodyLength": 1.2,
+    "radius": 0.45,
+    "acceleration": 6,
+    "braking": 8,
+    "accelerationCurve": 2,
+    "brakingCurve": 1,
+    "steeringSpeed": 0.8,
+    "normalTurn": 3,
+    "driftTurn": 5,
+    "normalTurnCurve": 1.4,
+    "driftTurnCurve": 0.8,
+    "normalGrip": 12,
+    "driftGrip": 4,
+    "lowSpeedBlend": 0.3,
+    "normalLoss": 0.18,
+    "driftLoss": 0.45,
+    "freeAngle": 5,
+    "lossExponent": 2,
+    "maxSlipAngle": 65,
+    "exitRatio": 1.2,
+    "enterRatio": 1.4
+  },
+  "durationSeconds": 10,
+  "events": [
+    {
+      "timestamp": 0,
+      "value": {
+        "targetSpeed": 6,
+        "angle": 0,
+        "drift": false
+      }
+    },
+    {
+      "timestamp": 1.5,
+      "value": {
+        "targetSpeed": 12,
+        "angle": 0,
+        "drift": false
+      }
+    },
+    {
+      "timestamp": 3,
+      "value": {
+        "targetSpeed": 12,
+        "angle": 0.7853981633974483,
+        "drift": false
+      }
+    },
+    {
+      "timestamp": 4.25,
+      "value": {
+        "targetSpeed": 12,
+        "angle": 1.5707963267948966,
+        "drift": true
+      }
+    },
+    {
+      "timestamp": 5.75,
+      "value": {
+        "targetSpeed": 12,
+        "angle": -0.5,
+        "drift": true
+      }
+    },
+    {
+      "timestamp": 7,
+      "value": {
+        "targetSpeed": 12,
+        "angle": -0.5,
+        "drift": false
+      }
+    },
+    {
+      "timestamp": 8.2,
+      "value": {
+        "targetSpeed": 0,
+        "angle": null,
+        "drift": false
+      }
+    }
+  ],
+  "results": [
+    {
+      "fps": 30,
+      "steps": 1200,
+      "state": {
+        "x": 61.84231487476949,
+        "y": 20.015942448446953,
+        "speed": 0,
+        "heading": -0.5,
+        "motion": -0.5,
+        "turnSign": -1,
+        "observation": {
+          "targetSpeed": 0,
+          "targetAngle": null,
+          "drift": false,
+          "intentAngle": 0,
+          "lossStrength": 0,
+          "driveDelta": 0,
+          "turnLoss": 0
+        }
+      },
+      "trails": 502
+    },
+    {
+      "fps": 60,
+      "steps": 1200,
+      "state": {
+        "x": 61.84231487476949,
+        "y": 20.015942448446953,
+        "speed": 0,
+        "heading": -0.5,
+        "motion": -0.5,
+        "turnSign": -1,
+        "observation": {
+          "targetSpeed": 0,
+          "targetAngle": null,
+          "drift": false,
+          "intentAngle": 0,
+          "lossStrength": 0,
+          "driveDelta": 0,
+          "turnLoss": 0
+        }
+      },
+      "trails": 502
+    },
+    {
+      "fps": 120,
+      "steps": 1200,
+      "state": {
+        "x": 61.84231487476949,
+        "y": 20.015942448446953,
+        "speed": 0,
+        "heading": -0.5,
+        "motion": -0.5,
+        "turnSign": -1,
+        "observation": {
+          "targetSpeed": 0,
+          "targetAngle": null,
+          "drift": false,
+          "intentAngle": 0,
+          "lossStrength": 0,
+          "driveDelta": 0,
+          "turnLoss": 0
+        }
+      },
+      "trails": 502
+    }
+  ],
+  "differences": [
+    {
+      "fps": 30,
+      "position": 0,
+      "speed": 0,
+      "headingDegrees": 0,
+      "motionDegrees": 0
+    },
+    {
+      "fps": 60,
+      "position": 0,
+      "speed": 0,
+      "headingDegrees": 0,
+      "motionDegrees": 0
+    },
+    {
+      "fps": 120,
+      "position": 0,
+      "speed": 0,
+      "headingDegrees": 0,
+      "motionDegrees": 0
+    }
+  ],
+  "tolerances": {
+    "position": 0.012,
+    "speed": 0.06,
+    "headingDegrees": 0.5,
+    "motionDegrees": 0.5
+  }
+}

@@ -1,6 +1,6 @@
 # MadMax 项目总览
 
-更新时间：2026-10-30。当前处于规划阶段，第一阶段驾驶验证场的 OpenSpec 提案、规范、设计和任务清单已形成，尚未开始游戏功能实现。
+更新时间：2026-10-30。第一阶段驾驶验证场已建立可运行客户端，包含车辆模型、手机摇杆、练习场、碰撞、拖尾和验证工具；真实手机人工驾驶仍待验收。执行结果以本变更的 [验收记录](../openspec/changes/validate-driving-prototype/acceptance.md) 为准。
 
 本文件集中说明项目大纲、核心规则、技术路线与阶段规划。已确认的产品规则与技术默认方案分别标注；公式和初始调校值以第一阶段 [详细设计](../openspec/changes/validate-driving-prototype/design.md) 为准。
 
@@ -152,11 +152,11 @@ Enter Playground --> Drive --> Observe --> Reset / Tune
 | 车辆获取与成长 | 车型、获得方式、成长或改装规则 | 后续提案 |
 | 存档与服务 | 持久进度、账号或联网能力 | 按后续需求决定 |
 
-表中的“实现”表示第一阶段计划范围，不代表当前已经实现。
+表中的“实现”范围已提供客户端和自动化验证，真实手机手感另行验收。
 
 ## 6. 技术路线
 
-以下为第一阶段采用的技术默认方案。客户端尚未初始化，依赖的具体版本在实施时锁定并记录。
+以下为第一阶段已经采用的技术方案。实际依赖由根目录 `package-lock.json` 锁定，运行版本记录在验收记录中。
 
 | 层次 | 方案 | 选择依据 |
 | --- | --- | --- |
@@ -173,7 +173,7 @@ Enter Playground --> Drive --> Observe --> Reset / Tune
 | 需求与规划 | OpenSpec 1.15.0、spec-driven | 用提案、规范、设计和任务管理行为变更 |
 | 构建交付 | 静态网页产物 | 第一阶段无需后端；部署位置按后续发布需求决定 |
 
-开发环境基线沿用项目 README 中的 Node.js 20.19.0 或更高版本要求。实施时记录实际 Node.js 与依赖版本，提供可重复的安装与验证命令。
+开发环境要求为 Node.js `^20.19.0 || >=22.12.0`，与 Vite 引擎要求一致；本轮实际使用 25.9.0。安装、启动与验证命令见 README。
 
 第一阶段采用 Canvas 2D 的依据是场景规模小、物理规则明确。未来若地图组织、动画与资源管理的复杂度明显增加，再评估引入 Phaser 等游戏框架；车辆行为合同和独立测试应继续保留。
 
@@ -211,7 +211,7 @@ Touch / Mouse --> Input Intent --> Fixed Physics --> Vehicle State
 
 ### 7.4 建议目录
 
-以下为实施时的组织建议，当前不代表这些源码目录已经存在：
+客户端按下列模块职责组织；纯几何场景无需额外美术资源目录，实际文件以源码为准：
 
 ```text
 MadMax/
@@ -292,11 +292,14 @@ MadMax/
 | 本项目总览 | 面向项目全局的定位、大纲、技术路线与阶段规划 |
 | [第一阶段 Proposal](../openspec/changes/validate-driving-prototype/proposal.md) | 第一阶段为什么做、做什么与影响范围 |
 | [第一阶段 Design](../openspec/changes/validate-driving-prototype/design.md) | 公式、架构、初始参数和验收矩阵 |
-| [第一阶段 Tasks](../openspec/changes/validate-driving-prototype/tasks.md) | 待实施任务和每项验证方式 |
+| [第一阶段 Tasks](../openspec/changes/validate-driving-prototype/tasks.md) | 实施进度和每项验证方式 |
+| [驾驶说明](DRIVING.md) | 摇杆操作、练习区域、碰撞与重置 |
+| [参数说明](PARAMETERS.md) | 默认值、单位、范围与规则不变量 |
+| [验收记录](../openspec/changes/validate-driving-prototype/acceptance.md) | 自动化证据与待完成手机实测 |
 | [移动端操控规范](../openspec/changes/validate-driving-prototype/specs/mobile-driving-interface/spec.md) | 界面与输入行为合同 |
 | [车辆操控规范](../openspec/changes/validate-driving-prototype/specs/vehicle-handling/spec.md) | 车辆运动与漂移行为合同 |
 | [驾驶验证场规范](../openspec/changes/validate-driving-prototype/specs/driving-playground/spec.md) | 场景、反馈、重置与验收记录合同 |
 
-当前三份能力规范属于进行中的变更，尚未归档成为 `openspec/specs/` 中的生效规范。第一阶段任务仍待实施。
+当前三份能力规范属于进行中的变更，尚未归档成为 `openspec/specs/` 中的生效规范。真实手机人工驾驶未完成时，第一阶段整体验收保持未完成。
 
 后续变更应同步对应提案与规范；项目定位、技术路线、阶段状态或文档位置变化时同步本总览。变更归档后，应将相关入口更新为归档文件或生效规范，保持总览可追溯。

@@ -2,9 +2,9 @@
 
 ## Status
 
-日期：2026-10-30（Asia/Shanghai）。参数版本：`baseline-1`，配置来源 `src/vehicle/config.ts`；本轮未修改设计默认调校值。
+日期：2026-10-31（Asia/Shanghai）。本文保留 `baseline-1` 历史证据，并单独记录当前 `vehicle-physics-1` 网页接入证据；版本化新版证据位于 `evidence/vehicle-physics-1/<profileId>/<profileRevision>/`。
 
-**实施进度：23/24；第一阶段整体验收：未完成。** 真实手机人工驾驶尚未执行（任务 6.3）。自动化、桌面浏览器和真实手机分别记载，不将视口仿真作为实机证据。最终整套命令回归已通过，未执行项保留未执行标记。
+**历史 baseline-1：原记录保留；当前 vehicle-physics-1：27/29；整体验收：未完成。** 6.3 真机人工驾驶和依赖它的 6.4 尚待设备记录。自动化、桌面浏览器和真实手机分别记载，不将历史视口仿真当作实机证据。
 
 状态约定：通过＝已有可复查证据；失败＝当前仍有违反行为合同的结果；未执行＝尚无对应执行证据。
 
@@ -85,14 +85,19 @@
 
 容差为位置 ≤0.012 世界单位（车长 1%）、速度 ≤0.06 世界单位/秒（Vmax 的 0.5%）、两种角度各 ≤0.5°。三个回放最终位置均为 (61.84231487476949, 20.015942448446953)，松手后速度 0，车头与运动方向均为 -0.5 弧度；差异均为零。
 
+### vehicle-physics-1 网页接入回放
+
+`npm run validation:replay` 使用实际 `stepInWorld`、核心固定 `1/120` 外步和三类输入阶段（直行、普通转向、持续漂移、退出、松手），为十个 profile 分别运行 10 秒，并以 30/60/120 FPS 驱动同一固定时钟。每个车型的报告位于 `evidence/vehicle-physics-1/<profileId>/<profileRevision>/replay.json`，汇总见 [replay-summary.json](evidence/vehicle-physics-1/replay-summary.json)。三种渲染帧率的最终位置、速度、车头、运动方向、路线率、前轮滑速和横摆差异均为 0，报告使用 `vehicle-physics-1`、`vehicle-profile-1`、`vehicle-surface-1` 和 `driving-playground-2` 元数据。
+
 ## Command Results
 
 | 命令 | 状态 | 本轮结果 |
 | --- | --- | --- |
 | `npm run typecheck` | 通过 | 最终客户端和测试 TypeScript 检查成功 |
-| `npm run test -- --run` | 通过 | 5 个文件、25 项测试通过；包括完整十秒回放 |
-| `npm run test:e2e` | 通过 | 19 项通过，55.8 秒；覆盖三个视口的驾驶、输入中断、碰撞与重置 |
-| `npm run build` | 通过 | Vite 静态构建成功；JS 22.11 kB（gzip 9.03 kB）、CSS 5.98 kB（gzip 2.15 kB） |
+| `npm run test -- --run` | 通过 | 14 个文件、88 项测试通过；包括核心接入、长车碰撞、四轮胎痕、快照和十车型合同 |
+| `npm run test:e2e` | 通过 | 21 项通过；覆盖三个视口的驾驶、输入中断、碰撞、重置、十车型切换、三路面快照和验证面板 |
+| `npm run build` | 通过 | Vite 静态构建成功；JS 54.86 kB（gzip 20.65 kB）、CSS 5.98 kB（gzip 2.15 kB） |
+| `npm run validation:replay` | 通过 | 十车型各执行 10 秒 30/60/120 FPS 链路回放，位置、速度、车头、路线、前轮和横摆差异均在容差内 |
 | `openspec validate validate-driving-prototype --strict --no-interactive` | 通过 | `Change 'validate-driving-prototype' is valid` |
 
 最终命令回归执行时间约为 2026-10-30 22:44～22:46（Asia/Shanghai）。修复或调整测试过程中发现的情况均已回归，当前无尚未解决的自动化失败。`git diff --check` 无空白错误。
@@ -104,9 +109,24 @@
 - 截图由交互测试在驾驶之后生成；测试还断言位移、侧滑、输入、碰撞、重置和镜头状态，截图单独不作为交互验收。
 - 浏览器碰撞回归从木箱左侧以最高速度进入接触面，再持续向上推杆，确认车体离开箱体上沿（y<9.5）；完全阻挡的边界角落不提交原地旋转。
 
+## vehicle-physics-1 Integration Evidence
+
+当前网页消费者使用同一核心状态和 profile，入口快照带有 `modelVersion=vehicle-physics-1`、`profileSchemaVersion=vehicle-profile-1`、`surfaceVersion=vehicle-surface-1`、`sceneVersion=driving-playground-2`。十个车型的验证模式切换会从 (-11,19)、车头 -90° 的一致出生状态重置；每个 profile/修订目录保留 `snapshot.json` 和 `browser.png`，旧 `evidence/` 根目录的 baseline 文件未覆盖。
+
+| 接入项 | 状态 | 证据 |
+| --- | --- | --- |
+| 核心状态与无碰撞场景结果一致 | 通过 | `tests/unit/vehicle-integration.test.ts`，同一 Intent 的位置、世界速度、车头、横摆、前轮、漂移和能量完全相同 |
+| 十车型输入映射与选择 | 通过 | `tests/unit/vehicle-web-adapter.test.ts`、`tests/e2e/vehicle-upgrade.spec.ts`；R/2、R、外拉漂移、后向和十个 profile 均验证 |
+| 自动反打、连续漂移和退出 | 通过 | 核心状态的 `delta`、`h`、`beta`、`r` 与验证面板观测；接入不清除物理过渡 |
+| 长车碰撞与切向脱离 | 通过 | `tests/unit/vehicle-scene-upgrade.test.ts`、三视口 Playwright；使用核心几何保守半径，碰撞停车清动态历史，切向输入可起步 |
+| 四轮、阿克曼角和接地点胎痕 | 通过 | `src/render/canvas.ts`、`src/scene/trails.ts` 及场景单元测试；低速几何转弯不留痕、历史有 6 秒/1600 段上限 |
+| 三路面和固定方向场景 | 通过 | `WORLD.surface`、`PRACTICE_AREAS`、`driving-playground-2`；干硬路/松散地/湿滑地均通过采样测试 |
+| 完整重置与快照 | 通过 | `vehicle-snapshot.test.ts`、隐藏恢复和重置 Playwright；拒绝旧版本与派生字段注入 |
+| 真机人工驾驶 | 未执行 | 见下一节，未收到设备与体验结果前保持 6.3/6.4 未完成 |
+
 ## Phone Evaluation
 
-设备型号：未执行；系统版本：未执行；浏览器及版本：未执行；参数：待评估 `baseline-1`；驾驶人员与日期：未执行。
+设备型号：待用户填写；系统版本：待用户填写；浏览器及版本：待用户填写；参数：默认 `sports-car`、`vehicle-physics-1`、`vehicle-profile-1`、`vehicle-surface-1`；驾驶人员与日期：待用户填写。
 
 | 手机人工检查项 | 状态 | 待记录内容 |
 | --- | --- | --- |
@@ -118,10 +138,32 @@
 | 碰撞后脱离 | 未执行 | 正面贴墙后连续侧向转弯耗时是否可接受 |
 | 浏览器体验 | 未执行 | 工具栏伸缩、真实安全区、中断恢复、性能和不适 |
 
-同一局域网手机打开上述 Network 地址，按 [驾驶说明](../../../docs/DRIVING.md) 驾驶并填写设备、版本、误触与不适。调参后记录新版本，并重跑受影响的单元/浏览器检查；完成前不勾选任务 6.3，不声称整体验收通过。
+同一局域网手机打开 `http://192.168.7.54:5173/`，按 [驾驶说明](../../../docs/DRIVING.md) 驾驶默认跑车、重卡和拉力车，并填写设备、版本、车型结果、误触与不适。调参后记录新版本，并重跑受影响的单元/浏览器检查；完成前不勾选当前任务 6.3，不声称整体验收通过。
+
+## vehicle-physics-1 Documentation Status
+
+本节对应当前网页接入，不能把前文 baseline-1 历史结论当作新版证据。
+
+| 文档要求 | 状态 | 证据/限制 |
+| --- | --- | --- |
+| 驾驶说明加入前轮带动、侧滑、自动反打、回正、碰撞和完整重置 | 已实现并核对 | [DRIVING.md](../../../docs/DRIVING.md) 与网页帮助说明路线意图、前轮、自动反打、三路面、十车型和重置 |
+| 几何圆、普通对齐、反打初态入口 | 已实现参考区 | `PRACTICE_AREAS` 绘制固定参考区；固定转角仍只在核心验证入口使用，不进入普通玩家流程 |
+| README、项目总览、技术路线同步 | 已完成文档同步 | [README](../../../README.md)、[项目总览](../../../docs/PROJECT_OVERVIEW.md)、[DRIVING](../../../docs/DRIVING.md)、[VEHICLE_PHYSICS](../../../docs/VEHICLE_PHYSICS.md)、[VEHICLE_PROFILES](../../../docs/VEHICLE_PROFILES.md) 和 [接入清单](../../../docs/VEHICLE_PHYSICS_INTEGRATION.md) 已写明模型选择、模块、入口、兼容和局限 |
+| 参数版本与兼容规则 | 已实现并核对 | [PARAMETERS.md](../../../docs/PARAMETERS.md) 记录 baseline-1、vehicle-physics-1、vehicle-profile-1、vehicle-surface-1 的边界；网页面板使用 `validateProfile/applyProfile` 原子应用 |
+| 研究来源与游戏近似边界 | 已记录 | 文档链接 Bicycle Model、CommonRoad、Stanford 漂移控制和 Project Chrono，并明确不做实车标定 |
+| 新版回放、轨迹、观测和截图 | 已执行 | `evidence/vehicle-physics-1/<profileId>/<profileRevision>/` 保留十车型快照、截图和回放；旧 `evidence/` 和 `replay.json` 保持历史不覆盖 |
+| 新版手机实测 | 未执行 | 无设备型号、系统和浏览器版本；任务 6.3 保持未完成 |
+
+新版完成条件是：先实现并测试权威速度向量/横摆/前轮状态，再生成带 `modelVersion` 和 `parameterVersion` 的新版证据；不能用当前 `baseline-1` 截图、回放或速度观测替代轴几何、轮胎力和反打证据。
+
+## Documentation Synchronization
+
+文档任务 5.6 的入口核对已执行。使用临时输出目录运行 `npm run physics:benchmark -- physics-doc-check-20261031` 和 `npm run physics:audit -- physics-doc-check-20261031`，结果为：`modelVersion=vehicle-physics-1`、`benchmarkVersion=vehicle-benchmark-1`、`profileSchemaVersion=vehicle-profile-1`、`surfaceVersion=vehicle-surface-1`、`runId=f89663035784`、`passed=true`；审计确认 10 个车型、7 对差异和 18,420 个轨迹采样点，且 baseline 历史证据未修改。临时目录不作为本变更的新版场景证据；新版网页截图、接入回放和手机证据仍按任务 5.5/6.1/6.3 的版本化路径生成。
+
+文档交叉检查覆盖 README、项目总览、驾驶说明、参数说明、车辆物理说明、车型说明和接入清单。所有入口都区分 `baseline-1` 历史网页记录与 `vehicle-physics-1` 当前网页/独立核心，明确十车型、干硬路/松散地/湿滑地三路面、两变更职责以及长车碰撞、前轮、自动反打和真实手机验收仍属于接入任务。
 
 ## Open Issues
 
 - 无真实手机驾驶证据，整体验收未完成。
 - 默认规则在正面贴住障碍时每步碰撞归零，侧向转弯脱离较慢；浏览器中可脱离，手感是否可接受需实机评估。任何调校均需保留“碰撞归零”和“完全阻挡不原地旋转”的规则。
-- 本轮为 Windows Edge 自动化，无 iOS Safari、Android Chrome 真机兼容性或流畅度结论。
+- 本轮为 Windows Edge 自动化，无 iOS Safari、Android Chrome 真机兼容性或流畅度结论；真实手机结果待 6.3。

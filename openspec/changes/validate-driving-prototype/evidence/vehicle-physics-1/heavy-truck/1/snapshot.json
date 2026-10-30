@@ -1,0 +1,265 @@
+{
+  "profileId": "heavy-truck",
+  "profileRevision": "1",
+  "modelVersion": "vehicle-physics-1",
+  "surfaceVersion": "vehicle-surface-1",
+  "sceneVersion": "driving-playground-2",
+  "state": {
+    "position": {
+      "x": -11,
+      "y": 19
+    },
+    "worldVelocity": {
+      "x": 0,
+      "y": 0
+    },
+    "theta": -1.5707963267948966,
+    "r": 0,
+    "delta": 0,
+    "h": 0,
+    "tires": {
+      "front": 0,
+      "rear": 0
+    },
+    "previousLongAcceleration": 0,
+    "assist": {
+      "betaRef": 0,
+      "routeRate": 0,
+      "turnSign": 1,
+      "lastTarget": null,
+      "targetRate": 0
+    },
+    "protection": {
+      "count": 0,
+      "strength": 0,
+      "loadCount": 0
+    },
+    "energy": {
+      "tireDissipation": 0,
+      "rollingDissipation": 0,
+      "gameDissipation": 0,
+      "projectionDissipation": 0,
+      "driveWork": 0
+    },
+    "time": 0.016666666666666666,
+    "speed": 0,
+    "motion": -1.5707963267948966,
+    "beta": 0,
+    "u": 0,
+    "v": 0,
+    "x": -11,
+    "y": 19,
+    "heading": -1.5707963267948966,
+    "turnSign": 0,
+    "observation": {
+      "modelVersion": "vehicle-physics-1",
+      "profileId": "heavy-truck",
+      "profileRevision": "1",
+      "speed": 0,
+      "motion": -1.5707963267948966,
+      "theta": -1.5707963267948966,
+      "beta": 0,
+      "u": 0,
+      "v": 0,
+      "r": 0,
+      "delta": 0,
+      "h": 0,
+      "geometry": {
+        "frontAxle": {
+          "x": -11,
+          "y": 18.034
+        },
+        "rearAxle": {
+          "x": -11,
+          "y": 19.966
+        },
+        "wheels": {
+          "frontLeft": {
+            "x": -11.362999999934,
+            "y": 18.034
+          },
+          "frontRight": {
+            "x": -10.637000000066,
+            "y": 18.034
+          },
+          "rearLeft": {
+            "x": -11.362999999934,
+            "y": 19.966
+          },
+          "rearRight": {
+            "x": -10.637000000066,
+            "y": 19.966
+          }
+        },
+        "frontBoundary": {
+          "x": -11,
+          "y": 17.62
+        },
+        "rearBoundary": {
+          "x": -11,
+          "y": 20.38
+        },
+        "footprint": [
+          {
+            "x": -11.429,
+            "y": 17.62
+          },
+          {
+            "x": -10.571,
+            "y": 17.62
+          },
+          {
+            "x": -10.571,
+            "y": 20.38
+          },
+          {
+            "x": -11.429,
+            "y": 20.38
+          }
+        ],
+        "bodyLength": 2.76,
+        "conservativeRadius": 1.4451439374678217,
+        "aabb": {
+          "minX": -11.429,
+          "maxX": -10.571,
+          "minY": 17.62,
+          "maxY": 20.38
+        },
+        "wheelAngles": {
+          "left": 0,
+          "right": 0
+        }
+      },
+      "loads": {
+        "front": 39.24,
+        "rear": 39.24,
+        "total": 78.48,
+        "transfer": 0,
+        "limited": false
+      },
+      "front": {
+        "load": 39.24,
+        "muX": 0.9450000000000001,
+        "muY": 1.05,
+        "capX": 37.0818,
+        "capY": 41.202000000000005,
+        "stiffness": 476,
+        "fx": 0,
+        "fy": 0,
+        "quasiStaticForce": 0,
+        "slipVelocity": 0,
+        "alpha": 0,
+        "lateralCap": 41.202000000000005,
+        "utilization": 0,
+        "surface": {
+          "schemaVersion": "vehicle-surface-1",
+          "surfaceId": "dry-hard",
+          "revision": "1",
+          "family": "hard",
+          "grip": 1,
+          "rolling": 1
+        },
+        "tau": 0,
+        "memoryProjection": 0,
+        "power": 0
+      },
+      "rear": {
+        "load": 39.24,
+        "muX": 0.9450000000000001,
+        "muY": 1.05,
+        "capX": 37.0818,
+        "capY": 41.202000000000005,
+        "stiffness": 516.8,
+        "fx": 0,
+        "fy": 0,
+        "quasiStaticForce": 0,
+        "slipVelocity": 0,
+        "alpha": 0,
+        "lateralCap": 41.202000000000005,
+        "utilization": 0,
+        "surface": {
+          "schemaVersion": "vehicle-surface-1",
+          "surfaceId": "dry-hard",
+          "revision": "1",
+          "family": "hard",
+          "grip": 1,
+          "rolling": 1
+        },
+        "tau": 0,
+        "memoryProjection": 0,
+        "power": 0
+      },
+      "route": {
+        "target": 0,
+        "routeError": 0,
+        "routeRate": 0,
+        "betaRef": 0,
+        "extraBeta": 0,
+        "rRef": 0,
+        "feedForward": 0,
+        "softStability": 0,
+        "history": {
+          "betaRef": 0,
+          "routeRate": 0,
+          "turnSign": 1,
+          "lastTarget": null,
+          "targetRate": 0
+        }
+      },
+      "deltaTarget": 0,
+      "targetSpeed": 0,
+      "input": {
+        "targetSpeed": 0,
+        "angle": null,
+        "drift": false,
+        "dx": 0,
+        "dy": 0,
+        "distance": 0,
+        "throttle": 0
+      },
+      "blend": 0,
+      "power": {
+        "target": 0,
+        "drive": 0,
+        "brake": 0,
+        "request": 0,
+        "resistance": 0,
+        "front": 0,
+        "rear": 0
+      },
+      "physicalForce": {
+        "x": 0,
+        "y": 0
+      },
+      "yawMoment": 0,
+      "physicalLongAcceleration": 0,
+      "game": {
+        "angle": 0,
+        "strength": 0,
+        "deceleration": 0
+      },
+      "energy": {
+        "mechanical": 0,
+        "tireStored": 0,
+        "total": 0,
+        "tireDissipation": 0,
+        "rollingDissipation": 0,
+        "gameDissipation": 0,
+        "projectionDissipation": 0,
+        "driveWork": 0
+      },
+      "protection": {
+        "count": 0,
+        "strength": 0,
+        "loadCount": 0
+      },
+      "loadIntervention": false,
+      "targetAngle": null,
+      "drift": false,
+      "intentAngle": 0,
+      "lossStrength": 0,
+      "driveDelta": 0,
+      "turnLoss": 0
+    }
+  }
+}

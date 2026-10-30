@@ -1,13 +1,12 @@
 import type { Page } from '@playwright/test';
-import type { VehicleState } from '../../src/vehicle/model';
-import type { VehicleConfig } from '../../src/vehicle/config';
 import type { StickSample, StickGeometry } from '../../src/input/joystick';
 
 export interface Snapshot {
-  state: VehicleState; input: StickSample; geometry: StickGeometry; activeId: number | null;
-  config: VehicleConfig; time: number; camera: { x: number; y: number; rotation: number }; trails: number;
+  state: any; input: StickSample; geometry: StickGeometry; activeId: number | null;
+  config: any; time: number; camera: { x: number; y: number; rotation: number }; trails: number;
+  version?: { modelVersion: string; profileSchemaVersion: string; profileId: string; profileRevision: string; surfaceVersion: string; sceneVersion: string };
 }
-declare global { interface Window { __driving: { snapshot(): Snapshot; test?: { place(state: Partial<VehicleState>): void } } } }
+declare global { interface Window { __driving: { snapshot(): Snapshot; test?: { place(state: any): void } } } }
 export async function snapshot(page: Page): Promise<Snapshot> { return page.evaluate(() => window.__driving.snapshot()); }
 export async function start(page: Page): Promise<StickGeometry> {
   await page.goto('/');

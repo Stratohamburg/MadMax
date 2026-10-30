@@ -1,13 +1,17 @@
-import type { Vec2, VehicleState } from '../vehicle/model';
-import type { VehicleConfig } from '../vehicle/config';
-import { stepVehicle } from '../vehicle/model';
-import type { Intent } from '../vehicle/model';
+import type { Vec2, PhysicsState, Intent } from '../vehicle/model';
+import { collisionStop, geometry, isPhysicsState, stepPhysicsVehicle } from '../vehicle/model';
+import { stateFrom } from '../vehicle/physics/state';
+import { forward, norm } from '../vehicle/physics/math';
+import type { VehicleProfile } from '../vehicle/physics/config';
 import type { Rect, World } from './world';
+import type { VehicleConfig } from '../vehicle/config';
+import type { LegacyVehicleState } from '../vehicle/legacy-model';
+import { stepVehicle as stepLegacyVehicle } from '../vehicle/legacy-model';
 
 interface Hit { t: number; normal: Vec2 }
 const dot = (a: Vec2, b: Vec2): number => a.x * b.x + a.y * b.y;
 
-/** 连续圆-矩形接触：矩形面和四个圆角分别求交，避免方形膨胀造成角落误挡。 */
+/** Continuous circle-rectangle contact, retained as the broad-phase helper. */
 function sweepRect(start: Vec2, delta: Vec2, radius: number, rect: Rect): Hit | null {
   let best: Hit | null = null;
   function accept(t: number, normal: Vec2): void {
@@ -61,10 +65,27 @@ function sweepBounds(start: Vec2, delta: Vec2, radius: number, bounds: Rect): Hi
   return best;
 }
 
-export function moveCircle(start: Vec2, delta: Vec2, radius: number, world: World): Vec2 & { collided: boolean } {
+function initiallyOverlapping(start: Vec2, delta: Vec2, radius: number, world: World): boolean {
+  const insideBounds = start.x >= world.bounds.x + radius - 1e-9 && start.x <= world.bounds.x + world.bounds.width - radius + 1e-9
+    && start.y >= world.bounds.y + radius - 1e-9 && start.y <= world.bounds.y + world.bounds.height - radius + 1e-9;
+  if (!insideBounds) return true;
+  for (const rect of world.obstacles) {
+    // A point on the conservative circle boundary may still move tangentially;
+    // only a stationary candidate uses the full-radius occupancy check.
+    if (Math.hypot(delta.x, delta.y) > 1e-12 && !(start.x > rect.x && start.x < rect.x + rect.width && start.y > rect.y && start.y < rect.y + rect.height)) continue;
+    const x = Math.max(rect.x, Math.min(start.x, rect.x + rect.width));
+    const y = Math.max(rect.y, Math.min(start.y, rect.y + rect.height));
+    if (Math.hypot(start.x - x, start.y - y) < radius - 1e-9) return true;
+  }
+  return false;
+}
+
+export function moveCircle(start: Vec2, delta: Vec2, radius: number, world: World): Vec2 & { collided: boolean; normal?: Vec2 } {
   const position = { ...start };
   let remaining = { ...delta };
   let collided = false;
+  if (initiallyOverlapping(position, remaining, radius, world)) return { ...position, collided: true };
+  let lastNormal: Vec2 | undefined;
   for (let contact = 0; contact < 6; contact++) {
     let hit = sweepBounds(position, remaining, radius, world.bounds);
     for (const obstacle of world.obstacles) {
@@ -73,20 +94,56 @@ export function moveCircle(start: Vec2, delta: Vec2, radius: number, world: Worl
     }
     if (!hit) { position.x += remaining.x; position.y += remaining.y; break; }
     collided = true;
+    lastNormal = hit.normal;
     position.x += remaining.x * hit.t; position.y += remaining.y * hit.t;
     remaining = { x: remaining.x * (1 - hit.t), y: remaining.y * (1 - hit.t) };
     const into = Math.min(0, dot(remaining, hit.normal));
     remaining.x -= into * hit.normal.x; remaining.y -= into * hit.normal.y;
     if (Math.hypot(remaining.x, remaining.y) < 1e-14) break;
   }
-  return { ...position, collided };
+  return { ...position, collided, normal: lastNormal };
 }
 
-export function stepInWorld(state: VehicleState, intent: Intent, config: VehicleConfig, dt: number, world: World): VehicleState {
-  const candidate = stepVehicle(state, intent, config, dt);
-  const contact = moveCircle(state, { x: candidate.x - state.x, y: candidate.y - state.y }, config.radius, world);
+function isProfile(value: unknown): value is VehicleProfile {
+  const p = value as Partial<VehicleProfile> | null;
+  return !!p && p.modelVersion === 'vehicle-physics-1' && !!p.geometry && !!p.power;
+}
+
+/**
+ * Advance the authoritative physics state and apply the scene's broad-phase
+ * contact. With no contact this returns the exact core step result.
+ */
+export function stepInWorld(state: PhysicsState, intent: Intent, profile: VehicleProfile, dt: number, world: World): PhysicsState;
+/** Historical baseline overload used by baseline evidence tests. */
+export function stepInWorld(state: LegacyVehicleState, intent: import('../vehicle/legacy-model').Intent, config: VehicleConfig, dt: number, world: World): LegacyVehicleState;
+export function stepInWorld(state: PhysicsState | LegacyVehicleState, intent: Intent | import('../vehicle/legacy-model').Intent, profileOrConfig: VehicleProfile | VehicleConfig, dt: number, world: World): PhysicsState | LegacyVehicleState {
+  if (isPhysicsState(state) && isProfile(profileOrConfig)) {
+    const profile = profileOrConfig;
+    const candidate = stepPhysicsVehicle(state, intent as Intent, profile, dt, { surface: world.surface });
+    const start = state.position;
+    const delta = { x: candidate.position.x - start.x, y: candidate.position.y - start.y };
+    const contact = moveCircle(start, delta, geometry(state, profile).conservativeRadius, world);
+    if (!contact.collided) return candidate;
+    const normal = contact.normal ?? { x: 0, y: 0 };
+    const normalSpeed = dot(candidate.worldVelocity, normal);
+    const tangent = { x: candidate.worldVelocity.x - Math.min(0, normalSpeed) * normal.x, y: candidate.worldVelocity.y - Math.min(0, normalSpeed) * normal.y };
+    const requested = intent.angle === null ? tangent : forward(intent.angle);
+    const requestedTangent = { x: requested.x - dot(requested, normal) * normal.x, y: requested.y - dot(requested, normal) * normal.y };
+    const requestedLength = norm(requestedTangent);
+    const canSlide = requestedLength > 0.1 && Math.hypot(contact.x - start.x, contact.y - start.y) > 1e-7;
+    if (canSlide) {
+      const escapeSpeed = Math.min(profile.power.maxSpeed, Math.max(norm(tangent), profile.power.driveForce / profile.mass * 0.25));
+      return stateFrom({ ...candidate, position: { x: contact.x, y: contact.y }, worldVelocity: { x: requestedTangent.x / requestedLength * escapeSpeed, y: requestedTangent.y / requestedLength * escapeSpeed }, tires: { front: 0, rear: 0 }, previousLongAcceleration: 0 });
+    }
+    const blocked = Math.hypot(contact.x - start.x, contact.y - start.y) < 1e-12;
+    return collisionStop(profile, candidate, { x: contact.x, y: contact.y }, blocked ? state.theta : candidate.theta);
+  }
+  const legacy = state as LegacyVehicleState;
+  const config = profileOrConfig as VehicleConfig;
+  const candidate = stepLegacyVehicle(legacy, intent as import('../vehicle/legacy-model').Intent, config, dt);
+  const contact = moveCircle({ x: legacy.x, y: legacy.y }, { x: candidate.x - legacy.x, y: candidate.y - legacy.y }, config.radius, world);
   if (!contact.collided) return candidate;
-  const blocked = Math.hypot(contact.x - state.x, contact.y - state.y) < 1e-12;
+  const blocked = Math.hypot(contact.x - legacy.x, contact.y - legacy.y) < 1e-12;
   return { ...candidate, x: contact.x, y: contact.y, speed: 0,
-    ...(blocked ? { heading: state.heading, motion: state.motion, turnSign: state.turnSign } : {}) };
+    ...(blocked ? { heading: legacy.heading, motion: legacy.motion, turnSign: legacy.turnSign } : {}) };
 }

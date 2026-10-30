@@ -1,14 +1,15 @@
 import './style.css';
 import { Joystick } from './input/joystick';
 import { FixedClock, TimedInput } from './simulation/clock';
-import { DEFAULT_CONFIG } from './vehicle/config';
-import { createVehicle, IDLE } from './vehicle/model';
+import { DEFAULT_PROFILE, createPhysicsVehicle, observePhysicsVehicle, IDLE, MODEL_VERSION, PROFILE_SCHEMA_VERSION, createVehicleSnapshot } from './vehicle/model';
+import type { VehicleProfile } from './vehicle/physics/config';
+import { SURFACE_VERSION } from './vehicle/physics/surfaces';
 import { stepInWorld } from './scene/collision';
 import { WORLD } from './scene/world';
 import { Trails } from './scene/trails';
 import { CanvasRenderer } from './render/canvas';
 import { ValidationPanel } from './debug/panel';
-import type { Intent, VehicleState } from './vehicle/model';
+import type { Intent, PhysicsState } from './vehicle/model';
 
 document.querySelector<HTMLDivElement>('#app')!.innerHTML = `
   <section id="game-view" aria-label="驾驶验证场">
@@ -29,16 +30,17 @@ document.querySelector<HTMLDivElement>('#app')!.innerHTML = `
   <dialog id="help"><button class="close-dialog">关闭</button><h2>一个摇杆，掌握路线</h2>
     <p>推向想去的屏幕方向，车辆逐渐转向。距离越远，目标速度越高；推到内环一半，目标为半速。</p>
     <p>实线内环是普通满油门。继续向外还有缓冲行程，到外侧虚线环才进入漂移。略微回收会保持漂移；收回点线退出环以内，恢复普通驾驶。</p>
-    <p>松手会逐渐停车。小幅转向保速，大角度和漂移转向损失更多速度。碰到障碍会停车，可沿接触面转向离开；死角用重置恢复。</p>
-    <p>直道练起步与半速；缓弯练保速；急弯练减速与侧滑；连续弯练主动进出漂移。沿路面标识寻找区域。</p>
+    <p>松手会逐渐停车。小幅转向保速，大角度和漂移转向损失更多速度。碰到障碍会按车身占地停车，可沿接触面转向离开；死角用重置恢复。</p>
+    <p>直道练起步与半速；缓弯练保速；急弯练减速与侧滑；连续弯练主动进出漂移和自动反打。场地标出固定前轮圆、普通对齐、持续漂移／反打及干硬路、松散地、湿滑地区域。</p>
+    <p>验证模式可以选择十类车型并从相同出生状态重置。车型改变轴距、轮胎和响应窗口，摇杆方向仍表示路线方向；普通页面只显示当前车型，不引入解锁流程。</p>
   </dialog>`;
 
-let config = { ...DEFAULT_CONFIG };
-let state = createVehicle();
+let profile: VehicleProfile = structuredClone(DEFAULT_PROFILE);
+let state = createPhysicsVehicle({ x: -11, y: 19 }, -Math.PI / 2, profile);
 let previous = state;
 const clock = new FixedClock();
 const input = new TimedInput<Intent>(IDLE);
-const joystick = new Joystick(document.querySelector('#joystick-area')!, () => config, (value, timestamp) => {
+const joystick = new Joystick(document.querySelector('#joystick-area')!, () => profile, (value, timestamp) => {
   input.push(timestamp, { targetSpeed: value.targetSpeed, angle: value.angle, drift: value.drift });
   document.querySelector('#input-state')!.textContent = value.drift ? '漂移 · 收回点线环退出' : value.throttle === 1 ? '普通满油门 · 继续外拉漂移' : '推向你想去的方向';
 });
@@ -46,20 +48,22 @@ const joystick = new Joystick(document.querySelector('#joystick-area')!, () => c
 const canvas = document.querySelector<HTMLCanvasElement>('#world')!;
 const renderer = new CanvasRenderer(canvas);
 const trails = new Trails();
-const panel = new ValidationPanel(document.querySelector('#game-view')!, () => config, next => {
-  config = next; joystick.resize(); reset();
+const panel = new ValidationPanel(document.querySelector('#game-view')!, () => profile, next => {
+  profile = next; joystick.resize(); reset();
 });
 const validation = new URLSearchParams(location.search).get('validate') === '1';
 panel.toggle(validation);
 document.querySelector('#validate-toggle')!.addEventListener('click', () => { joystick.clear(); input.clear(IDLE); panel.toggle(); });
+
 function step(dt: number, timestamp: number): void {
   previous = state;
-  state = stepInWorld(state, input.sample(timestamp), config, dt, WORLD);
-  trails.sample(previous, state, config, clock.time);
+  const intent = input.sample(timestamp);
+  state = stepInWorld(state, intent, profile, dt, WORLD) as PhysicsState;
+  trails.sample(previous, state, profile, clock.time, observePhysicsVehicle(state, profile, intent, { surface: WORLD.surface }));
 }
 function reset(): void {
   joystick.clear(); input.clear(IDLE);
-  state = previous = createVehicle();
+  state = previous = createPhysicsVehicle({ x: -11, y: 19 }, -Math.PI / 2, profile);
   trails.clear(); renderer.reset(state);
   clock.reset(performance.now() / 1000);
 }
@@ -73,8 +77,9 @@ document.addEventListener('visibilitychange', () => {
 });
 
 function render(): void {
-  renderer.render(previous, state, clock.alpha, config, trails.segments, clock.time, panel.enabled);
-  panel.update(state);
+  const observation = observePhysicsVehicle(state, profile, joystick.value, { surface: WORLD.surface });
+  renderer.render(previous, state, clock.alpha, profile, trails.segments, clock.time, panel.enabled, observation);
+  panel.update(state, observation);
   document.querySelector('#speed')!.textContent = state.speed.toFixed(1);
   document.querySelector('#mode')!.textContent = joystick.value.drift ? '侧滑漂移' : '普通驾驶';
   document.querySelector('#mode')!.classList.toggle('drifting', joystick.value.drift);
@@ -82,11 +87,31 @@ function render(): void {
 function frame(timestamp: number): void { clock.advance(timestamp / 1000, step); render(); requestAnimationFrame(frame); }
 requestAnimationFrame(frame);
 if (import.meta.env.DEV || validation) {
-  Object.assign(window, { __driving: { snapshot: () => ({ state: structuredClone(state), input: { ...joystick.value },
-    activeId: joystick.activeId, geometry: { ...joystick.geometry }, config: { ...config }, time: clock.time,
-    camera: { ...renderer.camera }, trails: trails.segments.length }),
+  const debugSnapshot = () => {
+    const observation = observePhysicsVehicle(state, profile, joystick.value, { surface: WORLD.surface });
+    const stateSnapshot = { ...structuredClone(state), x: state.position.x, y: state.position.y, heading: state.theta,
+      motion: state.motion, turnSign: state.speed === 0 ? 0 : state.assist.turnSign,
+      observation: { ...observation, targetSpeed: observation.targetSpeed, targetAngle: observation.input.angle, drift: observation.input.drift,
+        intentAngle: Math.abs(observation.route.routeError), lossStrength: observation.game.deceleration / Math.max(state.speed, 1e-6),
+        driveDelta: observation.power.request / Math.max(profile.mass, 1e-6) / 120, turnLoss: observation.game.deceleration / 120 } };
+    return { state: stateSnapshot, input: { ...joystick.value }, activeId: joystick.activeId, geometry: { ...joystick.geometry },
+      config: { ...structuredClone(profile), maxSpeed: profile.power.maxSpeed }, time: clock.time,
+      camera: { ...renderer.camera }, trails: trails.segments.length,
+      version: { modelVersion: MODEL_VERSION, profileSchemaVersion: PROFILE_SCHEMA_VERSION, profileId: profile.profileId, profileRevision: profile.profileRevision, surfaceVersion: SURFACE_VERSION, sceneVersion: WORLD.sceneVersion },
+      snapshot: createVehicleSnapshot(state, profile, WORLD.sceneVersion ?? 'driving-playground-2', observation.front.surface.surfaceId) };
+  };
+  Object.assign(window, { __driving: { snapshot: debugSnapshot,
     ...(import.meta.env.DEV && new URLSearchParams(location.search).get('test') === '1' ? {
-      test: { place: (patch: Partial<VehicleState>) => { reset(); state = previous = { ...state, ...patch }; renderer.reset(state); } },
+      test: { place: (patch: Partial<PhysicsState> & { x?: number; y?: number; heading?: number; speed?: number; motion?: number }) => {
+        reset();
+        const theta = patch.theta ?? patch.heading ?? state.theta;
+        const speed = patch.speed ?? 0;
+        const motion = patch.motion ?? theta;
+        state = previous = createPhysicsVehicle(
+          { x: patch.position?.x ?? patch.x ?? state.position.x, y: patch.position?.y ?? patch.y ?? state.position.y },
+          theta, profile, { worldVelocity: { x: Math.cos(motion) * speed, y: Math.sin(motion) * speed } });
+        renderer.reset(state);
+      } },
     } : {}) } });
 }
-export type DrivingSnapshot = { state: VehicleState; input: Intent; activeId: number | null };
+export type DrivingSnapshot = { state: PhysicsState; input: Intent; activeId: number | null };

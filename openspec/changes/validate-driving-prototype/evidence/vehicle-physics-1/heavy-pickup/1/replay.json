@@ -1,0 +1,142 @@
+{
+  "modelVersion": "vehicle-physics-1",
+  "profileSchemaVersion": "vehicle-profile-1",
+  "surfaceVersion": "vehicle-surface-1",
+  "sceneVersion": "driving-playground-2",
+  "profileId": "heavy-pickup",
+  "profileRevision": "1",
+  "duration": 10,
+  "fps": [
+    {
+      "renderFps": 30,
+      "physicalSteps": 1200,
+      "final": {
+        "position": {
+          "x": 12.086258873074794,
+          "y": 54.77179445453533
+        },
+        "speed": 0,
+        "theta": 0.0005474904400402023,
+        "motion": 0.0005474904400402023,
+        "beta": 0,
+        "r": 0,
+        "delta": -2.0854559257721796e-9,
+        "routeRate": -1.9740405911537347e-16,
+        "frontSlipVelocity": 0,
+        "h": 0.0000011961945410032912
+      },
+      "observation": {
+        "modelVersion": "vehicle-physics-1",
+        "profileId": "heavy-pickup",
+        "surface": "dry-hard"
+      },
+      "previousPosition": {
+        "x": 12.086258873074794,
+        "y": 54.77179445453533
+      }
+    },
+    {
+      "renderFps": 60,
+      "physicalSteps": 1200,
+      "final": {
+        "position": {
+          "x": 12.086258873074794,
+          "y": 54.77179445453533
+        },
+        "speed": 0,
+        "theta": 0.0005474904400402023,
+        "motion": 0.0005474904400402023,
+        "beta": 0,
+        "r": 0,
+        "delta": -2.0854559257721796e-9,
+        "routeRate": -1.9740405911537347e-16,
+        "frontSlipVelocity": 0,
+        "h": 0.0000011961945410032912
+      },
+      "observation": {
+        "modelVersion": "vehicle-physics-1",
+        "profileId": "heavy-pickup",
+        "surface": "dry-hard"
+      },
+      "previousPosition": {
+        "x": 12.086258873074794,
+        "y": 54.77179445453533
+      }
+    },
+    {
+      "renderFps": 120,
+      "physicalSteps": 1200,
+      "final": {
+        "position": {
+          "x": 12.086258873074794,
+          "y": 54.77179445453533
+        },
+        "speed": 0,
+        "theta": 0.0005474904400402023,
+        "motion": 0.0005474904400402023,
+        "beta": 0,
+        "r": 0,
+        "delta": -2.0854559257721796e-9,
+        "routeRate": -1.9740405911537347e-16,
+        "frontSlipVelocity": 0,
+        "h": 0.0000011961945410032912
+      },
+      "observation": {
+        "modelVersion": "vehicle-physics-1",
+        "profileId": "heavy-pickup",
+        "surface": "dry-hard"
+      },
+      "previousPosition": {
+        "x": 12.086258873074794,
+        "y": 54.77179445453533
+      }
+    }
+  ],
+  "deltas": [
+    {
+      "renderFps": 30,
+      "position": 0,
+      "speed": 0,
+      "theta": 0,
+      "motion": 0,
+      "beta": 0,
+      "r": 0,
+      "delta": 0,
+      "routeRate": 0,
+      "frontSlipVelocity": 0
+    },
+    {
+      "renderFps": 60,
+      "position": 0,
+      "speed": 0,
+      "theta": 0,
+      "motion": 0,
+      "beta": 0,
+      "r": 0,
+      "delta": 0,
+      "routeRate": 0,
+      "frontSlipVelocity": 0
+    },
+    {
+      "renderFps": 120,
+      "position": 0,
+      "speed": 0,
+      "theta": 0,
+      "motion": 0,
+      "beta": 0,
+      "r": 0,
+      "delta": 0,
+      "routeRate": 0,
+      "frontSlipVelocity": 0
+    }
+  ],
+  "tolerances": {
+    "position": 0.012,
+    "speed": 0.06,
+    "angle": 0.008726646259971648,
+    "yaw": 0.08,
+    "routeRate": 0.08,
+    "frontSlipVelocity": 0.05
+  },
+  "passed": true
+}

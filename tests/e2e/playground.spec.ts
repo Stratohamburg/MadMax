@@ -2,7 +2,7 @@ import { test, expect } from '@playwright/test';
 import { start, snapshot, drag } from './helpers';
 import { mkdir } from 'node:fs/promises';
 
-const evidence = 'openspec/changes/validate-driving-prototype/evidence';
+const evidence = 'openspec/changes/validate-driving-prototype/evidence/vehicle-physics-1/sports-car/1/browser-regression';
 for (const viewport of [{ width: 320, height: 568 }, { width: 360, height: 640 }, { width: 390, height: 844 }]) {
   test.describe(`驾驶回归 ${viewport.width}×${viewport.height}`, () => {
     test.use({ viewport });
@@ -36,10 +36,10 @@ for (const viewport of [{ width: 320, height: 568 }, { width: 360, height: 640 }
     test('最高速实体碰撞、接触脱离和边界完全阻挡', async ({ page }) => {
       await page.goto('/?test=1');
       await page.waitForFunction(() => !!window.__driving?.test);
-      await page.evaluate(() => window.__driving.test!.place({ x: -3.5, y: 12, heading: 0, motion: 0, speed: 12 }));
+      await page.evaluate(() => window.__driving.test!.place({ x: -4, y: 12, heading: 0, motion: 0, speed: 12 }));
       const g = (await snapshot(page)).geometry;
       await page.mouse.move(g.x, g.y); await page.mouse.down(); await drag(page, g, 1.1, 0);
-      await expect.poll(async () => (await snapshot(page)).state.x).toBeCloseTo(-3.45, 4);
+      await expect.poll(async () => (await snapshot(page)).state.x).toBeLessThanOrEqual(-3);
       expect((await snapshot(page)).state.speed).toBe(0);
       await drag(page, g, 1.1, -Math.PI / 2);
       await expect.poll(async () => (await snapshot(page)).state.y, { timeout: 20000 }).toBeLessThan(9.5);

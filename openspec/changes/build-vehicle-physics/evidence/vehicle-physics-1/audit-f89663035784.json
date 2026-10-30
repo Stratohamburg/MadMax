@@ -1,0 +1,63 @@
+{
+  "auditVersion": "vehicle-core-audit-1",
+  "runId": "f89663035784",
+  "implementationHash": "f89663035784ca5b0e1e8f6d56fb3969e4c41ff08fd77da4b6e28fe8bab3ea1d",
+  "passed": true,
+  "profiles": 10,
+  "pairs": 7,
+  "assistanceModes": [
+    "none",
+    "common",
+    "final"
+  ],
+  "checkedTracePoints": 18420,
+  "files": [
+    {
+      "path": "light-pickup/1/core-f89663035784.json",
+      "sha256": "9516dcb39744dc0cfb3ec574890b6a1b960b452a4aa49159506361f36f51971d"
+    },
+    {
+      "path": "heavy-pickup/1/core-f89663035784.json",
+      "sha256": "de7f9c6e5086d9c35471e00654582582dd2f08d09a99c7bc591dda4f95d50005"
+    },
+    {
+      "path": "van/1/core-f89663035784.json",
+      "sha256": "a5cd436cedfb79467dca404fe60b09e9a26dcd995afe343eff10661b66fe010d"
+    },
+    {
+      "path": "box-truck/1/core-f89663035784.json",
+      "sha256": "b537cf5ce880ef00d49099d28cb8615dda6cac6715a7f93db24e8edd97f8fbf2"
+    },
+    {
+      "path": "truck/1/core-f89663035784.json",
+      "sha256": "0aecaa3be53f81030a175e70b5f794f84ad3938cfecaf89124ba7198f20dd6e0"
+    },
+    {
+      "path": "heavy-truck/1/core-f89663035784.json",
+      "sha256": "1cc7e33b5871ff0f8e73452cf88e51cd74781e0b9a0dc2d6be4428e49b1d5a6d"
+    },
+    {
+      "path": "sports-car/1/core-f89663035784.json",
+      "sha256": "f100709d20bc8575b2e9112da5e9ce2a1c8f15bfae253e667ace47e1f6c620b8"
+    },
+    {
+      "path": "rally-car/1/core-f89663035784.json",
+      "sha256": "29d2136919e8bb822f5b741a4a374bd055e6d1cb8f3698ee69fd42fe57012fef"
+    },
+    {
+      "path": "muscle-car/1/core-f89663035784.json",
+      "sha256": "76c5f818e336d20cc17be44b8a498f8f9b3c7d64f39dc018d3146166eea62234"
+    },
+    {
+      "path": "off-road/1/core-f89663035784.json",
+      "sha256": "6eaebc3ee3b85842c9187642229a866fc150e77aa9380383a1ad9185e164a816"
+    }
+  ],
+  "baselineEvidenceUnchanged": true,
+  "baselineTree": "100644 blob 70aca7eef86480dd01cd1b67554be3da2702029e\topenspec/changes/validate-driving-prototype/evidence/320x568.png\n100644 blob 309691a1a60b6dbaeb24982571531ac4f2e947ee\topenspec/changes/validate-driving-prototype/evidence/360x640.png\n100644 blob 4d063f9a8cc441b5ddce97295150070e3297fc36\topenspec/changes/validate-driving-prototype/evidence/390x844.png\n100644 blob 0232f8cc8bdae18f748d1d728276e3c4e5ab2e27\topenspec/changes/validate-driving-prototype/evidence/browser.json\n100644 blob f2eb1ca9360d433feff95213c4f3d54b3f1af1cb\topenspec/changes/validate-driving-prototype/evidence/region-gentle.png\n100644 blob f10d6729041c2810bab8271f7734002ebec93c98\topenspec/changes/validate-driving-prototype/evidence/region-hairpin.png\n100644 blob 6a6835a8ffe962b343eed463cb49b458b61772f1\topenspec/changes/validate-driving-prototype/evidence/region-open.png\n100644 blob 835bce5a79155469ca05935d2b378ac9ab723cdb\topenspec/changes/validate-driving-prototype/evidence/region-slalom.png\n100644 blob d633837d636c71b3bc7247d8bfd9cf9df9227583\topenspec/changes/validate-driving-prototype/evidence/region-straight.png\n100644 blob 38d2919812ada877645a648c267f41a2ac758f96\topenspec/changes/validate-driving-prototype/evidence/replay.json\n",
+  "notExecuted": [
+    "网页集成",
+    "长车碰撞",
+    "真实手机验收"
+  ]
+}

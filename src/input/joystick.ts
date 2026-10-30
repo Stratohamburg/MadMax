@@ -1,15 +1,20 @@
 import { IDLE, clamp } from '../vehicle/model';
 import type { Intent } from '../vehicle/model';
 import type { VehicleConfig } from '../vehicle/config';
+import type { VehicleProfile } from '../vehicle/physics/config';
 
 export interface StickSample extends Intent { dx: number; dy: number; distance: number; throttle: number }
 export interface StickGeometry { x: number; y: number; radius: number; enter: number; exit: number }
 
-export function mapStick(dx: number, dy: number, radius: number, wasDrifting: boolean, config: VehicleConfig): StickSample {
+type StickConfig = VehicleConfig | VehicleProfile;
+function maxSpeed(config: StickConfig): number { return 'modelVersion' in config ? config.power.maxSpeed : config.maxSpeed; }
+function enterRatio(config: StickConfig): number { return 'modelVersion' in config ? 1.4 : config.enterRatio; }
+function exitRatio(config: StickConfig): number { return 'modelVersion' in config ? 1.2 : config.exitRatio; }
+export function mapStick(dx: number, dy: number, radius: number, wasDrifting: boolean, config: StickConfig): StickSample {
   const distance = Math.hypot(dx, dy);
   const throttle = clamp(distance / radius, 0, 1);
-  const drift = distance === 0 ? false : wasDrifting ? distance > radius * config.exitRatio : distance >= radius * config.enterRatio;
-  return { dx, dy, distance, throttle, targetSpeed: config.maxSpeed * throttle,
+  const drift = distance === 0 ? false : wasDrifting ? distance > radius * exitRatio(config) : distance >= radius * enterRatio(config);
+  return { dx, dy, distance, throttle, targetSpeed: maxSpeed(config) * throttle,
     angle: distance === 0 ? null : Math.atan2(dy, dx), drift };
 }
 
@@ -17,7 +22,7 @@ export class Joystick {
   activeId: number | null = null;
   value: StickSample = { ...IDLE, dx: 0, dy: 0, distance: 0, throttle: 0 };
   geometry: StickGeometry = { x: 0, y: 0, radius: 1, enter: 1.4, exit: 1.2 };
-  constructor(private element: HTMLElement, private config: () => VehicleConfig,
+  constructor(private element: HTMLElement, private config: () => StickConfig,
     private changed: (value: StickSample, timestamp: number) => void) {
     element.addEventListener('pointerdown', event => {
       if (this.activeId !== null || (event.pointerType === 'mouse' && event.button !== 0)) return;
@@ -49,9 +54,9 @@ export class Joystick {
     this.clear();
     const rect = this.element.getBoundingClientRect();
     const enter = Math.max(1, Math.min(rect.width, rect.height) / 2 - 15);
-    const radius = enter / this.config().enterRatio;
+    const radius = enter / enterRatio(this.config());
     this.geometry = { x: rect.left + rect.width / 2, y: rect.top + rect.height / 2,
-      radius, enter, exit: radius * this.config().exitRatio };
+      radius, enter, exit: radius * exitRatio(this.config()) };
     this.element.style.setProperty('--enter-diameter', `${enter * 2}px`);
     this.element.style.setProperty('--normal-diameter', `${radius * 2}px`);
     this.element.style.setProperty('--exit-diameter', `${this.geometry.exit * 2}px`);

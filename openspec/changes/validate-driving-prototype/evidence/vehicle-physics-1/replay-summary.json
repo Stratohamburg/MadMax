@@ -1,0 +1,446 @@
+{
+  "modelVersion": "vehicle-physics-1",
+  "profileSchemaVersion": "vehicle-profile-1",
+  "surfaceVersion": "vehicle-surface-1",
+  "sceneVersion": "driving-playground-2",
+  "duration": 10,
+  "renderFps": [
+    30,
+    60,
+    120
+  ],
+  "profiles": [
+    {
+      "profileId": "light-pickup",
+      "profileRevision": "1",
+      "passed": true,
+      "deltas": [
+        {
+          "renderFps": 30,
+          "position": 0,
+          "speed": 0,
+          "theta": 0,
+          "motion": 0,
+          "beta": 0,
+          "r": 0,
+          "delta": 0,
+          "routeRate": 0,
+          "frontSlipVelocity": 0
+        },
+        {
+          "renderFps": 60,
+          "position": 0,
+          "speed": 0,
+          "theta": 0,
+          "motion": 0,
+          "beta": 0,
+          "r": 0,
+          "delta": 0,
+          "routeRate": 0,
+          "frontSlipVelocity": 0
+        },
+        {
+          "renderFps": 120,
+          "position": 0,
+          "speed": 0,
+          "theta": 0,
+          "motion": 0,
+          "beta": 0,
+          "r": 0,
+          "delta": 0,
+          "routeRate": 0,
+          "frontSlipVelocity": 0
+        }
+      ]
+    },
+    {
+      "profileId": "heavy-pickup",
+      "profileRevision": "1",
+      "passed": true,
+      "deltas": [
+        {
+          "renderFps": 30,
+          "position": 0,
+          "speed": 0,
+          "theta": 0,
+          "motion": 0,
+          "beta": 0,
+          "r": 0,
+          "delta": 0,
+          "routeRate": 0,
+          "frontSlipVelocity": 0
+        },
+        {
+          "renderFps": 60,
+          "position": 0,
+          "speed": 0,
+          "theta": 0,
+          "motion": 0,
+          "beta": 0,
+          "r": 0,
+          "delta": 0,
+          "routeRate": 0,
+          "frontSlipVelocity": 0
+        },
+        {
+          "renderFps": 120,
+          "position": 0,
+          "speed": 0,
+          "theta": 0,
+          "motion": 0,
+          "beta": 0,
+          "r": 0,
+          "delta": 0,
+          "routeRate": 0,
+          "frontSlipVelocity": 0
+        }
+      ]
+    },
+    {
+      "profileId": "van",
+      "profileRevision": "1",
+      "passed": true,
+      "deltas": [
+        {
+          "renderFps": 30,
+          "position": 0,
+          "speed": 0,
+          "theta": 0,
+          "motion": 0,
+          "beta": 0,
+          "r": 0,
+          "delta": 0,
+          "routeRate": 0,
+          "frontSlipVelocity": 0
+        },
+        {
+          "renderFps": 60,
+          "position": 0,
+          "speed": 0,
+          "theta": 0,
+          "motion": 0,
+          "beta": 0,
+          "r": 0,
+          "delta": 0,
+          "routeRate": 0,
+          "frontSlipVelocity": 0
+        },
+        {
+          "renderFps": 120,
+          "position": 0,
+          "speed": 0,
+          "theta": 0,
+          "motion": 0,
+          "beta": 0,
+          "r": 0,
+          "delta": 0,
+          "routeRate": 0,
+          "frontSlipVelocity": 0
+        }
+      ]
+    },
+    {
+      "profileId": "box-truck",
+      "profileRevision": "1",
+      "passed": true,
+      "deltas": [
+        {
+          "renderFps": 30,
+          "position": 0,
+          "speed": 0,
+          "theta": 0,
+          "motion": 0,
+          "beta": 0,
+          "r": 0,
+          "delta": 0,
+          "routeRate": 0,
+          "frontSlipVelocity": 0
+        },
+        {
+          "renderFps": 60,
+          "position": 0,
+          "speed": 0,
+          "theta": 0,
+          "motion": 0,
+          "beta": 0,
+          "r": 0,
+          "delta": 0,
+          "routeRate": 0,
+          "frontSlipVelocity": 0
+        },
+        {
+          "renderFps": 120,
+          "position": 0,
+          "speed": 0,
+          "theta": 0,
+          "motion": 0,
+          "beta": 0,
+          "r": 0,
+          "delta": 0,
+          "routeRate": 0,
+          "frontSlipVelocity": 0
+        }
+      ]
+    },
+    {
+      "profileId": "truck",
+      "profileRevision": "1",
+      "passed": true,
+      "deltas": [
+        {
+          "renderFps": 30,
+          "position": 0,
+          "speed": 0,
+          "theta": 0,
+          "motion": 0,
+          "beta": 0,
+          "r": 0,
+          "delta": 0,
+          "routeRate": 0,
+          "frontSlipVelocity": 0
+        },
+        {
+          "renderFps": 60,
+          "position": 0,
+          "speed": 0,
+          "theta": 0,
+          "motion": 0,
+          "beta": 0,
+          "r": 0,
+          "delta": 0,
+          "routeRate": 0,
+          "frontSlipVelocity": 0
+        },
+        {
+          "renderFps": 120,
+          "position": 0,
+          "speed": 0,
+          "theta": 0,
+          "motion": 0,
+          "beta": 0,
+          "r": 0,
+          "delta": 0,
+          "routeRate": 0,
+          "frontSlipVelocity": 0
+        }
+      ]
+    },
+    {
+      "profileId": "heavy-truck",
+      "profileRevision": "1",
+      "passed": true,
+      "deltas": [
+        {
+          "renderFps": 30,
+          "position": 0,
+          "speed": 0,
+          "theta": 0,
+          "motion": 0,
+          "beta": 0,
+          "r": 0,
+          "delta": 0,
+          "routeRate": 0,
+          "frontSlipVelocity": 0
+        },
+        {
+          "renderFps": 60,
+          "position": 0,
+          "speed": 0,
+          "theta": 0,
+          "motion": 0,
+          "beta": 0,
+          "r": 0,
+          "delta": 0,
+          "routeRate": 0,
+          "frontSlipVelocity": 0
+        },
+        {
+          "renderFps": 120,
+          "position": 0,
+          "speed": 0,
+          "theta": 0,
+          "motion": 0,
+          "beta": 0,
+          "r": 0,
+          "delta": 0,
+          "routeRate": 0,
+          "frontSlipVelocity": 0
+        }
+      ]
+    },
+    {
+      "profileId": "sports-car",
+      "profileRevision": "1",
+      "passed": true,
+      "deltas": [
+        {
+          "renderFps": 30,
+          "position": 0,
+          "speed": 0,
+          "theta": 0,
+          "motion": 0,
+          "beta": 0,
+          "r": 0,
+          "delta": 0,
+          "routeRate": 0,
+          "frontSlipVelocity": 0
+        },
+        {
+          "renderFps": 60,
+          "position": 0,
+          "speed": 0,
+          "theta": 0,
+          "motion": 0,
+          "beta": 0,
+          "r": 0,
+          "delta": 0,
+          "routeRate": 0,
+          "frontSlipVelocity": 0
+        },
+        {
+          "renderFps": 120,
+          "position": 0,
+          "speed": 0,
+          "theta": 0,
+          "motion": 0,
+          "beta": 0,
+          "r": 0,
+          "delta": 0,
+          "routeRate": 0,
+          "frontSlipVelocity": 0
+        }
+      ]
+    },
+    {
+      "profileId": "rally-car",
+      "profileRevision": "1",
+      "passed": true,
+      "deltas": [
+        {
+          "renderFps": 30,
+          "position": 0,
+          "speed": 0,
+          "theta": 0,
+          "motion": 0,
+          "beta": 0,
+          "r": 0,
+          "delta": 0,
+          "routeRate": 0,
+          "frontSlipVelocity": 0
+        },
+        {
+          "renderFps": 60,
+          "position": 0,
+          "speed": 0,
+          "theta": 0,
+          "motion": 0,
+          "beta": 0,
+          "r": 0,
+          "delta": 0,
+          "routeRate": 0,
+          "frontSlipVelocity": 0
+        },
+        {
+          "renderFps": 120,
+          "position": 0,
+          "speed": 0,
+          "theta": 0,
+          "motion": 0,
+          "beta": 0,
+          "r": 0,
+          "delta": 0,
+          "routeRate": 0,
+          "frontSlipVelocity": 0
+        }
+      ]
+    },
+    {
+      "profileId": "muscle-car",
+      "profileRevision": "1",
+      "passed": true,
+      "deltas": [
+        {
+          "renderFps": 30,
+          "position": 0,
+          "speed": 0,
+          "theta": 0,
+          "motion": 0,
+          "beta": 0,
+          "r": 0,
+          "delta": 0,
+          "routeRate": 0,
+          "frontSlipVelocity": 0
+        },
+        {
+          "renderFps": 60,
+          "position": 0,
+          "speed": 0,
+          "theta": 0,
+          "motion": 0,
+          "beta": 0,
+          "r": 0,
+          "delta": 0,
+          "routeRate": 0,
+          "frontSlipVelocity": 0
+        },
+        {
+          "renderFps": 120,
+          "position": 0,
+          "speed": 0,
+          "theta": 0,
+          "motion": 0,
+          "beta": 0,
+          "r": 0,
+          "delta": 0,
+          "routeRate": 0,
+          "frontSlipVelocity": 0
+        }
+      ]
+    },
+    {
+      "profileId": "off-road",
+      "profileRevision": "1",
+      "passed": true,
+      "deltas": [
+        {
+          "renderFps": 30,
+          "position": 0,
+          "speed": 0,
+          "theta": 0,
+          "motion": 0,
+          "beta": 0,
+          "r": 0,
+          "delta": 0,
+          "routeRate": 0,
+          "frontSlipVelocity": 0
+        },
+        {
+          "renderFps": 60,
+          "position": 0,
+          "speed": 0,
+          "theta": 0,
+          "motion": 0,
+          "beta": 0,
+          "r": 0,
+          "delta": 0,
+          "routeRate": 0,
+          "frontSlipVelocity": 0
+        },
+        {
+          "renderFps": 120,
+          "position": 0,
+          "speed": 0,
+          "theta": 0,
+          "motion": 0,
+          "beta": 0,
+          "r": 0,
+          "delta": 0,
+          "routeRate": 0,
+          "frontSlipVelocity": 0
+        }
+      ]
+    }
+  ],
+  "passed": true,
+  "historicalEvidence": "baseline-1 原目录保留"
+}

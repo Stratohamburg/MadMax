@@ -12,7 +12,10 @@
     "preview": "vite preview --host 0.0.0.0",
     "typecheck": "tsc --noEmit",
     "test": "vitest",
-    "test:e2e": "playwright test"
+    "test:e2e": "playwright test",
+    "physics:benchmark": "node --import ./scripts/physics-loader.mjs scripts/physics-benchmark.ts",
+    "physics:audit": "node --import ./scripts/physics-loader.mjs scripts/physics-audit.ts",
+    "validation:replay": "node --import ./scripts/physics-loader.mjs scripts/vehicle-web-replay.ts"
   },
   "devDependencies": {
     "@playwright/test": "^1.64.1",

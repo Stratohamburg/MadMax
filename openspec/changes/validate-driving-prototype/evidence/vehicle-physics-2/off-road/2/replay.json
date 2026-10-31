@@ -1,0 +1,142 @@
+{
+  "modelVersion": "vehicle-physics-2",
+  "profileSchemaVersion": "vehicle-profile-2",
+  "surfaceVersion": "vehicle-surface-1",
+  "sceneVersion": "driving-playground-3",
+  "profileId": "off-road",
+  "profileRevision": "2",
+  "duration": 10,
+  "fps": [
+    {
+      "renderFps": 30,
+      "physicalSteps": 1200,
+      "final": {
+        "position": {
+          "x": -8.51064441119042,
+          "y": 35.949154118885964
+        },
+        "speed": 2.6914440933246747e-18,
+        "theta": 5.131234491779882,
+        "motion": -2.7227445224582305,
+        "beta": -1.5707937070585254,
+        "r": -2.590533354182434e-16,
+        "delta": -3.3553282437748316e-7,
+        "routeRate": 1.524547825585692e-9,
+        "frontSlipVelocity": -1.11493844968969e-16,
+        "h": 0.0000011961945410032912
+      },
+      "observation": {
+        "modelVersion": "vehicle-physics-2",
+        "profileId": "off-road",
+        "surface": "dry-hard"
+      },
+      "previousPosition": {
+        "x": -8.51064441119042,
+        "y": 35.949154118885964
+      }
+    },
+    {
+      "renderFps": 60,
+      "physicalSteps": 1200,
+      "final": {
+        "position": {
+          "x": -8.51064441119042,
+          "y": 35.949154118885964
+        },
+        "speed": 2.6914440933246747e-18,
+        "theta": 5.131234491779882,
+        "motion": -2.7227445224582305,
+        "beta": -1.5707937070585254,
+        "r": -2.590533354182434e-16,
+        "delta": -3.3553282437748316e-7,
+        "routeRate": 1.524547825585692e-9,
+        "frontSlipVelocity": -1.11493844968969e-16,
+        "h": 0.0000011961945410032912
+      },
+      "observation": {
+        "modelVersion": "vehicle-physics-2",
+        "profileId": "off-road",
+        "surface": "dry-hard"
+      },
+      "previousPosition": {
+        "x": -8.51064441119042,
+        "y": 35.949154118885964
+      }
+    },
+    {
+      "renderFps": 120,
+      "physicalSteps": 1200,
+      "final": {
+        "position": {
+          "x": -8.51064441119042,
+          "y": 35.949154118885964
+        },
+        "speed": 2.6914440933246747e-18,
+        "theta": 5.131234491779882,
+        "motion": -2.7227445224582305,
+        "beta": -1.5707937070585254,
+        "r": -2.590533354182434e-16,
+        "delta": -3.3553282437748316e-7,
+        "routeRate": 1.524547825585692e-9,
+        "frontSlipVelocity": -1.11493844968969e-16,
+        "h": 0.0000011961945410032912
+      },
+      "observation": {
+        "modelVersion": "vehicle-physics-2",
+        "profileId": "off-road",
+        "surface": "dry-hard"
+      },
+      "previousPosition": {
+        "x": -8.51064441119042,
+        "y": 35.949154118885964
+      }
+    }
+  ],
+  "deltas": [
+    {
+      "renderFps": 30,
+      "position": 0,
+      "speed": 0,
+      "theta": 0,
+      "motion": 0,
+      "beta": 0,
+      "r": 0,
+      "delta": 0,
+      "routeRate": 0,
+      "frontSlipVelocity": 0
+    },
+    {
+      "renderFps": 60,
+      "position": 0,
+      "speed": 0,
+      "theta": 0,
+      "motion": 0,
+      "beta": 0,
+      "r": 0,
+      "delta": 0,
+      "routeRate": 0,
+      "frontSlipVelocity": 0
+    },
+    {
+      "renderFps": 120,
+      "position": 0,
+      "speed": 0,
+      "theta": 0,
+      "motion": 0,
+      "beta": 0,
+      "r": 0,
+      "delta": 0,
+      "routeRate": 0,
+      "frontSlipVelocity": 0
+    }
+  ],
+  "tolerances": {
+    "position": 0.012,
+    "speed": 0.06,
+    "angle": 0.008726646259971648,
+    "yaw": 0.08,
+    "routeRate": 0.08,
+    "frontSlipVelocity": 0.05
+  },
+  "passed": true
+}

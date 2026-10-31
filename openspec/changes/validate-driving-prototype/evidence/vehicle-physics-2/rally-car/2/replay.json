@@ -1,0 +1,142 @@
+{
+  "modelVersion": "vehicle-physics-2",
+  "profileSchemaVersion": "vehicle-profile-2",
+  "surfaceVersion": "vehicle-surface-1",
+  "sceneVersion": "driving-playground-3",
+  "profileId": "rally-car",
+  "profileRevision": "2",
+  "duration": 10,
+  "fps": [
+    {
+      "renderFps": 30,
+      "physicalSteps": 1200,
+      "final": {
+        "position": {
+          "x": 5.438530487724179,
+          "y": 28.765462409900227
+        },
+        "speed": 2.252975010077219e-40,
+        "theta": 5.932018334339411,
+        "motion": -1.9219632996343277,
+        "beta": -1.570796326794152,
+        "r": -2.206118518859418e-38,
+        "delta": -8.675714881110154e-14,
+        "routeRate": 1.2717528287086975e-9,
+        "frontSlipVelocity": -9.0277103912568e-39,
+        "h": 0.0000011961945410032912
+      },
+      "observation": {
+        "modelVersion": "vehicle-physics-2",
+        "profileId": "rally-car",
+        "surface": "dry-hard"
+      },
+      "previousPosition": {
+        "x": 5.438530487724179,
+        "y": 28.765462409900227
+      }
+    },
+    {
+      "renderFps": 60,
+      "physicalSteps": 1200,
+      "final": {
+        "position": {
+          "x": 5.438530487724179,
+          "y": 28.765462409900227
+        },
+        "speed": 2.252975010077219e-40,
+        "theta": 5.932018334339411,
+        "motion": -1.9219632996343277,
+        "beta": -1.570796326794152,
+        "r": -2.206118518859418e-38,
+        "delta": -8.675714881110154e-14,
+        "routeRate": 1.2717528287086975e-9,
+        "frontSlipVelocity": -9.0277103912568e-39,
+        "h": 0.0000011961945410032912
+      },
+      "observation": {
+        "modelVersion": "vehicle-physics-2",
+        "profileId": "rally-car",
+        "surface": "dry-hard"
+      },
+      "previousPosition": {
+        "x": 5.438530487724179,
+        "y": 28.765462409900227
+      }
+    },
+    {
+      "renderFps": 120,
+      "physicalSteps": 1200,
+      "final": {
+        "position": {
+          "x": 5.438530487724179,
+          "y": 28.765462409900227
+        },
+        "speed": 2.252975010077219e-40,
+        "theta": 5.932018334339411,
+        "motion": -1.9219632996343277,
+        "beta": -1.570796326794152,
+        "r": -2.206118518859418e-38,
+        "delta": -8.675714881110154e-14,
+        "routeRate": 1.2717528287086975e-9,
+        "frontSlipVelocity": -9.0277103912568e-39,
+        "h": 0.0000011961945410032912
+      },
+      "observation": {
+        "modelVersion": "vehicle-physics-2",
+        "profileId": "rally-car",
+        "surface": "dry-hard"
+      },
+      "previousPosition": {
+        "x": 5.438530487724179,
+        "y": 28.765462409900227
+      }
+    }
+  ],
+  "deltas": [
+    {
+      "renderFps": 30,
+      "position": 0,
+      "speed": 0,
+      "theta": 0,
+      "motion": 0,
+      "beta": 0,
+      "r": 0,
+      "delta": 0,
+      "routeRate": 0,
+      "frontSlipVelocity": 0
+    },
+    {
+      "renderFps": 60,
+      "position": 0,
+      "speed": 0,
+      "theta": 0,
+      "motion": 0,
+      "beta": 0,
+      "r": 0,
+      "delta": 0,
+      "routeRate": 0,
+      "frontSlipVelocity": 0
+    },
+    {
+      "renderFps": 120,
+      "position": 0,
+      "speed": 0,
+      "theta": 0,
+      "motion": 0,
+      "beta": 0,
+      "r": 0,
+      "delta": 0,
+      "routeRate": 0,
+      "frontSlipVelocity": 0
+    }
+  ],
+  "tolerances": {
+    "position": 0.012,
+    "speed": 0.06,
+    "angle": 0.008726646259971648,
+    "yaw": 0.08,
+    "routeRate": 0.08,
+    "frontSlipVelocity": 0.05
+  },
+  "passed": true
+}

@@ -1,0 +1,142 @@
+{
+  "modelVersion": "vehicle-physics-2",
+  "profileSchemaVersion": "vehicle-profile-2",
+  "surfaceVersion": "vehicle-surface-1",
+  "sceneVersion": "driving-playground-3",
+  "profileId": "heavy-truck",
+  "profileRevision": "2",
+  "duration": 10,
+  "fps": [
+    {
+      "renderFps": 30,
+      "physicalSteps": 1200,
+      "final": {
+        "position": {
+          "x": 6.592111724622321,
+          "y": 21.105492715842345
+        },
+        "speed": 1.0013961261668485e-15,
+        "theta": -0.2826145520088362,
+        "motion": -1.8531798722197543,
+        "beta": -1.5705653202109182,
+        "r": -4.229905552470631e-14,
+        "delta": -0.0000300247994194199,
+        "routeRate": 8.680979402464986e-10,
+        "frontSlipVelocity": -4.186228371049907e-14,
+        "h": 0.0000011961945410032912
+      },
+      "observation": {
+        "modelVersion": "vehicle-physics-2",
+        "profileId": "heavy-truck",
+        "surface": "dry-hard"
+      },
+      "previousPosition": {
+        "x": 6.592111724622321,
+        "y": 21.105492715842345
+      }
+    },
+    {
+      "renderFps": 60,
+      "physicalSteps": 1200,
+      "final": {
+        "position": {
+          "x": 6.592111724622321,
+          "y": 21.105492715842345
+        },
+        "speed": 1.0013961261668485e-15,
+        "theta": -0.2826145520088362,
+        "motion": -1.8531798722197543,
+        "beta": -1.5705653202109182,
+        "r": -4.229905552470631e-14,
+        "delta": -0.0000300247994194199,
+        "routeRate": 8.680979402464986e-10,
+        "frontSlipVelocity": -4.186228371049907e-14,
+        "h": 0.0000011961945410032912
+      },
+      "observation": {
+        "modelVersion": "vehicle-physics-2",
+        "profileId": "heavy-truck",
+        "surface": "dry-hard"
+      },
+      "previousPosition": {
+        "x": 6.592111724622321,
+        "y": 21.105492715842345
+      }
+    },
+    {
+      "renderFps": 120,
+      "physicalSteps": 1200,
+      "final": {
+        "position": {
+          "x": 6.592111724622321,
+          "y": 21.105492715842345
+        },
+        "speed": 1.0013961261668485e-15,
+        "theta": -0.2826145520088362,
+        "motion": -1.8531798722197543,
+        "beta": -1.5705653202109182,
+        "r": -4.229905552470631e-14,
+        "delta": -0.0000300247994194199,
+        "routeRate": 8.680979402464986e-10,
+        "frontSlipVelocity": -4.186228371049907e-14,
+        "h": 0.0000011961945410032912
+      },
+      "observation": {
+        "modelVersion": "vehicle-physics-2",
+        "profileId": "heavy-truck",
+        "surface": "dry-hard"
+      },
+      "previousPosition": {
+        "x": 6.592111724622321,
+        "y": 21.105492715842345
+      }
+    }
+  ],
+  "deltas": [
+    {
+      "renderFps": 30,
+      "position": 0,
+      "speed": 0,
+      "theta": 0,
+      "motion": 0,
+      "beta": 0,
+      "r": 0,
+      "delta": 0,
+      "routeRate": 0,
+      "frontSlipVelocity": 0
+    },
+    {
+      "renderFps": 60,
+      "position": 0,
+      "speed": 0,
+      "theta": 0,
+      "motion": 0,
+      "beta": 0,
+      "r": 0,
+      "delta": 0,
+      "routeRate": 0,
+      "frontSlipVelocity": 0
+    },
+    {
+      "renderFps": 120,
+      "position": 0,
+      "speed": 0,
+      "theta": 0,
+      "motion": 0,
+      "beta": 0,
+      "r": 0,
+      "delta": 0,
+      "routeRate": 0,
+      "frontSlipVelocity": 0
+    }
+  ],
+  "tolerances": {
+    "position": 0.012,
+    "speed": 0.06,
+    "angle": 0.008726646259971648,
+    "yaw": 0.08,
+    "routeRate": 0.08,
+    "frontSlipVelocity": 0.05
+  },
+  "passed": true
+}

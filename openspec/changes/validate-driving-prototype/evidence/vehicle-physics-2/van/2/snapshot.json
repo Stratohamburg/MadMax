@@ -1,0 +1,267 @@
+{
+  "profileId": "van",
+  "profileRevision": "2",
+  "modelVersion": "vehicle-physics-2",
+  "surfaceVersion": "vehicle-surface-1",
+  "sceneVersion": "driving-playground-3",
+  "state": {
+    "theta": -1.5707963267948966,
+    "r": 0,
+    "delta": 0,
+    "previousLongAcceleration": 0,
+    "time": 0.016666666666666666,
+    "position": {
+      "x": -11,
+      "y": 19
+    },
+    "worldVelocity": {
+      "x": 0,
+      "y": 0
+    },
+    "wheelSpeeds": {
+      "front": 0,
+      "rear": 0
+    },
+    "tires": {
+      "front": 0,
+      "rear": 0
+    },
+    "longitudinalForces": {
+      "front": 0,
+      "rear": 0
+    },
+    "energy": {
+      "tireDissipation": 0,
+      "rollingDissipation": 0,
+      "driveWork": 0,
+      "brakeDissipation": 0,
+      "collisionDissipation": 0,
+      "numericalResidual": 0
+    },
+    "speed": 0,
+    "motion": -1.5707963267948966,
+    "beta": 0,
+    "u": 0,
+    "v": 0,
+    "assist": {
+      "betaRef": 0,
+      "routeRate": 0,
+      "turnSign": 1,
+      "lastTarget": null,
+      "targetRate": 0,
+      "driftBlend": 0
+    },
+    "h": 0,
+    "x": -11,
+    "y": 19,
+    "heading": -1.5707963267948966,
+    "turnSign": 0,
+    "observation": {
+      "geometry": {
+        "frontAxle": {
+          "x": -11,
+          "y": 18.5086
+        },
+        "rearAxle": {
+          "x": -11,
+          "y": 19.4914
+        },
+        "wheels": {
+          "frontLeft": {
+            "x": -11.278280434044222,
+            "y": 18.5086
+          },
+          "frontRight": {
+            "x": -10.721719565955778,
+            "y": 18.5086
+          },
+          "rearLeft": {
+            "x": -11.278280434044222,
+            "y": 19.4914
+          },
+          "rearRight": {
+            "x": -10.721719565955778,
+            "y": 19.4914
+          }
+        },
+        "frontBoundary": {
+          "x": -11,
+          "y": 18.298000000000002
+        },
+        "rearBoundary": {
+          "x": -11,
+          "y": 19.701999999999998
+        },
+        "footprint": [
+          {
+            "x": -11.328876876657512,
+            "y": 18.298000000000002
+          },
+          {
+            "x": -10.671123123342488,
+            "y": 18.298000000000002
+          },
+          {
+            "x": -10.671123123342488,
+            "y": 19.701999999999998
+          },
+          {
+            "x": -11.328876876657512,
+            "y": 19.701999999999998
+          }
+        ],
+        "bodyLength": 1.4039999999999997,
+        "conservativeRadius": 0.7752186788255299,
+        "aabb": {
+          "minX": -11.328876876657512,
+          "maxX": -10.671123123342488,
+          "minY": 18.298000000000002,
+          "maxY": 19.701999999999998
+        },
+        "wheelAngles": {
+          "left": 0,
+          "right": 0
+        }
+      },
+      "loads": {
+        "front": 7.848000000000001,
+        "rear": 7.848000000000001,
+        "total": 15.696000000000002,
+        "transfer": 0,
+        "limited": false
+      },
+      "front": {
+        "load": 7.848000000000001,
+        "muX": 1.008,
+        "muY": 1.05,
+        "capX": 7.9107840000000005,
+        "capY": 8.240400000000001,
+        "stiffness": 88.70400000000002,
+        "surface": {
+          "schemaVersion": "vehicle-surface-1",
+          "surfaceId": "dry-hard",
+          "revision": "1",
+          "family": "hard",
+          "grip": 1,
+          "rolling": 1
+        },
+        "alpha": 0,
+        "slipVelocity": 0,
+        "longSlip": 0,
+        "transport": 0,
+        "fx": 0,
+        "fy": 0,
+        "power": 0,
+        "utilization": 0,
+        "lateralCap": 8.240400000000001,
+        "quasiStaticForce": 0,
+        "tau": 0,
+        "memoryProjection": 0
+      },
+      "rear": {
+        "load": 7.848000000000001,
+        "muX": 1.008,
+        "muY": 1.05,
+        "capX": 7.9107840000000005,
+        "capY": 8.240400000000001,
+        "stiffness": 107.00800000000001,
+        "surface": {
+          "schemaVersion": "vehicle-surface-1",
+          "surfaceId": "dry-hard",
+          "revision": "1",
+          "family": "hard",
+          "grip": 1,
+          "rolling": 1
+        },
+        "alpha": 0,
+        "slipVelocity": 0,
+        "longSlip": 0,
+        "transport": 0,
+        "fx": 0,
+        "fy": 0,
+        "power": 0,
+        "utilization": 0,
+        "lateralCap": 8.240400000000001,
+        "quasiStaticForce": 0,
+        "tau": 0,
+        "memoryProjection": 0
+      },
+      "modelVersion": "vehicle-physics-2",
+      "profileId": "van",
+      "profileRevision": "2",
+      "speed": 0,
+      "motion": -1.5707963267948966,
+      "theta": -1.5707963267948966,
+      "beta": 0,
+      "u": 0,
+      "v": 0,
+      "r": 0,
+      "delta": 0,
+      "h": 0,
+      "route": {
+        "target": 0,
+        "routeError": 0,
+        "routeRate": 0,
+        "betaRef": 0,
+        "extraBeta": 0,
+        "rRef": 0,
+        "feedForward": 0,
+        "softStability": 0,
+        "steeringLimit": 0.5934119456780721,
+        "command": {
+          "steeringTarget": 0,
+          "drive": 0,
+          "brake": 0,
+          "rearBrake": 0
+        },
+        "saturated": false,
+        "history": {
+          "betaRef": 0,
+          "routeRate": 0,
+          "turnSign": 1,
+          "lastTarget": null,
+          "targetRate": 0,
+          "driftBlend": 0
+        }
+      },
+      "deltaTarget": 0,
+      "targetSpeed": 0,
+      "input": {
+        "targetSpeed": 0,
+        "angle": null,
+        "drift": false,
+        "dx": 0,
+        "dy": 0,
+        "distance": 0,
+        "throttle": 0
+      },
+      "command": {
+        "steeringTarget": 0,
+        "drive": 0,
+        "brake": 0,
+        "rearBrake": 0
+      },
+      "power": {
+        "target": 0,
+        "drive": 0,
+        "brake": 0,
+        "request": 0,
+        "resistance": 0.18835200000000002
+      },
+      "energy": {
+        "mechanical": 0,
+        "total": 0,
+        "tireDissipation": 0,
+        "rollingDissipation": 0,
+        "driveWork": 0,
+        "brakeDissipation": 0,
+        "collisionDissipation": 0,
+        "numericalResidual": 0
+      },
+      "physicalLongAcceleration": 0,
+      "targetAngle": null,
+      "drift": false,
+      "intentAngle": 0
+    }
+  }
+}

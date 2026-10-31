@@ -1,0 +1,142 @@
+{
+  "modelVersion": "vehicle-physics-2",
+  "profileSchemaVersion": "vehicle-profile-2",
+  "surfaceVersion": "vehicle-surface-1",
+  "sceneVersion": "driving-playground-3",
+  "profileId": "sports-car",
+  "profileRevision": "2",
+  "duration": 10,
+  "fps": [
+    {
+      "renderFps": 30,
+      "physicalSteps": 1200,
+      "final": {
+        "position": {
+          "x": 1.3265263545799695,
+          "y": 42.384850219070415
+        },
+        "speed": 1.8027078105110587e-121,
+        "theta": 5.963641036429041,
+        "motion": -1.8903405975422307,
+        "beta": -1.5707963267916856,
+        "r": -1.6453285572124745e-119,
+        "delta": -3.5488384172901035e-13,
+        "routeRate": 1.9362587468244802e-9,
+        "frontSlipVelocity": -7.090650721343498e-120,
+        "h": 0.0000011961945410032912
+      },
+      "observation": {
+        "modelVersion": "vehicle-physics-2",
+        "profileId": "sports-car",
+        "surface": "dry-hard"
+      },
+      "previousPosition": {
+        "x": 1.3265263545799695,
+        "y": 42.384850219070415
+      }
+    },
+    {
+      "renderFps": 60,
+      "physicalSteps": 1200,
+      "final": {
+        "position": {
+          "x": 1.3265263545799695,
+          "y": 42.384850219070415
+        },
+        "speed": 1.8027078105110587e-121,
+        "theta": 5.963641036429041,
+        "motion": -1.8903405975422307,
+        "beta": -1.5707963267916856,
+        "r": -1.6453285572124745e-119,
+        "delta": -3.5488384172901035e-13,
+        "routeRate": 1.9362587468244802e-9,
+        "frontSlipVelocity": -7.090650721343498e-120,
+        "h": 0.0000011961945410032912
+      },
+      "observation": {
+        "modelVersion": "vehicle-physics-2",
+        "profileId": "sports-car",
+        "surface": "dry-hard"
+      },
+      "previousPosition": {
+        "x": 1.3265263545799695,
+        "y": 42.384850219070415
+      }
+    },
+    {
+      "renderFps": 120,
+      "physicalSteps": 1200,
+      "final": {
+        "position": {
+          "x": 1.3265263545799695,
+          "y": 42.384850219070415
+        },
+        "speed": 1.8027078105110587e-121,
+        "theta": 5.963641036429041,
+        "motion": -1.8903405975422307,
+        "beta": -1.5707963267916856,
+        "r": -1.6453285572124745e-119,
+        "delta": -3.5488384172901035e-13,
+        "routeRate": 1.9362587468244802e-9,
+        "frontSlipVelocity": -7.090650721343498e-120,
+        "h": 0.0000011961945410032912
+      },
+      "observation": {
+        "modelVersion": "vehicle-physics-2",
+        "profileId": "sports-car",
+        "surface": "dry-hard"
+      },
+      "previousPosition": {
+        "x": 1.3265263545799695,
+        "y": 42.384850219070415
+      }
+    }
+  ],
+  "deltas": [
+    {
+      "renderFps": 30,
+      "position": 0,
+      "speed": 0,
+      "theta": 0,
+      "motion": 0,
+      "beta": 0,
+      "r": 0,
+      "delta": 0,
+      "routeRate": 0,
+      "frontSlipVelocity": 0
+    },
+    {
+      "renderFps": 60,
+      "position": 0,
+      "speed": 0,
+      "theta": 0,
+      "motion": 0,
+      "beta": 0,
+      "r": 0,
+      "delta": 0,
+      "routeRate": 0,
+      "frontSlipVelocity": 0
+    },
+    {
+      "renderFps": 120,
+      "position": 0,
+      "speed": 0,
+      "theta": 0,
+      "motion": 0,
+      "beta": 0,
+      "r": 0,
+      "delta": 0,
+      "routeRate": 0,
+      "frontSlipVelocity": 0
+    }
+  ],
+  "tolerances": {
+    "position": 0.012,
+    "speed": 0.06,
+    "angle": 0.008726646259971648,
+    "yaw": 0.08,
+    "routeRate": 0.08,
+    "frontSlipVelocity": 0.05
+  },
+  "passed": true
+}

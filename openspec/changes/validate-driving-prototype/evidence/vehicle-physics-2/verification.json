@@ -1,0 +1,134 @@
+{
+  "modelVersion": "vehicle-physics-2",
+  "profileSchemaVersion": "vehicle-profile-2",
+  "sceneVersion": "driving-playground-3",
+  "coreRunId": "ec94e7866cf5",
+  "coreImplementationHash": "ec94e7866cf5d5d2f085f6dacebb8f64c9fb4beebc1180d1c4672154646af1b3",
+  "sourceSha256": "970695be914021d5c7ef80cca90c35ea40b9fd0084ac6a9741a2beac705e0c15",
+  "sourceHashScope": "按路径排序的src/scripts/tests下全部ts及package*.json,index.html,tsconfig.json,vite.config.ts,playwright.config.ts；每份先更新POSIX相对路径UTF-8，再更新原始文件字节",
+  "sourceFiles": [
+    "index.html",
+    "package-lock.json",
+    "package.json",
+    "playwright.config.ts",
+    "scripts/physics-audit.ts",
+    "scripts/physics-benchmark.ts",
+    "scripts/physics-calibrate.ts",
+    "scripts/physics-diagnostic.ts",
+    "scripts/vehicle-web-replay.ts",
+    "src/debug/panel.ts",
+    "src/input/joystick.ts",
+    "src/main.ts",
+    "src/render/canvas.ts",
+    "src/scene/collision.ts",
+    "src/scene/contacts.ts",
+    "src/scene/trails.ts",
+    "src/scene/world.ts",
+    "src/simulation/clock.ts",
+    "src/vehicle/config.ts",
+    "src/vehicle/legacy-model.ts",
+    "src/vehicle/model.ts",
+    "src/vehicle/physics/assist.ts",
+    "src/vehicle/physics/benchmarks.ts",
+    "src/vehicle/physics/config.ts",
+    "src/vehicle/physics/dynamics.ts",
+    "src/vehicle/physics/geometry.ts",
+    "src/vehicle/physics/index.ts",
+    "src/vehicle/physics/loads.ts",
+    "src/vehicle/physics/math.ts",
+    "src/vehicle/physics/physical.ts",
+    "src/vehicle/physics/powertrain.ts",
+    "src/vehicle/physics/profiles.ts",
+    "src/vehicle/physics/state.ts",
+    "src/vehicle/physics/steering.ts",
+    "src/vehicle/physics/surfaces.ts",
+    "src/vehicle/physics/tires.ts",
+    "src/vehicle/snapshot.ts",
+    "tests/e2e/driving.spec.ts",
+    "tests/e2e/helpers.ts",
+    "tests/e2e/input.spec.ts",
+    "tests/e2e/playground.spec.ts",
+    "tests/e2e/vehicle-upgrade.spec.ts",
+    "tests/unit/clock.test.ts",
+    "tests/unit/input.test.ts",
+    "tests/unit/physics-assist.test.ts",
+    "tests/unit/physics-contract.test.ts",
+    "tests/unit/physics-dynamics.test.ts",
+    "tests/unit/physics-numerics.test.ts",
+    "tests/unit/physics-profiles.test.ts",
+    "tests/unit/replay.test.ts",
+    "tests/unit/scene.test.ts",
+    "tests/unit/vehicle-integration.test.ts",
+    "tests/unit/vehicle-scene-upgrade.test.ts",
+    "tests/unit/vehicle-snapshot.test.ts",
+    "tests/unit/vehicle-web-adapter.test.ts",
+    "tests/unit/vehicle.test.ts",
+    "tsconfig.json",
+    "vite.config.ts"
+  ],
+  "recordedAt": "2026-10-31T04:44:38.146932+08:00",
+  "checks": {
+    "typecheck": {
+      "passed": true,
+      "command": "npm run typecheck"
+    },
+    "unit": {
+      "passed": true,
+      "files": 14,
+      "tests": 77,
+      "report": "unit-results.json"
+    },
+    "browser": {
+      "passed": true,
+      "tests": 21,
+      "viewports": [
+        "320x568",
+        "360x640",
+        "390x844"
+      ],
+      "command": "npm run test:e2e",
+      "lastRun": {
+        "status": "passed",
+        "failedTests": []
+      },
+      "environment": {
+        "browserVersion": "155.0.4283.62",
+        "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/155.0.0.0 Safari/537.36 Edg/155.0.0.0",
+        "node": "v25.9.0",
+        "platform": "win32",
+        "channel": "自动选择已下载 Chromium 或本机 Edge",
+        "realPhone": false
+      }
+    },
+    "build": {
+      "passed": true,
+      "command": "npm run build"
+    },
+    "core": {
+      "passed": true,
+      "profiles": 10,
+      "normalCases": 270,
+      "pairs": 7,
+      "auditTracePoints": 19200
+    },
+    "replay": {
+      "passed": true,
+      "profiles": 10,
+      "fps": [
+        30,
+        60,
+        120
+      ],
+      "maxPositionDifference": 0
+    },
+    "openspec": {
+      "passed": true,
+      "changes": 2,
+      "command": "openspec validate --all --strict --no-interactive"
+    }
+  },
+  "notExecuted": [
+    "真实手机驾驶与手感验收"
+  ],
+  "historicalEvidenceUnchanged": true
+}

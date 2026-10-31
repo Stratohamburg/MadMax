@@ -1,3 +1,34 @@
+# Acceptance v2
+
+日期：2026-10-31。当前运行 `vehicle-physics-2` / `vehicle-profile-2`，车型修订均为 `2`，场景 `driving-playground-3`，快照 `vehicle-snapshot-2`；路面仍为 `vehicle-surface-1`。下方baseline/v1记录保留为历史，不代表当前行为。
+
+## Status
+
+代码与自动化验收通过；真实手机人工驾驶未执行，整体验收继续保持未完成。最终核心批次 `ec94e7866cf5`，网页验证清单、环境、源码哈希及范围见 [verification.json](evidence/vehicle-physics-2/verification.json)。
+
+| 检查 | 结果与证据 |
+| --- | --- |
+| 模式无关内核及实际惯性 | 同执行器不同模式来源物理一致；允许>90°侧滑、倒滑、纯旋转和普通模式spin |
+| 无碰撞接入 | 与核心完整状态一致，无第二份速度/方向权威状态 |
+| 完整快照 | 同ID自定义参数、模拟时间、轮速、能量和控制历史经JSON精确续算；旧版/缺字段拒绝 |
+| 车身碰撞 | 跑车/重卡高速薄墙、偏心镜像、擦墙、长车旋转扫掠、窄通道与能量通过；无逃离速度和整组清零 |
+| 胎痕 | 实际各轴滑移与摩擦功，纯旋转和动力空转有效；低速直行无误痕 |
+| 全量单元 | 14文件、77测试通过，见 [unit-results.json](evidence/vehicle-physics-2/unit-results.json) |
+| 浏览器 | 21测试通过；三视口触控、生命周期、碰撞后惯性、十车型、调参及重置；环境见browser-regression/browser.json |
+| 网页固定时钟 | 十车30/60/120 FPS差异全部为零，见 [replay-summary.json](evidence/vehicle-physics-2/replay-summary.json) |
+| 类型、构建、OpenSpec | 全部通过 |
+| 手机驾驶 | 未执行，无设备/浏览器/人工手感记录，不以仿真替代 |
+
+本轮浏览器为本机Edge无头运行，三视口属于仿真。已目视检查320×568驾驶截图及重卡验证界面。所有截图、车型快照与回放写入 `evidence/vehicle-physics-2/`；旧baseline与v1证据未改。单位、接口与近似见docs/VEHICLE_PHYSICS.md和docs/PARAMETERS.md。
+
+## Behavioral Changes
+
+输入仅表达目标。普通控制按车辆/速度/轴载荷/路面限制请求，漂移放宽策略并使用后轴制动；物理无模式分支。删除85°锁角、实际速度/前进分量保护、零质心速度清横摆、低速姿态拉回和意图夹角扣速。碰撞接触冲量保留可行切向动量及横摆。界面将“满油门”改为“最高目标速度”，漂移输入显示“漂移辅助”，观测包括真实执行器请求、控制饱和、轮速和能量。
+
+---
+
+以下为保留的baseline/v1历史记录。
+
 # Acceptance
 
 ## Status
@@ -22,7 +53,7 @@
 | 输入检查 | Playwright 鼠标指针与 CDP 实际触点；取消/捕获丢失用浏览器事件注入；隐藏恢复用受控 visibilitychange 注入并结合独立五秒暂停测试 |
 | 开发入口 | `npm run dev -- --port 5173 --strictPort` → `http://localhost:5173/`；实际局域网入口 `http://192.168.7.54:5173/` |
 | 静态入口 | `npm run build` → `dist/`；`npm run preview -- --port 4173 --strictPort` → `http://localhost:4173/` |
-| 真实手机 | 未执行：没有已连接、可供人工驾驶并记录型号版本的手机 |
+| 真实手机 | 未执行：用户已确认当前暂时无法连接手机，尚无可供人工驾驶并记录型号版本的设备 |
 
 初始依赖安装、开发页和静态预览均已执行，两个入口 HTTP 200。锁文件安装无已报告漏洞。Chromium 下载未完成，改用本机已安装 Edge 完成自动化；下载进程已结束。Playwright 配置会优先使用已下载 Chromium，其次使用 Windows 的 Edge，也支持 `PLAYWRIGHT_CHANNEL` 指定通道。
 
@@ -126,7 +157,7 @@
 
 ## Phone Evaluation
 
-设备型号：待用户填写；系统版本：待用户填写；浏览器及版本：待用户填写；参数：默认 `sports-car`、`vehicle-physics-1`、`vehicle-profile-1`、`vehicle-surface-1`；驾驶人员与日期：待用户填写。
+设备型号：待用户填写；系统版本：待用户填写；浏览器及版本：待用户填写；参数：默认 `sports-car`、`vehicle-physics-1`、`vehicle-profile-1`、`vehicle-surface-1`；驾驶人员与日期：待用户填写。当前状态（2026-10-31）：用户暂时无法连接手机，未产生真机驾驶记录；待连接恢复后再执行三车型检查。
 
 | 手机人工检查项 | 状态 | 待记录内容 |
 | --- | --- | --- |
@@ -164,6 +195,6 @@
 
 ## Open Issues
 
-- 无真实手机驾驶证据，整体验收未完成。
+- 用户当前暂时无法连接手机，暂无真实手机驾驶证据；6.3 与依赖它的 6.4 保持未完成，整体验收未完成。
 - 默认规则在正面贴住障碍时每步碰撞归零，侧向转弯脱离较慢；浏览器中可脱离，手感是否可接受需实机评估。任何调校均需保留“碰撞归零”和“完全阻挡不原地旋转”的规则。
 - 本轮为 Windows Edge 自动化，无 iOS Safari、Android Chrome 真机兼容性或流畅度结论；真实手机结果待 6.3。

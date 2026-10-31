@@ -1,11 +1,19 @@
-import type { VehicleProfile } from './config';
-import { approach, clamp } from './math';
-export function steeringLimit(speed: number, p: VehicleProfile): number {
-  const z = speed / p.power.maxSpeed;
-  return p.steering.maxAngle * (p.steering.highSpeedRatio + (1 - p.steering.highSpeedRatio) / (1 + p.steering.speedCurve * z * z));
-}
-export function advanceSteering(delta: number, target: number, speed: number, p: VehicleProfile, dt: number): number {
-  const limit = steeringLimit(speed, p);
-  // 速度改变时也经过执行器回到新行程，禁止瞬间截断旧转角。
-  return approach(delta, clamp(target, -limit, limit), p.steering.response, p.steering.rate, dt);
+import type { PhysicalProfile } from "./config";
+import { approach, clamp } from "./math";
+export function advanceSteering(
+  delta: number,
+  target: number,
+  speed: number,
+  p: PhysicalProfile,
+  dt: number,
+): number {
+  const limit = p.steering.maxAngle;
+  // 机械行程、响应时间与角速度限制属于真实执行器。
+  return approach(
+    delta,
+    clamp(target, -limit, limit),
+    p.steering.response,
+    p.steering.rate,
+    dt,
+  );
 }

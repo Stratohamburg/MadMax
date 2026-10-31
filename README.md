@@ -48,6 +48,7 @@ npm run validation:replay
 - [车辆物理模型与验证方法](docs/VEHICLE_PHYSICS.md)
 - [车型、路面与参数字典](docs/VEHICLE_PROFILES.md)
 - [车辆物理接入清单](docs/VEHICLE_PHYSICS_INTEGRATION.md)
+- [武器与车辆配件目录](docs/WEAPONS_AND_PARTS.md)
 - [自动化证据与真实手机验收记录](openspec/changes/validate-driving-prototype/acceptance.md)
 
 ## 环境准备

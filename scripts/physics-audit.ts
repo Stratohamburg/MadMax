@@ -8,7 +8,7 @@ import { RULES } from "../src/vehicle/physics/config.ts";
 
 const folder = resolve(
   process.argv[2] ??
-    "openspec/changes/build-vehicle-physics/evidence/vehicle-physics-2",
+    "openspec/changes/add-assembly-physics/evidence/vehicle-physics-3/core",
 );
 const hash = createHash("sha256");
 for (const file of readdirSync(resolve("src/vehicle/physics")).sort())
@@ -98,7 +98,7 @@ for (const pair of summary.pairs) {
 // 旧证据目录只读核对，不运行会直接覆盖它的旧e2e证据写入器。
 const baselinePath = "openspec/changes/validate-driving-prototype/evidence";
 const excludeCurrentEvidence =
-  ":(exclude)openspec/changes/validate-driving-prototype/evidence/vehicle-physics-2";
+  ":(exclude)openspec/changes/add-assembly-physics/evidence/vehicle-physics-3/web";
 execFileSync("git", [
   "diff",
   "--quiet",
@@ -108,7 +108,7 @@ execFileSync("git", [
   excludeCurrentEvidence,
   "openspec/changes/build-vehicle-physics/evidence/vehicle-physics-1",
 ]);
-const baselineTree = execFileSync('git',['ls-tree','-r','HEAD','--',baselinePath],{encoding:'utf8'}).split('\n').filter(line=>!line.includes(`${baselinePath}/vehicle-physics-2/`)).join('\n');
+const baselineTree = execFileSync('git',['ls-tree','-r','HEAD','--',baselinePath],{encoding:'utf8'}).split('\n').filter(line=>!line.includes(`${baselinePath}/vehicle-physics-3/`)).join('\n');
 const result = {
   auditVersion: "vehicle-core-audit-2",
   runId,

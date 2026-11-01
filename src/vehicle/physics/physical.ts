@@ -45,8 +45,9 @@ export function physicalObservation(
       cs = Math.cos(angle),
       sn = Math.sin(angle),
       side = s.v + along * s.r;
-    const transport = s.u * cs + side * sn,
-      slip = side * cs - s.u * sn,
+    const alongSpeed = s.u + p.geometry.cgLateral * s.r;
+    const transport = alongSpeed * cs + side * sn,
+      slip = side * cs - alongSpeed * sn,
       longSlip = transport - R * s.wheelSpeeds[name];
     return {
       ...t,
@@ -86,6 +87,10 @@ export function advancePhysical(
     )
   )
     throw new Error("actuation: 非有限");
+  for (const value of [command.driveForce, command.boostForce, command.externalForce?.x, command.externalForce?.y, command.externalTorque])
+    if (value !== undefined && !Number.isFinite(value)) throw new Error("actuation: 外部执行器非有限");
+  if ((command.driveForce ?? 0) < 0 || (command.boostForce ?? 0) < 0)
+    throw new Error("actuation: 动力与助推须非负");
   const d = derived(p),
     m = p.mass,
     I = d.inertia,
@@ -108,6 +113,8 @@ export function advancePhysical(
     0.5 * J * (omega.front ** 2 + omega.rear ** 2);
   const startEnergy = energy();
   let driveWork = 0,
+    externalWork = 0,
+    boostWork = 0,
     brakeLoss = 0,
     rollingLoss = 0;
   const drive = clamp(command.drive, 0, 1),
@@ -117,7 +124,20 @@ export function advancePhysical(
     R *
     (Math.abs(omega.front) * p.power.driveFront +
       Math.abs(omega.rear) * (1 - p.power.driveFront));
-  const available = availableDriveForce(motorSpeed, p);
+  const available = command.driveForce ?? availableDriveForce(motorSpeed, p);
+  if (command.externalForce || command.externalTorque) {
+    const before = energy();
+    vx += (command.externalForce?.x ?? 0) * dt / m;
+    vy += (command.externalForce?.y ?? 0) * dt / m;
+    r += (command.externalTorque ?? 0) * dt / I;
+    externalWork += energy() - before;
+  }
+  if (command.boostForce) {
+    const before = energy(), direction = forward(s.theta);
+    vx += direction.x * command.boostForce * dt / m;
+    vy += direction.y * command.boostForce * dt / m;
+    boostWork += energy() - before;
+  }
   for (const name of ["front", "rear"] as const) {
     const before = energy();
     const share =
@@ -145,7 +165,8 @@ export function advancePhysical(
       angle = s.theta + (name === "front" ? delta : 0),
       ex = forward(angle),
       ey = right(angle),
-      arm = scale(forward(s.theta), along);
+      arm = { x: forward(s.theta).x * along - right(s.theta).x * p.geometry.cgLateral,
+        y: forward(s.theta).y * along - right(s.theta).y * p.geometry.cgLateral };
     const cross = (a: { x: number; y: number }, b: { x: number; y: number }) =>
       a.x * b.y - a.y * b.x;
     const cx = cross(arm, ex),
@@ -243,7 +264,7 @@ export function advancePhysical(
     residual =
       finalEnergy -
       startEnergy -
-      driveWork +
+      driveWork - externalWork - boostWork +
       rollingLoss +
       brakeLoss +
       tireLoss;
@@ -269,10 +290,23 @@ export function advancePhysical(
     energy: {
       ...s.energy,
       driveWork: s.energy.driveWork + driveWork,
+      externalWork: s.energy.externalWork + externalWork,
+      boostWork: s.energy.boostWork + boostWork,
       brakeDissipation: s.energy.brakeDissipation + brakeLoss,
       tireDissipation: s.energy.tireDissipation + tireLoss,
       rollingDissipation: s.energy.rollingDissipation + rollingLoss,
       numericalResidual: s.energy.numericalResidual + residual,
     },
   });
+}
+
+/** 世界坐标挂点冲量：位置是质心，冲量产生的功独立记录。 */
+export function applyExternalImpulse(s: PhysicalState, p: PhysicalProfile, impulse: { x: number; y: number }, point = s.position): PhysicalState {
+  if (![impulse.x, impulse.y, point.x, point.y].every(Number.isFinite)) throw new Error("impulse: 非有限");
+  const before = mechanicalEnergy(s, p);
+  const result = physicalFrom({ ...s,
+    worldVelocity: { x: s.worldVelocity.x + impulse.x / p.mass, y: s.worldVelocity.y + impulse.y / p.mass },
+    r: s.r + ((point.x - s.position.x) * impulse.y - (point.y - s.position.y) * impulse.x) / derived(p).inertia,
+  });
+  return physicalFrom({ ...result, energy: { ...s.energy, externalWork: s.energy.externalWork + mechanicalEnergy(result, p) - before } });
 }

@@ -3,7 +3,7 @@ import { start, snapshot, drag } from "./helpers";
 import { mkdir } from "node:fs/promises";
 
 const evidence =
-  "openspec/changes/validate-driving-prototype/evidence/vehicle-physics-2/sports-car/2/browser-regression";
+  "openspec/changes/add-assembly-physics/evidence/vehicle-physics-3/web/sports-car/2/browser-regression";
 for (const viewport of [
   { width: 320, height: 568 },
   { width: 360, height: 640 },

@@ -12,6 +12,10 @@ export interface Actuation {
   drive: number;
   brake: number;
   rearBrake: number;
+  driveForce?: number;
+  boostForce?: number;
+  externalForce?: Vec2;
+  externalTorque?: number;
 }
 export interface TireHistory {
   front: number;
@@ -29,6 +33,8 @@ export interface EnergyLedger {
   tireDissipation: number;
   rollingDissipation: number;
   driveWork: number;
+  externalWork: number;
+  boostWork: number;
   brakeDissipation: number;
   collisionDissipation: number;
   numericalResidual: number;
@@ -80,6 +86,8 @@ export const emptyEnergy = (): EnergyLedger => ({
   tireDissipation: 0,
   rollingDissipation: 0,
   driveWork: 0,
+  externalWork: 0,
+  boostWork: 0,
   brakeDissipation: 0,
   collisionDissipation: 0,
   numericalResidual: 0,
@@ -189,9 +197,9 @@ export function createState(
     delta,
     wheelSpeeds: initial.wheelSpeeds ?? {
       front:
-        (u * Math.cos(delta) + (v + lf * r) * Math.sin(delta)) /
+        ((u + profile.geometry.cgLateral * r) * Math.cos(delta) + (v + lf * r) * Math.sin(delta)) /
         profile.wheels.radius,
-      rear: u / profile.wheels.radius,
+      rear: (u + profile.geometry.cgLateral * r) / profile.wheels.radius,
     },
     longitudinalForces: initial.longitudinalForces ?? { front: 0, rear: 0 },
     tires: initial.tires ?? { front: 0, rear: 0 },

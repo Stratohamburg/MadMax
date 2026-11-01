@@ -1,0 +1,16 @@
+{
+  "benchmarkVersion": "combat-benchmark-1",
+  "seed": 123,
+  "iterations": 600,
+  "enemyCount": 128,
+  "bulletCapacity": 2048,
+  "peakBullets": 2047,
+  "p50Ms": 0.5126999999999953,
+  "p95Ms": 0.875,
+  "maxMs": 2.2291000000000167,
+  "targetP95Ms": 4,
+  "withinEngineeringTarget": true,
+  "mobileVerified": false,
+  "aggregated": 317,
+  "environment": "Node.js/25"
+}

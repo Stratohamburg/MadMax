@@ -1,6 +1,6 @@
 # Tasks
 
-v1历史见acceptance及evidence/vehicle-physics-1。以下重新跟踪v2。
+v1历史见acceptance及evidence/vehicle-physics-1。以下保留v2接入任务记录；当前运行时已由 add-assembly-physics 升至v3，独立证据见该变更的 acceptance.md。未完成的真机驾驶须针对当前v3运行时验收。
 
 ## 1. Integration
 - [x] 1.1 接入v2执行器/物理、完整参数快照及时间，以无碰撞一致性、快照恢复和版本拒绝测试验证。

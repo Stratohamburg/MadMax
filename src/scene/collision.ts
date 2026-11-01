@@ -168,7 +168,7 @@ export function moveCircle(
 function isProfile(value: unknown): value is VehicleProfile {
   const p = value as Partial<VehicleProfile> | null;
   return (
-    !!p && p.modelVersion === "vehicle-physics-2" && !!p.geometry && !!p.power
+    !!p && p.modelVersion === "vehicle-physics-3" && !!p.geometry && !!p.power
   );
 }
 

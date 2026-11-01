@@ -1,12 +1,12 @@
 # 车辆参数与版本
 
-当前模型为 `vehicle-physics-2`，车型格式 `vehicle-profile-2`，控制器 `route-assist-2`，路面 `vehicle-surface-1`，场景 `driving-playground-3`，快照 `vehicle-snapshot-2`。十车型的完整数值来自 `src/vehicle/physics/profiles.ts`，字段范围来自 `config.ts` 的 `PARAMETER_UNITS` 和 `validateProfile`。所有数值使用游戏长度 L、质量 M、秒 s；世界向右为 +x、向下为 +y，正角顺时针。
+当前模型为 `vehicle-physics-3`，车型格式 `vehicle-profile-3`，控制器 `route-assist-2`，路面 `vehicle-surface-1`，场景 `driving-playground-3`，快照 `vehicle-snapshot-3`。十车型的完整数值来自 `src/vehicle/physics/profiles.ts`，字段范围来自 `config.ts` 的 `PARAMETER_UNITS` 和 `validateProfile`。所有数值使用游戏长度 L、质量 M、秒 s；世界向右为 +x、向下为 +y，正角顺时针。
 
 摇杆角度表示世界路线期望，距离表示目标速度；R、Rexit、Renter 属于输入布局。`power.maxSpeed` 是输入最大目标和动力曲线的特征速度，物理速度可以超过它。普通模式的转向包络属于控制器，机械执行器只限制真实行程、响应时间与变化速率。
 
 | 参数组 | 主要字段与单位 | 含义 |
 | --- | --- | --- |
-| 几何 | wheelbase、width、track、frontOverhang、rearOverhang、heightCG：L；cgFromRear：1 | 统一生成车身、接地点、碰撞足迹与力臂 |
+| 几何 | wheelbase、width、track、frontOverhang、rearOverhang、heightCG、cgLateral：L；cgFromRear：1 | 统一生成车身、接地点、碰撞足迹与相对二维质心的力臂 |
 | 质量惯量 | mass：M；kYaw：1 | 横摆惯量唯一派生为 mass × wheelbase² × kYaw |
 | 轮速 | wheels.radius：L；wheels.inertia：ML² | 前后等效轮各自轮速，驱动/制动扭矩和轮胎反作用共同积分 |
 | 动力 | driveForce、brakeForce：ML/s²；driveFront、brakeFront：1 | 有限动力及制动的前后分配；没有按目标夹断实际速度 |

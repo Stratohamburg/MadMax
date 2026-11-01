@@ -16,7 +16,7 @@ import type { Intent } from "../src/vehicle/physics/state.ts";
 
 const output = resolve(
   process.argv[2] ??
-    "openspec/changes/validate-driving-prototype/evidence/vehicle-physics-2",
+    "openspec/changes/add-assembly-physics/evidence/vehicle-physics-3/web",
 );
 const sceneVersion = "driving-playground-3";
 const world = {

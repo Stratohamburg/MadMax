@@ -61,4 +61,55 @@ dialog h2 { font-size: 19px; }
 #parameters button { font-size: 10px; padding: 6px; margin-right: 4px; }
 #parameter-message { font-size: 9px; color: #b6c5a7; margin-bottom: 0; }
 #parameter-message[data-error="true"] { color: #ffba97; }
+.button-link { display: inline-block; color: #e9d2a3; text-decoration: none; font-size: 11px; padding: 8px; border: 1px solid #6d7c6d55; border-radius: 7px; }
+select, input { color: #e8ede4; background: #26382d; border: 1px solid #71805f; padding: 8px; border-radius: 5px; max-width: 100%; font: inherit; }
+button:disabled { opacity: .4; cursor: default; }
+.primary { background: #957139; color: #fff1d1; border-color: #d1ac6d; }
+.eyebrow { font-size: 10px; letter-spacing: .2em; color: #d3b77b; }
+.dialog-actions { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 15px; }
+.risk-rules { border-left: 2px solid #ce956c; padding: 8px 12px; background: #c6925320; color: #f2d5a9; }
+#run-hud { position: absolute; top: calc(61px + var(--safe-top)); left: 12px; right: 12px; font-size: 11px; color: #e0e4c8; pointer-events: none; text-shadow: 0 1px 4px #000; }
+#run-notice { position: absolute; bottom: 9px; left: 50%; transform: translateX(-50%); max-width: 66%; text-align: center; font-size: 10px; padding: 5px 8px; background: #14261acc; border-radius: 6px; pointer-events: none; }
+.upgrade-card { display: block; width: 100%; text-align: left; margin: 10px 0; padding: 14px; border-color: #b99c60; }
+#workbench { width: min(94vw, 760px); max-width: 760px; max-height: 94dvh; padding: 16px; font-size: 12px; overscroll-behavior: contain; }
+.garage-header { display: flex; justify-content: space-between; align-items: center; gap: 10px; }
+.garage-header h2, .garage-header p { margin: 0 0 5px; }
+#garage-wallet { color: #cbd4b6; font-variant-numeric: tabular-nums; }
+.garage-toolbar { display: flex; gap: 6px; flex-wrap: wrap; align-items: center; margin: 10px 0; }
+.garage-toolbar button { padding: 7px 9px; font-size: 11px; }
+.garage-toolbar [aria-pressed="true"] { background: #6e6541; border-color: #d1b774; }
+.garage-layout { display: grid; grid-template-columns: minmax(0, 1fr); gap: 16px; }
+.garage-layout h3 { margin: 2px 0 8px; font-size: 13px; }
+.grid-heading { display: flex; justify-content: space-between; color: #e5ca8d; margin: 8px 0; }
+.board-scroll { overflow: auto; background: #111e1a; border: 1px solid #75836866; padding: 6px; border-radius: 7px; }
+#loadout-board { display: grid; gap: 3px; grid-auto-rows: 30px; min-width: max-content; touch-action: none; }
+.grid-cell { position: relative; min-width: 30px; padding: 0; border-radius: 3px; font-size: 10px; background: #2a3b30; border-color: #5d735d88; touch-action: none; }
+.grid-cell.occupied { background: #5b6750; color: #f0e1b6; }
+.grid-cell.unavailable { background: repeating-linear-gradient(45deg,#111d19,#111d19 3px,#253027 3px,#253027 5px); }
+.grid-cell.edge-slot { border-style: dashed; }
+.selected { outline: 2px solid #e6b867; outline-offset: -2px; }
+.grid-cell.drop-target { background: #a5b56c; }
+.ghost-part { position: absolute; inset: 0; display: grid; place-items: center; opacity: .23; pointer-events: none; color: #9ddde3; background: #547c7c20; font-size: 9px; }
+.grid-cell.occupied .ghost-part { color: transparent; background: transparent; }
+#garage-summary { display: block; font-size: 10px; line-height: 1.8; white-space: pre-line; padding: 10px; background: #101e19; border-radius: 6px; color: #c9d5bc; }
+#selected-part { min-height: 20px; color: #d7bf86; }
+#inventory-list { max-height: 170px; overflow: auto; display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 5px; }
+.inventory-part { font-size: 10px; text-align: left; padding: 8px; line-height: 1.5; touch-action: none; }
+.garage-layout label { display: block; margin: 10px 0 5px; }
+.garage-layout select { max-width: 60%; }
+#garage-message { min-height: 24px; color: #f2c889; margin: 10px 0; overflow-wrap: anywhere; }
+.blueprint-controls { border-top: 1px solid #6d7c6d55; padding-top: 12px; }
+.blueprint-controls label { display: block; margin-bottom: 8px; }
+#blueprint-name { width: 100%; }
+#module-hud { position: absolute; left: 9px; bottom: 35px; width: 78px; pointer-events: none; background: #102219bd; border: 1px solid #9bb78155; border-radius: 5px; padding: 5px; }
+.doll-title { font-size: 8px; color: #bccdb0; }
+.paper-doll { display: grid; grid-auto-rows: 6px; gap: 1px; margin: 5px auto; }
+.doll-cell { background: #87bd85; font-size: 7px; line-height: 6px; text-align: center; }
+.doll-cell.damaged { background: #e5c364; animation: damage-pulse .7s ease-in-out infinite alternate; }
+.doll-cell.destroyed { background: #c66c60; color: #311612; }
+.doll-cell.detached { background: transparent; color: #ef9880; border: 1px dashed #c66c60; }
+.doll-description { display: block; max-height: 25px; overflow: hidden; font-size: 7px; color: #d3d9bb; }
+@keyframes damage-pulse { to { opacity: .45; } }
+@media (prefers-reduced-motion: reduce) { .doll-cell.damaged { animation: none; } }
+@media (min-width: 650px) { .garage-layout { grid-template-columns: minmax(0,1fr) minmax(0,1fr); } }
 @media (min-width: 700px) { .brand { font-size: 20px; } #joystick-area { max-width: 540px; width: 100%; align-self: center; } }

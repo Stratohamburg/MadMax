@@ -1,6 +1,6 @@
 # 十车型与三类路面
 
-十车型使用 `vehicle-profile-2`，修订均为 `2`，模型为 `vehicle-physics-2`。完整参数由 `profiles.ts` 从参考配置生成，每份 profile 均独立可复制。名称、类别、验收元数据不参与物理分支。
+十车型使用 `vehicle-profile-3`，修订均为 `3`，模型为 `vehicle-physics-3`。完整参数由 `profiles.ts` 从参考配置生成，每份 profile 均独立可复制。名称、类别、验收元数据不参与物理分支；装配派生见 [装配物理](ASSEMBLY_PHYSICS.md)。
 
 | 配置 ID | 特点 |
 | --- | --- |
@@ -19,7 +19,7 @@
 
 前轮机械行程、响应和速率来自物理执行器参数。普通控制器结合轴距、速度、可用轴载荷和路面估计前轮包络与牵引余量；漂移仅放宽控制请求并使用后轴制动。平直路段不固定牺牲一半牵引力，转弯时按横向需求留出抓地余量。
 
-参数、单位和校验规则见 [PARAMETERS.md](PARAMETERS.md)。所有完整参数、规则、版本、源码哈希和轨迹保存在 `build-vehicle-physics/evidence/vehicle-physics-2/<profileId>/2/`。
+参数、单位和校验规则见 [PARAMETERS.md](PARAMETERS.md)。v3 完整参数、规则、版本、源码哈希和轨迹保存在 `openspec/changes/add-assembly-physics/evidence/vehicle-physics-3/core/<profileId>/3/`，v2 历史仍在原变更目录。
 
 基准覆盖每车三路面 × 三速度（最大目标的20%/50%/100%）× 90°急转、180°急转及0.5秒换向，共270个普通驾驶场景；稳定初态下最大侧滑须小于45°，不得spin。该门槛用于发现控制失稳，不是物理角度限制。已有95°侧滑和强横摆的普通接管另行验证惯性连续性，不要求保证救回。
 

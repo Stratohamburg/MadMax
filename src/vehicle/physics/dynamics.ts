@@ -16,9 +16,15 @@ export interface StepOptions {
   coast?: boolean;
   substep?: number;
   actuation?: Actuation;
+  driveForce?: number;
+  boostForce?: number;
+  externalForce?: { x: number; y: number };
+  externalTorque?: number;
 }
 function actuatorRequest(base: Actuation, options: StepOptions): Actuation {
   let command = options.actuation ?? base;
+  for (const key of ["driveForce", "boostForce", "externalForce", "externalTorque"] as const)
+    if (options[key] !== undefined) command = { ...command, [key]: options[key] };
   if (options.fixedSteering !== undefined)
     command = { ...command, steeringTarget: options.fixedSteering };
   if (options.coast) command = { ...command, drive: 0, brake: 0, rearBrake: 0 };

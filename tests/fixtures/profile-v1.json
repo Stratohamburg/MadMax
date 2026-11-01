@@ -1,0 +1,8 @@
+{
+  "version": 1,
+  "inventory": { "legacy:armor": { "id": "legacy:armor", "definitionId": "inner-armor" } },
+  "blueprints": [], "currency": 123, "materials": { "scrap": 45 },
+  "unlocks": { "chassis": ["sports-car"], "parts": ["inner-armor"], "levels": ["scrapyard"] },
+  "story": ["legacy-story"],
+  "stats": { "runs": 2, "extracted": 1, "kills": 10, "damage": 200, "time": 100, "xp": 100 }
+}

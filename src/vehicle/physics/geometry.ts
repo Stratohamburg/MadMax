@@ -26,7 +26,7 @@ export function geometry(
     f = forward(s.theta),
     side = right(s.theta);
   const point = (along: number, lateral = 0): Vec2 =>
-    add(s.position, add(scale(f, along), scale(side, lateral)));
+    add(s.position, add(scale(f, along), scale(side, lateral - p.geometry.cgLateral)));
   const front = lf + p.geometry.frontOverhang,
     rear = -lr - p.geometry.rearOverhang;
   const half = p.geometry.width / 2,
@@ -50,7 +50,7 @@ export function geometry(
     rearBoundary: point(rear),
     footprint,
     bodyLength,
-    conservativeRadius: Math.hypot(Math.max(front, -rear), half),
+    conservativeRadius: Math.hypot(Math.max(front, -rear), half + Math.abs(p.geometry.cgLateral)),
     aabb: {
       minX: Math.min(...footprint.map((v) => v.x)),
       maxX: Math.max(...footprint.map((v) => v.x)),

@@ -7,7 +7,7 @@ import type { VehicleProfile } from "./physics/config";
 import { SURFACE_VERSION, SURFACES } from "./physics/surfaces";
 import { createState } from "./physics/state";
 import type { AuthoritativeState, VehicleState } from "./physics/state";
-export const SNAPSHOT_VERSION = "vehicle-snapshot-2" as const;
+export const SNAPSHOT_VERSION = "vehicle-snapshot-3" as const;
 export interface VehicleSnapshot {
   snapshotVersion: typeof SNAPSHOT_VERSION;
   modelVersion: typeof MODEL_VERSION;

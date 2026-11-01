@@ -20,6 +20,7 @@ export {
   advancePhysical,
   physicalObservation,
   mechanicalEnergy,
+  applyExternalImpulse,
 } from "./physical";
 export { createPhysicalState, physicalFrom } from "./state";
 export type { Actuation, PhysicalState, PhysicalData } from "./state";

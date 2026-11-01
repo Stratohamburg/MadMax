@@ -72,7 +72,7 @@ export class Trails {
     if (
       isPhysicsState(before) &&
       isPhysicsState(after) &&
-      (profileOrConfig as VehicleProfile).modelVersion === "vehicle-physics-2"
+      (profileOrConfig as VehicleProfile).modelVersion === "vehicle-physics-3"
     ) {
       const profile = profileOrConfig as VehicleProfile;
       const obs = observation ?? observePhysicsVehicle(after, profile);

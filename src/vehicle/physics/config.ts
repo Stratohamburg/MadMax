@@ -1,7 +1,7 @@
 import { rad } from "./math";
 
-export const MODEL_VERSION = "vehicle-physics-2" as const;
-export const PROFILE_SCHEMA_VERSION = "vehicle-profile-2" as const;
+export const MODEL_VERSION = "vehicle-physics-3" as const;
+export const PROFILE_SCHEMA_VERSION = "vehicle-profile-3" as const;
 export const CONTROLLER_VERSION = "route-assist-2" as const;
 export interface PhysicsRules {
   modelVersion: typeof MODEL_VERSION;
@@ -41,6 +41,7 @@ export interface VehicleProfile {
   geometry: {
     wheelbase: number;
     cgFromRear: number;
+    cgLateral: number;
     width: number;
     track: number;
     frontOverhang: number;
@@ -108,12 +109,13 @@ export const REFERENCE_PROFILE: VehicleProfile = {
   modelVersion: MODEL_VERSION,
   profileSchemaVersion: PROFILE_SCHEMA_VERSION,
   profileId: "sports-car",
-  profileRevision: "2",
+  profileRevision: "3",
   label: "跑车",
   category: "sports-car",
   geometry: {
     wheelbase: 0.84,
     cgFromRear: 0.5,
+    cgLateral: 0,
     width: 0.52,
     track: 0.44,
     frontOverhang: 0.18,
@@ -181,6 +183,7 @@ rules("L", 0.02, 1, "radius");
 rules("ML²", 0.000001, 20, "inertia");
 rules("L", 0.2, 8, "wheelbase");
 rules("1", 0.2, 0.8, "cgFromRear");
+rules("L", -2, 2, "cgLateral");
 rules("L", 0.05, 4, "width track");
 rules("L", 0, 3, "frontOverhang rearOverhang heightCG");
 rules("M", 0.1, 50, "mass");
@@ -303,11 +306,13 @@ export function validateProfile(value: unknown, rules = RULES): string[] {
       "profile.modelVersion: 不兼容；拒绝baseline-1与axle-dynamics-1",
     );
   if (p?.profileSchemaVersion !== PROFILE_SCHEMA_VERSION)
-    errors.push("profile.profileSchemaVersion: 必须为vehicle-profile-2");
+    errors.push("profile.profileSchemaVersion: 必须为vehicle-profile-3");
   if (errors.length) return errors;
   const g = p.geometry;
   if (g.track > g.width)
     errors.push("profile.geometry.track/width: 轮距不能超过车宽");
+  if (Math.abs(g.cgLateral) > g.width / 2)
+    errors.push("profile.geometry.cgLateral: 横向质心须在半车宽内");
   if (g.wheelbase / Math.tan(p.steering.maxAngle) <= g.track / 2)
     errors.push(
       "profile.geometry.track/steering.maxAngle: 阿克曼内轮分母必须为正",

@@ -15,6 +15,8 @@
     "test:e2e": "playwright test",
     "physics:benchmark": "node --import ./scripts/physics-loader.mjs scripts/physics-benchmark.ts",
     "physics:audit": "node --import ./scripts/physics-loader.mjs scripts/physics-audit.ts",
+    "combat:benchmark": "node --import ./scripts/physics-loader.mjs scripts/combat-benchmark.ts",
+    "modifiers:diagnose": "node --import ./scripts/physics-loader.mjs scripts/modifier-diagnostics.ts",
     "validation:replay": "node --import ./scripts/physics-loader.mjs scripts/vehicle-web-replay.ts"
   },
   "devDependencies": {

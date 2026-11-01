@@ -13,7 +13,7 @@ export class CanvasRenderer {
   constructor(private canvas: HTMLCanvasElement) { this.context = canvas.getContext('2d')!; }
   reset(state: PhysicsState): void { this.camera = { x: state.position.x, y: state.position.y, rotation: 0 }; }
 
-  render(previous: PhysicsState, current: PhysicsState, alpha: number, profile: VehicleProfile, trails: Trail[], time: number, validate: boolean, observation?: Observation): void {
+  render(previous: PhysicsState, current: PhysicsState, alpha: number, profile: VehicleProfile, trails: Trail[], time: number, validate: boolean, observation?: Observation, ground?: (ctx: CanvasRenderingContext2D, car: Vec2) => void): void {
     const ctx = this.context;
     const { width, height } = this.canvas.getBoundingClientRect();
     const dpr = window.devicePixelRatio || 1;
@@ -78,13 +78,14 @@ export class CanvasRenderer {
       ctx.strokeStyle = '#c9b588'; ctx.lineWidth = 0.07; ctx.strokeRect(obstacle.x + 0.12, obstacle.y + 0.12, obstacle.width - 0.24, obstacle.height - 0.24);
       ctx.beginPath(); ctx.moveTo(obstacle.x + 0.15, obstacle.y + 0.15); ctx.lineTo(obstacle.x + obstacle.width - 0.15, obstacle.y + obstacle.height - 0.15); ctx.stroke();
     }
+    ground?.(ctx, car);
     for (const trail of trails) {
       ctx.strokeStyle = `rgba(15,22,17,${trail.intensity * Math.max(0, 1 - (time - trail.born) / TRAIL_LIFETIME) * 0.7})`;
       ctx.lineWidth = 0.075; ctx.beginPath(); ctx.moveTo(trail.from.x, trail.from.y); ctx.lineTo(trail.to.x, trail.to.y); ctx.stroke();
     }
     const currentGeometry = geometry(current, profile);
     const d = derived(profile);
-    ctx.save(); ctx.translate(car.x, car.y); ctx.rotate(car.theta);
+    ctx.save(); ctx.translate(car.x, car.y); ctx.rotate(car.theta); ctx.translate(0, -profile.geometry.cgLateral);
     const length = currentGeometry.bodyLength;
     const bodyWidth = profile.geometry.width;
     const rear = -d.lr - profile.geometry.rearOverhang;

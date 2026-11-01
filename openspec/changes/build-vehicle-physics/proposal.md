@@ -25,3 +25,7 @@ vehicle-physics-1将期望误作实际状态边界，导致85°锁角、减速�
 ## Impact
 
 重构vehicle/physics、snapshot、scene、debug、tests、scripts和文档，保留TypeScript、Canvas、单指输入及固定外层时钟。采用刚性车身与前后等效轴；不增加悬挂、挂车或完整四轮系统。
+
+## Core Ownership Revision
+
+本能力继续作为未归档车辆核心规范的唯一来源。发动机扭矩/功率与自动变速箱、有限助推、二维质心受力、质量变化迁移及实体接触冲量统一归入 vehicle-physics；assembly-physics 仅选择部件并派生参数。当前修订升级为 vehicle-physics-4 / vehicle-profile-4 / vehicle-snapshot-4、route-assist-3，历史 v2/v3 证据保留。

@@ -35,6 +35,8 @@ export interface EnergyLedger {
   driveWork: number;
   externalWork: number;
   boostWork: number;
+  /** 装卸质量携带的机械能，正值表示流入当前车体。 */
+  configurationWork: number;
   brakeDissipation: number;
   collisionDissipation: number;
   numericalResidual: number;
@@ -88,6 +90,7 @@ export const emptyEnergy = (): EnergyLedger => ({
   driveWork: 0,
   externalWork: 0,
   boostWork: 0,
+  configurationWork: 0,
   brakeDissipation: 0,
   collisionDissipation: 0,
   numericalResidual: 0,

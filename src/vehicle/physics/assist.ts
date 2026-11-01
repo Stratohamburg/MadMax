@@ -52,6 +52,7 @@ export function routeAssist(
     front: p.mass * RULES.gravity * p.geometry.cgFromRear,
     rear: p.mass * RULES.gravity * (1 - p.geometry.cgFromRear),
   },
+  driveCapacity?: number,
 ) {
   const h = approach(
     s.h,
@@ -128,7 +129,7 @@ export function routeAssist(
     target = clamp(raw, -limit, limit);
   const error = clamp(input.targetSpeed, 0, p.power.maxSpeed) - s.speed;
   const acceleration = error / 0.55;
-  const available = availableDriveForce(s.speed, p);
+  const available = Math.max(1e-12, driveCapacity ?? availableDriveForce(s.speed, p));
   const resistance =
     p.mass * RULES.gravity * p.power.rolling + p.power.aero * s.speed * s.speed;
   let drive = clamp((p.mass * acceleration + resistance) / available, 0, 1),

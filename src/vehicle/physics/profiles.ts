@@ -238,7 +238,7 @@ const recipes: Recipe[] = [
 function materialize(r: Recipe): VehicleProfile {
   const p = structuredClone(REFERENCE_PROFILE);
   p.profileId = r.id;
-  p.profileRevision = "3";
+  p.profileRevision = "4";
   p.label = r.label;
   p.category = r.id;
   p.mass = r.mass;

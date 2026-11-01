@@ -9,7 +9,7 @@ export interface Snapshot {
 declare global { interface Window { __driving: { snapshot(): Snapshot; test?: { place(state: any): void } } } }
 export async function snapshot(page: Page): Promise<Snapshot> { return page.evaluate(() => window.__driving.snapshot()); }
 export async function start(page: Page): Promise<StickGeometry> {
-  await page.goto('/');
+  await page.goto('/?mode=practice');
   await page.waitForFunction(() => window.__driving?.snapshot().geometry.radius > 5);
   return (await snapshot(page)).geometry;
 }

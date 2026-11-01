@@ -18,7 +18,7 @@ const intent = {
   drift: true,
 };
 
-describe("vehicle-physics-3 web facade", () => {
+describe("vehicle-physics-4 web facade", () => {
   it("无碰撞场景严格复用核心推进结果", () => {
     const start = createPhysicsVehicle({ x: -4, y: 3 }, 0, profile);
     const direct = stepPhysicsVehicle(start, intent, profile);

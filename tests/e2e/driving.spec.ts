@@ -2,7 +2,7 @@ import { test, expect } from "@playwright/test";
 import { mkdir, writeFile } from "node:fs/promises";
 
 test("客户端可加载并绘制画布", async ({ page, browser }) => {
-  await page.goto("/");
+  await page.goto("/?mode=practice");
   await expect(page).toHaveTitle("MadMax · 驾驶验证场");
   await expect(page.locator("#world")).toBeVisible();
   expect(
@@ -11,7 +11,7 @@ test("客户端可加载并绘制画布", async ({ page, browser }) => {
       .evaluate((canvas: HTMLCanvasElement) => !!canvas.getContext("2d")),
   ).toBe(true);
   const directory =
-    "openspec/changes/add-assembly-physics/evidence/vehicle-physics-3/web/browser-regression";
+    "openspec/changes/add-assembly-physics/evidence/vehicle-physics-4/web/browser-regression";
   await mkdir(directory, { recursive: true });
   await writeFile(
     `${directory}/browser.json`,

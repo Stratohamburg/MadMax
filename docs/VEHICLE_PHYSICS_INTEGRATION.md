@@ -1,4 +1,4 @@
-# v3 物理与网页接入
+# v4 物理与网页接入
 
 核心入口为 `src/vehicle/physics/index.ts`，网页通过 `src/vehicle/model.ts` 使用同一权威状态。`step`组合控制器与物理；`advancePhysical`只接受物理状态、执行器、物理参数、步长和路面。普通/漂移模式、期望速度、路线和目标侧滑不进入内核。
 
@@ -19,10 +19,10 @@ flowchart LR
 
 四轮胎痕按所属轴的实际接地点侧向/纵向滑速与摩擦功产生，不以质心速度或质心侧滑角为必要条件，能表达纯旋转及动力空转。低速无滑直行不留痕；容量与寿命有界。
 
-快照格式为 `vehicle-snapshot-3`，保存完整有效profile、模拟时间、轮速、力历史、加速度历史、控制历史和能量；恢复不按profile ID重新加载默认参数。拒绝旧版本、缺失状态和重复派生来源。自定义同ID参数与时间相关路面有精确续算测试。
+快照格式为 `vehicle-snapshot-4`，保存完整有效profile、模拟时间、轮速、力历史、加速度历史、控制历史和能量；恢复不按profile ID重新加载默认参数。拒绝旧版本、缺失状态和重复派生来源。自定义同ID参数与时间相关路面有精确续算测试。
 
 验证面板显示控制请求、实际前轮、转向包络、饱和、轮速、滑移与能量；普通页面用“最高目标速度”和“漂移辅助”表达期望。`/?test=1`仅在开发模式允许注入完整物理初态；普通输入不具有状态修改权限。
 
-检查入口：`npm run typecheck`、`npx vitest run`、`npm run build`、`npm run test:e2e`、`npm run physics:benchmark`、`npm run physics:audit`、`npm run validation:replay`。v3 结果记录在 `add-assembly-physics/acceptance.md`，核心与网页证据分别进入该变更 `evidence/vehicle-physics-3/core/` 和 `web/`，不覆盖驾驶验证变更的 v1/v2 历史证据。
+检查入口：`npm run typecheck`、`npx vitest run`、`npm run build`、`npm run test:e2e`、`npm run physics:benchmark`、`npm run physics:audit`、`npm run validation:replay`。v4 结果记录在 `add-assembly-physics/acceptance-v4.md`，核心与网页证据分别进入该变更 `evidence/vehicle-physics-4/core/` 和 `web/`，不覆盖驾驶验证变更的 v1/v2/v3 历史证据。
 
 真实手机驾驶尚未执行，核心及桌面浏览器通过不代表手机手感通过。两个变更保持进行中，不在本次自动归档或发布。

@@ -7,6 +7,7 @@ import { clamp, wrap } from "../../vehicle/physics/math";
 import type { Vec2 } from "../../vehicle/physics/math";
 import type { VehicleState } from "../../vehicle/physics/state";
 import { WEAPONS } from "./definitions";
+import { muzzleOffset } from "./presentation";
 import type { FireEvent, RecoilEvent, Target, TargetQuery, WeaponDefinition, WeaponOptions, WeaponRuntime, WeaponSystemState, WeaponVisual } from "./types";
 
 export const newWeaponRuntime = (): WeaponRuntime => ({ angle: 0, cooldown: 0, heat: 0, overheated: false, lockTarget: null, lockProgress: 0, lastEventSequence: -1, shots: 0 });
@@ -26,7 +27,7 @@ export function chooseTarget(targets: readonly Target[], origin: Vec2, rule: Wea
   const score = (t: Target) => rule === "threat" ? -t.threat : rule === "lowest-hp" ? t.hp : (t.position.x - origin.x) ** 2 + (t.position.y - origin.y) ** 2;
   return [...targets].sort((a, b) => score(a) - score(b) || a.id - b.id)[0];
 }
-export function stepWeapons(current: WeaponSystemState, vehicle: VehicleState, composition: Composition, query: TargetQuery, options: WeaponOptions = {}) {
+export function stepWeapons(current: WeaponSystemState, vehicle: Pick<VehicleState, "position" | "theta" | "delta">, composition: Composition, query: TargetQuery, options: WeaponOptions = {}) {
   const dt = 1 / 120, definitions = options.definitions ?? WEAPONS;
   const next: WeaponSystemState = { random: current.random, weapons: {}, ammo: { ...current.ammo }, energy: current.energy };
   const fire: FireEvent[] = [], recoil: RecoilEvent[] = [], visuals: WeaponVisual[] = [];
@@ -47,6 +48,7 @@ export function stepWeapons(current: WeaponSystemState, vehicle: VehicleState, c
     const spread = Math.max(0, attribute(definition.spread, "spread") * (component.performance < 1 ? 2 : 1));
     const transformed = worldMount(vehicle.position, vehicle.theta, mount.position, mount.angle);
     const { origin, baseAngle } = transformed;
+    if (definition.arc < Math.PI * 2 - 1e-10) state.angle = clamp(state.angle, -definition.arc / 2, definition.arc / 2);
     state.cooldown = Math.max(-dt, state.cooldown - dt);
     state.heat = Math.max(0, state.heat - definition.cooling * dt);
     if (state.overheated && state.heat <= definition.heatRecovery) state.overheated = false;
@@ -65,7 +67,7 @@ export function stepWeapons(current: WeaponSystemState, vehicle: VehicleState, c
       if (target) {
         if (state.lockTarget !== target.id) state.lockProgress = 0;
         state.lockTarget = target.id; state.lockProgress += dt;
-        state.angle = wrap(Math.atan2(target.position.y - origin.y, target.position.x - origin.x) - baseAngle);
+        state.angle = 0;
       } else {
         state.lockProgress = definition.lockLoss === "reset" ? 0 : Math.max(0, state.lockProgress - definition.lockDecay * dt);
       }
@@ -88,9 +90,10 @@ export function stepWeapons(current: WeaponSystemState, vehicle: VehicleState, c
         bullets.push({ angle: aimAngle + (random.value * 2 - 1) * spread, speed: definition.speed, damage,
           kind: definition.kind, aoe: definition.aoe, penetration: definition.penetration,
           lifetime: Math.min(definition.lifetime, range / Math.max(0.01, definition.speed)), burn: definition.burn,
-          homingTarget: definition.trigger === "guided" ? target?.id : undefined, turnRate: definition.trigger === "guided" ? 2 : undefined });
+          homingTarget: definition.trigger === "guided" ? target?.id : undefined, turnRate: definition.trigger === "guided" ? 2 : undefined, weaponId: definition.id });
       }
-      fire.push({ weaponInstanceId: mount.instanceId, weaponId: definition.id, origin: { ...origin }, angle: aimAngle, targetId: target?.id ?? null, bullets, tags: definition.tags });
+      const muzzle = muzzleOffset(definition.id);
+      fire.push({ weaponInstanceId: mount.instanceId, weaponId: definition.id, origin: { x: origin.x + Math.cos(aimAngle) * muzzle, y: origin.y + Math.sin(aimAngle) * muzzle }, angle: aimAngle, targetId: target?.id ?? null, bullets, tags: definition.tags });
       recoil.push({ weaponInstanceId: mount.instanceId, point: { ...origin }, impulse: { x: -Math.cos(aimAngle) * definition.recoil, y: -Math.sin(aimAngle) * definition.recoil } });
       state.cooldown += 1 / fireRate; state.heat += definition.heatPerShot; state.shots++;
       if (state.heat >= definition.heatMax) state.overheated = true;
@@ -99,7 +102,7 @@ export function stepWeapons(current: WeaponSystemState, vehicle: VehicleState, c
     }
     if (!trigger || state.cooldown < 0) state.cooldown = Math.max(0, state.cooldown);
     next.weapons[mount.instanceId] = state;
-    visuals.push({ instanceId: mount.instanceId, origin, baseAngle, aimAngle, arc: definition.arc, range,
+    visuals.push({ instanceId: mount.instanceId, weaponId: definition.id, origin, baseAngle, aimAngle, arc: definition.arc, range,
       clearCenter: { ...vehicle.position }, clearRadius: geometry(vehicle, composition.profile).conservativeRadius * 1.5,
       rimProgress: fireRate > 0 ? clamp(1 - state.cooldown * fireRate, 0, 1) : 0,
       heatProgress: clamp(state.heat / definition.heatMax, 0, 1), overheated: state.overheated,

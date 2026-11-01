@@ -17,7 +17,7 @@
   - **视觉净空规范**：射界投影要求车身半径 1.5 倍范围内保持完全净空，确保车体姿态、转向与漂移完全不被遮挡。
   - **状态外沿规范**：武器装填与过热状态数据暴露为外弧进度（Arc Rim Progress），用于在射界最外缘绘制装填光弧，不在车体上方堆砌进度条。
 - 新增目标选择规则（最近/最高威胁/血量最低等，可按武器配置）。
-- 新增后坐力对车体的外力输入（使用 `add-assembly-physics` 预留的外力接口）。
+- 新增后坐力对车体的外力输入（使用 `build-vehicle-physics` 定义的外力接口）。
 - 不含伤害结算、敌人 AI 与倍率（由 `add-combat-damage` 与 `add-roguelike-modifiers` 负责）。
 
 ## Capabilities
@@ -32,4 +32,6 @@
 
 ## Impact
 
-新增无 DOM 的武器模块（如 `src/combat/weapons/`）与单测，依赖 `add-vehicle-loadout-grid` 的挂点与朝向、`add-assembly-physics` 的外力接口。战斗在固定步长内与物理同步推进，以保证 PVP 时的可复现性。
+本次细化补齐九种武器的独立外形、枪口与特效数据；战斗显示真实武器及有限转速炮台，并向玩家和敌人统一输出开火、弹道、命中展示事件。
+
+新增无 DOM 的武器模块（如 `src/combat/weapons/`）与单测，依赖 `add-vehicle-loadout-grid` 的挂点与朝向、`build-vehicle-physics` 的外力接口。战斗在固定步长内与物理同步推进，以保证 PVP 时的可复现性。

@@ -1,0 +1,30 @@
+{
+  "benchmarkVersion": "combat-roster-benchmark-1",
+  "seed": 123,
+  "iterations": 600,
+  "warmup": 120,
+  "enemyCount": 128,
+  "bulletCapacity": 2048,
+  "archetypes": [
+    "rifleman",
+    "rocketeer",
+    "raider-pickup",
+    "armored-car",
+    "bunker",
+    "rocket-tower",
+    "iron-warlord"
+  ],
+  "peakBullets": 2048,
+  "peakEffects": 256,
+  "peakPresentation": 512,
+  "p50Ms": 1.61749999999995,
+  "p95Ms": 2.8166000000001077,
+  "maxMs": 6.0150000000001,
+  "enemyShots": 1564,
+  "aggregated": 1922,
+  "targetP95Ms": 4,
+  "withinEngineeringTarget": true,
+  "mobileVerified": false,
+  "environment": "Node.js v25.9.0 / win32 / x64",
+  "measured": "固定步模拟、128个真实敌方武器状态及展示事件消费；不含Canvas绘制和预填弹丸开销"
+}

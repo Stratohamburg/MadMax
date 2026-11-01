@@ -21,14 +21,17 @@ import type { Intent, PhysicsState } from "./vehicle/model";
 
 if (new URLSearchParams(location.search).has("combat-benchmark")) void import("./combat/benchmark-page");
 
-if (new URLSearchParams(location.search).get("mode") === "pve") {
+const route = new URLSearchParams(location.search);
+if (route.get("mode") === "pve") {
   void import("./persistence/bootstrap").then(module => module.startGame());
+} else if (route.get("mode") === "hub" || (!route.has("mode") && !route.has("test") && !route.has("validate") && !route.has("combat-benchmark"))) {
+  void import("./persistence/bootstrap").then(module => module.startGame("hub"));
 } else {
 document.querySelector<HTMLDivElement>("#app")!.innerHTML = `
   <section id="game-view" aria-label="驾驶验证场">
     <canvas id="world" aria-label="车辆与练习场地"></canvas>
     <header class="topbar"><div class="brand">MADMAX <small>驾驶验证场 · 01</small></div>
-    <div class="actions"><a class="button-link" href="?mode=pve">出击 / 车库</a><button id="help-button" aria-label="操作说明">?</button><button id="reset">重置 ↺</button></div></header>
+    <div class="actions"><a class="button-link" href="?">返回营地</a><button id="help-button" aria-label="操作说明">?</button><button id="reset">重置 ↺</button></div></header>
     <div class="hud"><div><strong id="speed">0.0</strong><span>世界单位 / 秒</span></div><div id="mode">普通驾驶</div></div>
     <div class="scene-caption">自由练习 / 固定方向跟随</div>
   </section>

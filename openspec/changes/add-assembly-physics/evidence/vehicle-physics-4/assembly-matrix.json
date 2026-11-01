@@ -1,0 +1,6522 @@
+{
+  "modelVersion": "vehicle-physics-4",
+  "controllerVersion": "route-assist-3",
+  "implementationHash": "0f3085cd694648d9e7f009ea385b00cf41b020a87764696bc7f7fb847ad12450",
+  "sources": [
+    "scripts/assembly-physics-audit.ts",
+    "src/loadout/chassis.ts",
+    "src/loadout/compose.ts",
+    "src/loadout/index.ts",
+    "src/loadout/model.ts",
+    "src/loadout/parts.ts",
+    "src/loadout/presets.ts",
+    "src/loadout/resources.ts",
+    "src/loadout/serialization.ts",
+    "src/loadout/types.ts",
+    "src/stats/modifiers.ts",
+    "src/vehicle/assembly-benchmarks.ts",
+    "src/vehicle/assembly-drive.ts",
+    "src/vehicle/physics/assist.ts",
+    "src/vehicle/physics/benchmarks.ts",
+    "src/vehicle/physics/body-contact.ts",
+    "src/vehicle/physics/config.ts",
+    "src/vehicle/physics/dynamics.ts",
+    "src/vehicle/physics/geometry.ts",
+    "src/vehicle/physics/index.ts",
+    "src/vehicle/physics/loads.ts",
+    "src/vehicle/physics/math.ts",
+    "src/vehicle/physics/mechanics.ts",
+    "src/vehicle/physics/physical.ts",
+    "src/vehicle/physics/powertrain.ts",
+    "src/vehicle/physics/profiles.ts",
+    "src/vehicle/physics/reconfigure.ts",
+    "src/vehicle/physics/state.ts",
+    "src/vehicle/physics/steering.ts",
+    "src/vehicle/physics/surfaces.ts",
+    "src/vehicle/physics/tires.ts"
+  ],
+  "passed": true,
+  "configurations": 14,
+  "scenarios": 378,
+  "reports": [
+    {
+      "name": "light-pickup:stock",
+      "loadout": {
+        "version": "vehicle-loadout-1",
+        "chassisId": "light-pickup",
+        "parts": [
+          {
+            "instanceId": "stock:light-pickup:0",
+            "partId": "driver-seat",
+            "layer": "inner",
+            "x": 5,
+            "y": 0,
+            "rotation": 0,
+            "facing": 0
+          },
+          {
+            "instanceId": "stock:light-pickup:1",
+            "partId": "engine-l4",
+            "layer": "inner",
+            "x": -5,
+            "y": -2,
+            "rotation": 0,
+            "facing": 0
+          },
+          {
+            "instanceId": "stock:light-pickup:2",
+            "partId": "gearbox",
+            "layer": "inner",
+            "x": -5,
+            "y": 0,
+            "rotation": 0,
+            "facing": 0
+          },
+          {
+            "instanceId": "stock:light-pickup:3",
+            "partId": "fuel-tank",
+            "layer": "inner",
+            "x": -5,
+            "y": 1,
+            "rotation": 0,
+            "facing": 0
+          },
+          {
+            "instanceId": "stock:light-pickup:4",
+            "partId": "battery",
+            "layer": "inner",
+            "x": -5,
+            "y": 2,
+            "rotation": 0,
+            "facing": 0
+          },
+          {
+            "instanceId": "stock:light-pickup:5",
+            "partId": "ammo-box",
+            "layer": "inner",
+            "x": -4,
+            "y": 1,
+            "rotation": 0,
+            "facing": 0
+          },
+          {
+            "instanceId": "stock:light-pickup:6",
+            "partId": "machine-gun",
+            "layer": "outer",
+            "x": -6,
+            "y": -3,
+            "rotation": 0,
+            "facing": 0
+          }
+        ]
+      },
+      "parameters": {
+        "modelVersion": "vehicle-physics-4",
+        "profileSchemaVersion": "vehicle-profile-4",
+        "profileId": "light-pickup",
+        "profileRevision": "4",
+        "label": "轻型皮卡",
+        "category": "light-pickup",
+        "geometry": {
+          "wheelbase": 0.924,
+          "cgFromRear": 0.3875095492742552,
+          "cgLateral": -0.01129411764705882,
+          "width": 0.6041854020083571,
+          "track": 0.5112338016064275,
+          "frontOverhang": 0.198,
+          "rearOverhang": 0.198,
+          "heightCG": 0.17
+        },
+        "mass": 1.7000000000000002,
+        "kYaw": 0.2815410777825958,
+        "power": {
+          "driveForce": 10.86336,
+          "brakeForce": 9.936000000000002,
+          "accelerationCurve": 2,
+          "maxSpeed": 11,
+          "driveFront": 0,
+          "brakeFront": 0.6,
+          "rolling": 0.012,
+          "aero": 0
+        },
+        "tires": {
+          "front": {
+            "stiffness": 89.77499999999999,
+            "muX": 1.029,
+            "muY": 1.029,
+            "slide": 0.82,
+            "nominalLoad": 6.6217500000000005,
+            "loadSensitivity": 0,
+            "stiffnessExponent": 1,
+            "adaptation": {
+              "hard": 1,
+              "loose": 0.9,
+              "wet": 0.85
+            }
+          },
+          "rear": {
+            "stiffness": 97.47,
+            "muX": 1.029,
+            "muY": 1.029,
+            "slide": 0.82,
+            "nominalLoad": 6.6217500000000005,
+            "loadSensitivity": 0,
+            "stiffnessExponent": 1,
+            "adaptation": {
+              "hard": 1,
+              "loose": 0.9,
+              "wet": 0.85
+            }
+          }
+        },
+        "steering": {
+          "maxAngle": 0.5934119456780721,
+          "response": 0.075,
+          "rate": 4.1887902047863905
+        },
+        "drift": {
+          "brakeBase": 0.4,
+          "brakeGain": 3,
+          "maxBeta": 0.20943951023931953,
+          "minSpeed": 1.5,
+          "fullSpeed": 4,
+          "demandRate": 0.55,
+          "enterTime": 0.3,
+          "exitTime": 0.22,
+          "betaRate": 0.7853981633974483
+        },
+        "assist": {
+          "routeGain": 3.337119062359573,
+          "betaGain": 1.4683323874382121,
+          "yawGain": 0.33561883141444854,
+          "maxRouteRate": 2,
+          "gripReserve": 0.55,
+          "referenceTime": 0.1
+        },
+        "wheels": {
+          "radius": 0.12,
+          "inertia": 0.000675
+        },
+        "acceptance": {
+          "normalWindow": 3.5,
+          "recoveryWindow": 4.5,
+          "recoverySpeed": 0.65,
+          "recoveryHeading": 0.4363323129985824,
+          "recoveryYaw": 0.6,
+          "recoverySteer": 0.2617993877991494,
+          "recoveryBlend": 1,
+          "target": "中等灵活，后轴可感知且甩尾可控"
+        }
+      },
+      "engine": {
+        "idleRpm": 800,
+        "redlineRpm": 7000,
+        "maxPower": 170,
+        "maxTorque": 240,
+        "torqueCurve": [
+          [
+            800,
+            0.5
+          ],
+          [
+            2500,
+            0.85
+          ],
+          [
+            4500,
+            1
+          ],
+          [
+            7000,
+            0.65
+          ]
+        ],
+        "fuelConsumption": 0.012
+      },
+      "gearbox": {
+        "ratios": [
+          3.6,
+          2.3,
+          1.55,
+          1.15,
+          0.9,
+          0.72
+        ],
+        "finalDrive": 4.1,
+        "shiftTime": 0.22,
+        "efficiency": 0.92,
+        "maxInputTorque": 400
+      },
+      "centerOfMass": {
+        "x": -0.10394117647058825,
+        "y": -0.01129411764705882
+      },
+      "matrix": [
+        {
+          "family": "hard",
+          "fraction": 0.2,
+          "scenario": "side",
+          "peakSlip": 0.22180094625526614,
+          "peakYaw": 1.450453109035547,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "hard",
+          "fraction": 0.2,
+          "scenario": "behind",
+          "peakSlip": 0.22180094625526614,
+          "peakYaw": 1.4708566314937133,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "hard",
+          "fraction": 0.2,
+          "scenario": "switch",
+          "peakSlip": 0.22474334123676398,
+          "peakYaw": 1.4513187708839115,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "hard",
+          "fraction": 0.5,
+          "scenario": "side",
+          "peakSlip": 0.025497751714983363,
+          "peakYaw": 0.9198008486946176,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "hard",
+          "fraction": 0.5,
+          "scenario": "behind",
+          "peakSlip": 0.025497751714983363,
+          "peakYaw": 0.9198008486946176,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "hard",
+          "fraction": 0.5,
+          "scenario": "switch",
+          "peakSlip": 0.02868083436430119,
+          "peakYaw": 0.9284946929831868,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "hard",
+          "fraction": 1,
+          "scenario": "side",
+          "peakSlip": 0.021689258397121547,
+          "peakYaw": 0.45496787087752955,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "hard",
+          "fraction": 1,
+          "scenario": "behind",
+          "peakSlip": 0.02114762029043882,
+          "peakYaw": 0.45496787087752955,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "hard",
+          "fraction": 1,
+          "scenario": "switch",
+          "peakSlip": 0.023197281328088234,
+          "peakYaw": 0.44422126710662263,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "loose",
+          "fraction": 0.2,
+          "scenario": "side",
+          "peakSlip": 0.22338079356133134,
+          "peakYaw": 1.4031921018163251,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "loose",
+          "fraction": 0.2,
+          "scenario": "behind",
+          "peakSlip": 0.22338079356133134,
+          "peakYaw": 1.417866661993245,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "loose",
+          "fraction": 0.2,
+          "scenario": "switch",
+          "peakSlip": 0.22624675179826081,
+          "peakYaw": 1.4033081802378873,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "loose",
+          "fraction": 0.5,
+          "scenario": "side",
+          "peakSlip": 0.01812346196797586,
+          "peakYaw": 0.6497691388270265,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "loose",
+          "fraction": 0.5,
+          "scenario": "behind",
+          "peakSlip": 0.01812346196797586,
+          "peakYaw": 0.6497691388270265,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "loose",
+          "fraction": 0.5,
+          "scenario": "switch",
+          "peakSlip": 0.02077821631784582,
+          "peakYaw": 0.6596938739208763,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "loose",
+          "fraction": 1,
+          "scenario": "side",
+          "peakSlip": 0.015212576115718914,
+          "peakYaw": 0.32120335637525826,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "loose",
+          "fraction": 1,
+          "scenario": "behind",
+          "peakSlip": 0.014812987563267654,
+          "peakYaw": 0.32120335751113804,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "loose",
+          "fraction": 1,
+          "scenario": "switch",
+          "peakSlip": 0.016212132585884553,
+          "peakYaw": 0.3116946559041622,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "wet",
+          "fraction": 0.2,
+          "scenario": "side",
+          "peakSlip": 0.16698648265850297,
+          "peakYaw": 1.0973196484282557,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "wet",
+          "fraction": 0.2,
+          "scenario": "behind",
+          "peakSlip": 0.16698648265850297,
+          "peakYaw": 1.0973196484282557,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "wet",
+          "fraction": 0.2,
+          "scenario": "switch",
+          "peakSlip": 0.1688630643541598,
+          "peakYaw": 1.1066211222525035,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "wet",
+          "fraction": 0.5,
+          "scenario": "side",
+          "peakSlip": 0.011311354931700041,
+          "peakYaw": 0.40607720232009215,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "wet",
+          "fraction": 0.5,
+          "scenario": "behind",
+          "peakSlip": 0.011311354931700041,
+          "peakYaw": 0.40607720232009215,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "wet",
+          "fraction": 0.5,
+          "scenario": "switch",
+          "peakSlip": 0.01250415862004825,
+          "peakYaw": 0.407719403873529,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "wet",
+          "fraction": 1,
+          "scenario": "side",
+          "peakSlip": 0.009492636763031692,
+          "peakYaw": 0.20055520171764796,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "wet",
+          "fraction": 1,
+          "scenario": "behind",
+          "peakSlip": 0.009492636763031692,
+          "peakYaw": 0.20055520171764796,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "wet",
+          "fraction": 1,
+          "scenario": "switch",
+          "peakSlip": 0.010311238883859403,
+          "peakYaw": 0.19647207003455966,
+          "finite": true,
+          "passed": true
+        }
+      ],
+      "passed": true
+    },
+    {
+      "name": "heavy-pickup:stock",
+      "loadout": {
+        "version": "vehicle-loadout-1",
+        "chassisId": "heavy-pickup",
+        "parts": [
+          {
+            "instanceId": "stock:heavy-pickup:0",
+            "partId": "driver-seat",
+            "layer": "inner",
+            "x": 5,
+            "y": 0,
+            "rotation": 0,
+            "facing": 0
+          },
+          {
+            "instanceId": "stock:heavy-pickup:1",
+            "partId": "engine-diesel",
+            "layer": "inner",
+            "x": -5,
+            "y": -2,
+            "rotation": 0,
+            "facing": 0
+          },
+          {
+            "instanceId": "stock:heavy-pickup:2",
+            "partId": "gearbox-heavy",
+            "layer": "inner",
+            "x": -5,
+            "y": 0,
+            "rotation": 0,
+            "facing": 0
+          },
+          {
+            "instanceId": "stock:heavy-pickup:3",
+            "partId": "fuel-tank",
+            "layer": "inner",
+            "x": -5,
+            "y": 1,
+            "rotation": 0,
+            "facing": 0
+          },
+          {
+            "instanceId": "stock:heavy-pickup:4",
+            "partId": "battery",
+            "layer": "inner",
+            "x": -5,
+            "y": 2,
+            "rotation": 0,
+            "facing": 0
+          },
+          {
+            "instanceId": "stock:heavy-pickup:5",
+            "partId": "ammo-box",
+            "layer": "inner",
+            "x": -4,
+            "y": 1,
+            "rotation": 0,
+            "facing": 0
+          },
+          {
+            "instanceId": "stock:heavy-pickup:6",
+            "partId": "machine-gun",
+            "layer": "outer",
+            "x": -6,
+            "y": -3,
+            "rotation": 0,
+            "facing": 0
+          }
+        ]
+      },
+      "parameters": {
+        "modelVersion": "vehicle-physics-4",
+        "profileSchemaVersion": "vehicle-profile-4",
+        "profileId": "heavy-pickup",
+        "profileRevision": "4",
+        "label": "重型皮卡",
+        "category": "heavy-pickup",
+        "geometry": {
+          "wheelbase": 0.9911999999999999,
+          "cgFromRear": 0.37497967595786663,
+          "cgLateral": -0.02068965517241379,
+          "width": 0.7535515908018509,
+          "track": 0.6376205767164043,
+          "frontOverhang": 0.21239999999999998,
+          "rearOverhang": 0.21239999999999998,
+          "heightCG": 0.2
+        },
+        "mass": 2.7550000000000003,
+        "kYaw": 0.29380910246411523,
+        "power": {
+          "driveForce": 149.76,
+          "brakeForce": 12.096,
+          "accelerationCurve": 2,
+          "maxSpeed": 12.217304763960305,
+          "driveFront": 0.4,
+          "brakeFront": 0.6,
+          "rolling": 0.012,
+          "aero": 0
+        },
+        "tires": {
+          "front": {
+            "stiffness": 147,
+            "muX": 1.0710000000000002,
+            "muY": 1.0710000000000002,
+            "slide": 0.82,
+            "nominalLoad": 10.300500000000001,
+            "loadSensitivity": 0,
+            "stiffnessExponent": 1,
+            "adaptation": {
+              "hard": 1,
+              "loose": 0.97,
+              "wet": 0.85
+            }
+          },
+          "rear": {
+            "stiffness": 159.6,
+            "muX": 1.0710000000000002,
+            "muY": 1.0710000000000002,
+            "slide": 0.82,
+            "nominalLoad": 10.300500000000001,
+            "loadSensitivity": 0,
+            "stiffnessExponent": 1,
+            "adaptation": {
+              "hard": 1,
+              "loose": 0.97,
+              "wet": 0.85
+            }
+          }
+        },
+        "steering": {
+          "maxAngle": 0.5934119456780721,
+          "response": 0.12,
+          "rate": 2.9670597283903604
+        },
+        "drift": {
+          "brakeBase": 0.4,
+          "brakeGain": 3,
+          "maxBeta": 0.13962634015954636,
+          "minSpeed": 1.5,
+          "fullSpeed": 4,
+          "demandRate": 0.55,
+          "enterTime": 0.3,
+          "exitTime": 0.22,
+          "betaRate": 0.7853981633974483
+        },
+        "assist": {
+          "routeGain": 3.222011162644132,
+          "betaGain": 1.52078926876803,
+          "yawGain": 0.3476089757184069,
+          "maxRouteRate": 2,
+          "gripReserve": 0.55,
+          "referenceTime": 0.1
+        },
+        "wheels": {
+          "radius": 0.12,
+          "inertia": 0.0010500000000000002
+        },
+        "acceptance": {
+          "normalWindow": 4,
+          "recoveryWindow": 5,
+          "recoverySpeed": 0.5,
+          "recoveryHeading": 0.24434609527920614,
+          "recoveryYaw": 0.276172385369497,
+          "recoverySteer": 0.17453292519943295,
+          "recoveryBlend": 1,
+          "target": "较慢响应、四驱牵引稳定、较小侧滑包络"
+        }
+      },
+      "engine": {
+        "idleRpm": 600,
+        "redlineRpm": 3500,
+        "maxPower": 260,
+        "maxTorque": 1300,
+        "torqueCurve": [
+          [
+            600,
+            0.75
+          ],
+          [
+            1200,
+            1
+          ],
+          [
+            2200,
+            0.95
+          ],
+          [
+            3500,
+            0.55
+          ]
+        ],
+        "fuelConsumption": 0.02
+      },
+      "gearbox": {
+        "ratios": [
+          8,
+          5.4,
+          3.7,
+          2.5,
+          1.8,
+          1.3,
+          1,
+          0.75
+        ],
+        "finalDrive": 4.8,
+        "shiftTime": 0.35,
+        "efficiency": 0.9,
+        "maxInputTorque": 1600
+      },
+      "centerOfMass": {
+        "x": -0.12392014519056259,
+        "y": -0.02068965517241379
+      },
+      "matrix": [
+        {
+          "family": "hard",
+          "fraction": 0.2,
+          "scenario": "side",
+          "peakSlip": 0.2155206776962254,
+          "peakYaw": 1.3874060644481088,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "hard",
+          "fraction": 0.2,
+          "scenario": "behind",
+          "peakSlip": 0.21648768386084738,
+          "peakYaw": 1.4895771366635948,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "hard",
+          "fraction": 0.2,
+          "scenario": "switch",
+          "peakSlip": 0.21486933528997565,
+          "peakYaw": 1.4080233953330483,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "hard",
+          "fraction": 0.5,
+          "scenario": "side",
+          "peakSlip": 0.021602463530570493,
+          "peakYaw": 0.8978795287260469,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "hard",
+          "fraction": 0.5,
+          "scenario": "behind",
+          "peakSlip": 0.023065899838895062,
+          "peakYaw": 0.9072027329777359,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "hard",
+          "fraction": 0.5,
+          "scenario": "switch",
+          "peakSlip": 0.023777621011313865,
+          "peakYaw": 0.9024744260898799,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "hard",
+          "fraction": 1,
+          "scenario": "side",
+          "peakSlip": 0.022455381752729098,
+          "peakYaw": 0.44481419506308056,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "hard",
+          "fraction": 1,
+          "scenario": "behind",
+          "peakSlip": 0.022455381752729098,
+          "peakYaw": 0.44481419506308056,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "hard",
+          "fraction": 1,
+          "scenario": "switch",
+          "peakSlip": 0.02305315508678696,
+          "peakYaw": 0.4161344108604638,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "loose",
+          "fraction": 0.2,
+          "scenario": "side",
+          "peakSlip": 0.21849663846158895,
+          "peakYaw": 1.3406339897260877,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "loose",
+          "fraction": 0.2,
+          "scenario": "behind",
+          "peakSlip": 0.21959028099175315,
+          "peakYaw": 1.441524171992458,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "loose",
+          "fraction": 0.2,
+          "scenario": "switch",
+          "peakSlip": 0.21609499028025125,
+          "peakYaw": 1.3636220699097858,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "loose",
+          "fraction": 0.5,
+          "scenario": "side",
+          "peakSlip": 0.019562671601088155,
+          "peakYaw": 0.7003711245355285,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "loose",
+          "fraction": 0.5,
+          "scenario": "behind",
+          "peakSlip": 0.019562671601088155,
+          "peakYaw": 0.7003711245355285,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "loose",
+          "fraction": 0.5,
+          "scenario": "switch",
+          "peakSlip": 0.02002385234331455,
+          "peakYaw": 0.6987330679359313,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "loose",
+          "fraction": 1,
+          "scenario": "side",
+          "peakSlip": 0.017181980938354435,
+          "peakYaw": 0.34093171951452017,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "loose",
+          "fraction": 1,
+          "scenario": "behind",
+          "peakSlip": 0.016939309136339453,
+          "peakYaw": 0.34093171951452017,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "loose",
+          "fraction": 1,
+          "scenario": "switch",
+          "peakSlip": 0.017516967395148533,
+          "peakYaw": 0.31881885264467846,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "wet",
+          "fraction": 0.2,
+          "scenario": "side",
+          "peakSlip": 0.15431727530522388,
+          "peakYaw": 1.0332872822491856,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "wet",
+          "fraction": 0.2,
+          "scenario": "behind",
+          "peakSlip": 0.15431727530522388,
+          "peakYaw": 1.0332872822491856,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "wet",
+          "fraction": 0.2,
+          "scenario": "switch",
+          "peakSlip": 0.14701698575433927,
+          "peakYaw": 1.0155533341524516,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "wet",
+          "fraction": 0.5,
+          "scenario": "side",
+          "peakSlip": 0.008352713546605382,
+          "peakYaw": 0.38939373507152863,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "wet",
+          "fraction": 0.5,
+          "scenario": "behind",
+          "peakSlip": 0.008352713546605382,
+          "peakYaw": 0.38939373507152863,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "wet",
+          "fraction": 0.5,
+          "scenario": "switch",
+          "peakSlip": 0.009692209460048368,
+          "peakYaw": 0.39288018368640293,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "wet",
+          "fraction": 1,
+          "scenario": "side",
+          "peakSlip": 0.010063419004000318,
+          "peakYaw": 0.1926069412951005,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "wet",
+          "fraction": 1,
+          "scenario": "behind",
+          "peakSlip": 0.010063419004000318,
+          "peakYaw": 0.1926069412951005,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "wet",
+          "fraction": 1,
+          "scenario": "switch",
+          "peakSlip": 0.010197580896779567,
+          "peakYaw": 0.18383112892864725,
+          "finite": true,
+          "passed": true
+        }
+      ],
+      "passed": true
+    },
+    {
+      "name": "van:stock",
+      "loadout": {
+        "version": "vehicle-loadout-1",
+        "chassisId": "van",
+        "parts": [
+          {
+            "instanceId": "stock:van:0",
+            "partId": "driver-seat",
+            "layer": "inner",
+            "x": 5,
+            "y": 0,
+            "rotation": 0,
+            "facing": 0
+          },
+          {
+            "instanceId": "stock:van:1",
+            "partId": "engine-l4",
+            "layer": "inner",
+            "x": -5,
+            "y": -2,
+            "rotation": 0,
+            "facing": 0
+          },
+          {
+            "instanceId": "stock:van:2",
+            "partId": "gearbox",
+            "layer": "inner",
+            "x": -5,
+            "y": 0,
+            "rotation": 0,
+            "facing": 0
+          },
+          {
+            "instanceId": "stock:van:3",
+            "partId": "fuel-tank",
+            "layer": "inner",
+            "x": -5,
+            "y": 1,
+            "rotation": 0,
+            "facing": 0
+          },
+          {
+            "instanceId": "stock:van:4",
+            "partId": "battery",
+            "layer": "inner",
+            "x": -5,
+            "y": 2,
+            "rotation": 0,
+            "facing": 0
+          },
+          {
+            "instanceId": "stock:van:5",
+            "partId": "ammo-box",
+            "layer": "inner",
+            "x": -4,
+            "y": 1,
+            "rotation": 0,
+            "facing": 0
+          },
+          {
+            "instanceId": "stock:van:6",
+            "partId": "machine-gun",
+            "layer": "outer",
+            "x": -6,
+            "y": -3,
+            "rotation": 0,
+            "facing": 0
+          }
+        ]
+      },
+      "parameters": {
+        "modelVersion": "vehicle-physics-4",
+        "profileSchemaVersion": "vehicle-profile-4",
+        "profileId": "van",
+        "profileRevision": "4",
+        "label": "van",
+        "category": "van",
+        "geometry": {
+          "wheelbase": 0.9827999999999999,
+          "cgFromRear": 0.40779875395260007,
+          "cgLateral": -0.009846153846153845,
+          "width": 0.657753753315023,
+          "track": 0.556560868088442,
+          "frontOverhang": 0.21059999999999998,
+          "rearOverhang": 0.21059999999999998,
+          "heightCG": 0.2
+        },
+        "mass": 1.9500000000000002,
+        "kYaw": 0.2976862202583507,
+        "power": {
+          "driveForce": 10.86336,
+          "brakeForce": 10.240000000000002,
+          "accelerationCurve": 2,
+          "maxSpeed": 10,
+          "driveFront": 1,
+          "brakeFront": 0.6,
+          "rolling": 0.012,
+          "aero": 0
+        },
+        "tires": {
+          "front": {
+            "stiffness": 88.70400000000002,
+            "muX": 1.008,
+            "muY": 1.008,
+            "slide": 0.82,
+            "nominalLoad": 7.848000000000001,
+            "loadSensitivity": 0,
+            "stiffnessExponent": 1,
+            "adaptation": {
+              "hard": 1,
+              "loose": 0.7,
+              "wet": 0.85
+            }
+          },
+          "rear": {
+            "stiffness": 107.00800000000001,
+            "muX": 1.008,
+            "muY": 1.008,
+            "slide": 0.82,
+            "nominalLoad": 7.848000000000001,
+            "loadSensitivity": 0,
+            "stiffnessExponent": 1,
+            "adaptation": {
+              "hard": 1,
+              "loose": 0.7,
+              "wet": 0.85
+            }
+          }
+        },
+        "steering": {
+          "maxAngle": 0.5934119456780721,
+          "response": 0.11,
+          "rate": 3.141592653589793
+        },
+        "drift": {
+          "brakeBase": 0.4,
+          "brakeGain": 3,
+          "maxBeta": 0.12217304763960307,
+          "minSpeed": 1.5,
+          "fullSpeed": 4,
+          "demandRate": 0.55,
+          "enterTime": 0.3,
+          "exitTime": 0.22,
+          "betaRate": 0.7853981633974483
+        },
+        "assist": {
+          "routeGain": 3.2357511446471703,
+          "betaGain": 1.5143315356948752,
+          "yawGain": 0.3461329224445429,
+          "maxRouteRate": 2,
+          "gripReserve": 0.55,
+          "referenceTime": 0.1
+        },
+        "wheels": {
+          "radius": 0.12,
+          "inertia": 0.0008
+        },
+        "acceptance": {
+          "normalWindow": 4,
+          "recoveryWindow": 5,
+          "recoverySpeed": 0.65,
+          "recoveryHeading": 0.4363323129985824,
+          "recoveryYaw": 0.6,
+          "recoverySteer": 0.2617993877991494,
+          "recoveryBlend": 1,
+          "target": "前驱、温和响应与偏欠转"
+        }
+      },
+      "engine": {
+        "idleRpm": 800,
+        "redlineRpm": 7000,
+        "maxPower": 170,
+        "maxTorque": 240,
+        "torqueCurve": [
+          [
+            800,
+            0.5
+          ],
+          [
+            2500,
+            0.85
+          ],
+          [
+            4500,
+            1
+          ],
+          [
+            7000,
+            0.65
+          ]
+        ],
+        "fuelConsumption": 0.012
+      },
+      "gearbox": {
+        "ratios": [
+          3.6,
+          2.3,
+          1.55,
+          1.15,
+          0.9,
+          0.72
+        ],
+        "finalDrive": 4.1,
+        "shiftTime": 0.22,
+        "efficiency": 0.92,
+        "maxInputTorque": 400
+      },
+      "centerOfMass": {
+        "x": -0.09061538461538463,
+        "y": -0.009846153846153845
+      },
+      "matrix": [
+        {
+          "family": "hard",
+          "fraction": 0.2,
+          "scenario": "side",
+          "peakSlip": 0.23905449516488655,
+          "peakYaw": 1.2601793877777592,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "hard",
+          "fraction": 0.2,
+          "scenario": "behind",
+          "peakSlip": 0.23905449516488655,
+          "peakYaw": 1.2776744710144705,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "hard",
+          "fraction": 0.2,
+          "scenario": "switch",
+          "peakSlip": 0.2395283023063487,
+          "peakYaw": 1.23694666139814,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "hard",
+          "fraction": 0.5,
+          "scenario": "side",
+          "peakSlip": 0.04073773578482526,
+          "peakYaw": 0.9994520095932319,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "hard",
+          "fraction": 0.5,
+          "scenario": "behind",
+          "peakSlip": 0.04073773578482526,
+          "peakYaw": 0.9994520095932319,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "hard",
+          "fraction": 0.5,
+          "scenario": "switch",
+          "peakSlip": 0.04278296413691568,
+          "peakYaw": 1.001022742914648,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "hard",
+          "fraction": 1,
+          "scenario": "side",
+          "peakSlip": 0.019069951778013964,
+          "peakYaw": 0.4733630528912037,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "hard",
+          "fraction": 1,
+          "scenario": "behind",
+          "peakSlip": 0.017750430260846554,
+          "peakYaw": 0.4733630528912037,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "hard",
+          "fraction": 1,
+          "scenario": "switch",
+          "peakSlip": 0.0209348985869792,
+          "peakYaw": 0.45708563037059097,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "loose",
+          "fraction": 0.2,
+          "scenario": "side",
+          "peakSlip": 0.24116140251212526,
+          "peakYaw": 1.2256156850143678,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "loose",
+          "fraction": 0.2,
+          "scenario": "behind",
+          "peakSlip": 0.24116140251212526,
+          "peakYaw": 1.2393274909012038,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "loose",
+          "fraction": 0.2,
+          "scenario": "switch",
+          "peakSlip": 0.24040540814058095,
+          "peakYaw": 1.1954202114964203,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "loose",
+          "fraction": 0.5,
+          "scenario": "side",
+          "peakSlip": 0.02253043913356781,
+          "peakYaw": 0.550375826665089,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "loose",
+          "fraction": 0.5,
+          "scenario": "behind",
+          "peakSlip": 0.02253043913356781,
+          "peakYaw": 0.550375826665089,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "loose",
+          "fraction": 0.5,
+          "scenario": "switch",
+          "peakSlip": 0.02395134622780301,
+          "peakYaw": 0.5601510478058881,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "loose",
+          "fraction": 1,
+          "scenario": "side",
+          "peakSlip": 0.009703027564545108,
+          "peakYaw": 0.26054302988267675,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "loose",
+          "fraction": 1,
+          "scenario": "behind",
+          "peakSlip": 0.009703027564545108,
+          "peakYaw": 0.26054302988267675,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "loose",
+          "fraction": 1,
+          "scenario": "switch",
+          "peakSlip": 0.011460346434838384,
+          "peakYaw": 0.25131662573209007,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "wet",
+          "fraction": 0.2,
+          "scenario": "side",
+          "peakSlip": 0.2295955893498971,
+          "peakYaw": 1.178265939954431,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "wet",
+          "fraction": 0.2,
+          "scenario": "behind",
+          "peakSlip": 0.2295955893498971,
+          "peakYaw": 1.178265939954431,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "wet",
+          "fraction": 0.2,
+          "scenario": "switch",
+          "peakSlip": 0.22648661079481516,
+          "peakYaw": 1.1483458689612482,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "wet",
+          "fraction": 0.5,
+          "scenario": "side",
+          "peakSlip": 0.01777837793540815,
+          "peakYaw": 0.44338600724391813,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "wet",
+          "fraction": 0.5,
+          "scenario": "behind",
+          "peakSlip": 0.01777837793540815,
+          "peakYaw": 0.44338600724391813,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "wet",
+          "fraction": 0.5,
+          "scenario": "switch",
+          "peakSlip": 0.018086173340869247,
+          "peakYaw": 0.44391229479538613,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "wet",
+          "fraction": 1,
+          "scenario": "side",
+          "peakSlip": 0.007993391370880508,
+          "peakYaw": 0.20831049770282684,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "wet",
+          "fraction": 1,
+          "scenario": "behind",
+          "peakSlip": 0.007993391370880508,
+          "peakYaw": 0.20831049770282684,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "wet",
+          "fraction": 1,
+          "scenario": "switch",
+          "peakSlip": 0.00930484230545918,
+          "peakYaw": 0.202095822814849,
+          "finite": true,
+          "passed": true
+        }
+      ],
+      "passed": true
+    },
+    {
+      "name": "box-truck:stock",
+      "loadout": {
+        "version": "vehicle-loadout-1",
+        "chassisId": "box-truck",
+        "parts": [
+          {
+            "instanceId": "stock:box-truck:0",
+            "partId": "driver-seat",
+            "layer": "inner",
+            "x": 7,
+            "y": 0,
+            "rotation": 0,
+            "facing": 0
+          },
+          {
+            "instanceId": "stock:box-truck:1",
+            "partId": "engine-diesel",
+            "layer": "inner",
+            "x": -7,
+            "y": -3,
+            "rotation": 0,
+            "facing": 0
+          },
+          {
+            "instanceId": "stock:box-truck:2",
+            "partId": "gearbox-heavy",
+            "layer": "inner",
+            "x": -7,
+            "y": -1,
+            "rotation": 0,
+            "facing": 0
+          },
+          {
+            "instanceId": "stock:box-truck:3",
+            "partId": "fuel-tank",
+            "layer": "inner",
+            "x": -7,
+            "y": 0,
+            "rotation": 0,
+            "facing": 0
+          },
+          {
+            "instanceId": "stock:box-truck:4",
+            "partId": "battery",
+            "layer": "inner",
+            "x": -7,
+            "y": 1,
+            "rotation": 0,
+            "facing": 0
+          },
+          {
+            "instanceId": "stock:box-truck:5",
+            "partId": "ammo-box",
+            "layer": "inner",
+            "x": -7,
+            "y": 2,
+            "rotation": 0,
+            "facing": 0
+          },
+          {
+            "instanceId": "stock:box-truck:6",
+            "partId": "machine-gun",
+            "layer": "outer",
+            "x": -8,
+            "y": -4,
+            "rotation": 0,
+            "facing": 0
+          }
+        ]
+      },
+      "parameters": {
+        "modelVersion": "vehicle-physics-4",
+        "profileSchemaVersion": "vehicle-profile-4",
+        "profileId": "box-truck",
+        "profileRevision": "4",
+        "label": "厢式货车",
+        "category": "box-truck",
+        "geometry": {
+          "wheelbase": 1.302,
+          "cgFromRear": 0.399120680874042,
+          "cgLateral": -0.03323568575233022,
+          "width": 0.858,
+          "track": 0.725999999868,
+          "frontOverhang": 0.27899999999999997,
+          "rearOverhang": 0.27899999999999997,
+          "heightCG": 0.25
+        },
+        "mass": 3.7550000000000003,
+        "kYaw": 0.32996901296776493,
+        "power": {
+          "driveForce": 149.76,
+          "brakeForce": 14.879999999999999,
+          "accelerationCurve": 2,
+          "maxSpeed": 11.130244963215162,
+          "driveFront": 0,
+          "brakeFront": 0.6,
+          "rolling": 0.012,
+          "aero": 0
+        },
+        "tires": {
+          "front": {
+            "stiffness": 195.3,
+            "muX": 0.9660000000000001,
+            "muY": 0.9660000000000001,
+            "slide": 0.82,
+            "nominalLoad": 15.2055,
+            "loadSensitivity": 0,
+            "stiffnessExponent": 1,
+            "adaptation": {
+              "hard": 1,
+              "loose": 0.68,
+              "wet": 0.85
+            }
+          },
+          "rear": {
+            "stiffness": 212.04,
+            "muX": 0.9660000000000001,
+            "muY": 0.9660000000000001,
+            "slide": 0.82,
+            "nominalLoad": 15.2055,
+            "loadSensitivity": 0,
+            "stiffnessExponent": 1,
+            "adaptation": {
+              "hard": 1,
+              "loose": 0.68,
+              "wet": 0.85
+            }
+          }
+        },
+        "steering": {
+          "maxAngle": 0.5934119456780721,
+          "response": 0.15,
+          "rate": 2.5307274153917776
+        },
+        "drift": {
+          "brakeBase": 0.4,
+          "brakeGain": 3,
+          "maxBeta": 0.10471975511965977,
+          "minSpeed": 1.5,
+          "fullSpeed": 4,
+          "demandRate": 0.55,
+          "enterTime": 0.3,
+          "exitTime": 0.22,
+          "betaRate": 0.7853981633974483
+        },
+        "assist": {
+          "routeGain": 2.811267651158746,
+          "betaGain": 1.7429859437184223,
+          "yawGain": 0.3983967871356394,
+          "maxRouteRate": 2,
+          "gripReserve": 0.55,
+          "referenceTime": 0.1
+        },
+        "wheels": {
+          "radius": 0.12,
+          "inertia": 0.0015500000000000002
+        },
+        "acceptance": {
+          "normalWindow": 4.5,
+          "recoveryWindow": 5.5,
+          "recoverySpeed": 0.5,
+          "recoveryHeading": 0.20943951023931953,
+          "recoveryYaw": 0.24096579867074966,
+          "recoverySteer": 0.17453292519943295,
+          "recoveryBlend": 1,
+          "target": "长轴距、制动提前量与缓慢恢复"
+        }
+      },
+      "engine": {
+        "idleRpm": 600,
+        "redlineRpm": 3500,
+        "maxPower": 260,
+        "maxTorque": 1300,
+        "torqueCurve": [
+          [
+            600,
+            0.75
+          ],
+          [
+            1200,
+            1
+          ],
+          [
+            2200,
+            0.95
+          ],
+          [
+            3500,
+            0.55
+          ]
+        ],
+        "fuelConsumption": 0.02
+      },
+      "gearbox": {
+        "ratios": [
+          8,
+          5.4,
+          3.7,
+          2.5,
+          1.8,
+          1.3,
+          1,
+          0.75
+        ],
+        "finalDrive": 4.8,
+        "shiftTime": 0.35,
+        "efficiency": 0.9,
+        "maxInputTorque": 1600
+      },
+      "centerOfMass": {
+        "x": -0.13134487350199733,
+        "y": -0.03323568575233022
+      },
+      "matrix": [
+        {
+          "family": "hard",
+          "fraction": 0.2,
+          "scenario": "side",
+          "peakSlip": 0.23520742982945728,
+          "peakYaw": 1.007226004671295,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "hard",
+          "fraction": 0.2,
+          "scenario": "behind",
+          "peakSlip": 0.23520742982945728,
+          "peakYaw": 1.0583122889693801,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "hard",
+          "fraction": 0.2,
+          "scenario": "switch",
+          "peakSlip": 0.23561199320108828,
+          "peakYaw": 0.9610783846643132,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "hard",
+          "fraction": 0.5,
+          "scenario": "side",
+          "peakSlip": 0.05301021701265918,
+          "peakYaw": 0.8874053132881897,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "hard",
+          "fraction": 0.5,
+          "scenario": "behind",
+          "peakSlip": 0.05494925509173498,
+          "peakYaw": 0.9029492404068444,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "hard",
+          "fraction": 0.5,
+          "scenario": "switch",
+          "peakSlip": 0.052942919254981576,
+          "peakYaw": 0.8536185241327866,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "hard",
+          "fraction": 1,
+          "scenario": "side",
+          "peakSlip": 0.017031998993883413,
+          "peakYaw": 0.4405636662084988,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "hard",
+          "fraction": 1,
+          "scenario": "behind",
+          "peakSlip": 0.015937710040424102,
+          "peakYaw": 0.4405636662084988,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "hard",
+          "fraction": 1,
+          "scenario": "switch",
+          "peakSlip": 0.019224580078179482,
+          "peakYaw": 0.39793494843150806,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "loose",
+          "fraction": 0.2,
+          "scenario": "side",
+          "peakSlip": 0.23669681217347527,
+          "peakYaw": 0.9714789854609925,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "loose",
+          "fraction": 0.2,
+          "scenario": "behind",
+          "peakSlip": 0.23669681217347527,
+          "peakYaw": 1.0184951843613756,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "loose",
+          "fraction": 0.2,
+          "scenario": "switch",
+          "peakSlip": 0.23366693849580827,
+          "peakYaw": 0.9082283150181456,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "loose",
+          "fraction": 0.5,
+          "scenario": "side",
+          "peakSlip": 0.030145932003615816,
+          "peakYaw": 0.4829066455529044,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "loose",
+          "fraction": 0.5,
+          "scenario": "behind",
+          "peakSlip": 0.030145932003615816,
+          "peakYaw": 0.4829066455529044,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "loose",
+          "fraction": 0.5,
+          "scenario": "switch",
+          "peakSlip": 0.029188877080413664,
+          "peakYaw": 0.45810497241274695,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "loose",
+          "fraction": 1,
+          "scenario": "side",
+          "peakSlip": 0.00835598190197759,
+          "peakYaw": 0.23569577998332286,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "loose",
+          "fraction": 1,
+          "scenario": "behind",
+          "peakSlip": 0.00835598190197759,
+          "peakYaw": 0.23569577998332286,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "loose",
+          "fraction": 1,
+          "scenario": "switch",
+          "peakSlip": 0.010215660667667962,
+          "peakYaw": 0.2121762000275704,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "wet",
+          "fraction": 0.2,
+          "scenario": "side",
+          "peakSlip": 0.23548424536767035,
+          "peakYaw": 0.9809039567287332,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "wet",
+          "fraction": 0.2,
+          "scenario": "behind",
+          "peakSlip": 0.23548424536767035,
+          "peakYaw": 0.9809039567287332,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "wet",
+          "fraction": 0.2,
+          "scenario": "switch",
+          "peakSlip": 0.21140597541233705,
+          "peakYaw": 0.8498761477565651,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "wet",
+          "fraction": 0.5,
+          "scenario": "side",
+          "peakSlip": 0.021406326558166655,
+          "peakYaw": 0.3863621662837092,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "wet",
+          "fraction": 0.5,
+          "scenario": "behind",
+          "peakSlip": 0.021406326558166655,
+          "peakYaw": 0.3863621662837092,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "wet",
+          "fraction": 0.5,
+          "scenario": "switch",
+          "peakSlip": 0.02138212054015795,
+          "peakYaw": 0.38017896816740987,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "wet",
+          "fraction": 1,
+          "scenario": "side",
+          "peakSlip": 0.007109517180240846,
+          "peakYaw": 0.19104887979945345,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "wet",
+          "fraction": 1,
+          "scenario": "behind",
+          "peakSlip": 0.007109517180240846,
+          "peakYaw": 0.19104887979945345,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "wet",
+          "fraction": 1,
+          "scenario": "switch",
+          "peakSlip": 0.008514250002460033,
+          "peakYaw": 0.17596879900711296,
+          "finite": true,
+          "passed": true
+        }
+      ],
+      "passed": true
+    },
+    {
+      "name": "truck:stock",
+      "loadout": {
+        "version": "vehicle-loadout-1",
+        "chassisId": "truck",
+        "parts": [
+          {
+            "instanceId": "stock:truck:0",
+            "partId": "driver-seat",
+            "layer": "inner",
+            "x": 8,
+            "y": 0,
+            "rotation": 0,
+            "facing": 0
+          },
+          {
+            "instanceId": "stock:truck:1",
+            "partId": "engine-diesel",
+            "layer": "inner",
+            "x": -8,
+            "y": -3,
+            "rotation": 0,
+            "facing": 0
+          },
+          {
+            "instanceId": "stock:truck:2",
+            "partId": "gearbox-heavy",
+            "layer": "inner",
+            "x": -8,
+            "y": -1,
+            "rotation": 0,
+            "facing": 0
+          },
+          {
+            "instanceId": "stock:truck:3",
+            "partId": "fuel-tank",
+            "layer": "inner",
+            "x": -8,
+            "y": 0,
+            "rotation": 0,
+            "facing": 0
+          },
+          {
+            "instanceId": "stock:truck:4",
+            "partId": "battery",
+            "layer": "inner",
+            "x": -8,
+            "y": 1,
+            "rotation": 0,
+            "facing": 0
+          },
+          {
+            "instanceId": "stock:truck:5",
+            "partId": "ammo-box",
+            "layer": "inner",
+            "x": -8,
+            "y": 2,
+            "rotation": 0,
+            "facing": 0
+          },
+          {
+            "instanceId": "stock:truck:6",
+            "partId": "machine-gun",
+            "layer": "outer",
+            "x": -9,
+            "y": -4,
+            "rotation": 0,
+            "facing": 0
+          }
+        ]
+      },
+      "parameters": {
+        "modelVersion": "vehicle-physics-4",
+        "profileSchemaVersion": "vehicle-profile-4",
+        "profileId": "truck",
+        "profileRevision": "4",
+        "label": "卡车",
+        "category": "truck",
+        "geometry": {
+          "wheelbase": 1.554,
+          "cgFromRear": 0.43311368196794414,
+          "cgLateral": -0.022878093492208977,
+          "width": 0.858,
+          "track": 0.725999999868,
+          "frontOverhang": 0.333,
+          "rearOverhang": 0.333,
+          "heightCG": 0.3
+        },
+        "mass": 5.455,
+        "kYaw": 0.34869342405172615,
+        "power": {
+          "driveForce": 149.76,
+          "brakeForce": 19.968,
+          "accelerationCurve": 2,
+          "maxSpeed": 9.893551078413477,
+          "driveFront": 0,
+          "brakeFront": 0.6,
+          "rolling": 0.012,
+          "aero": 0
+        },
+        "tires": {
+          "front": {
+            "stiffness": 295.68,
+            "muX": 0.9555000000000001,
+            "muY": 0.9555000000000001,
+            "slide": 0.82,
+            "nominalLoad": 23.544,
+            "loadSensitivity": 0,
+            "stiffnessExponent": 1,
+            "adaptation": {
+              "hard": 1,
+              "loose": 0.72,
+              "wet": 0.85
+            }
+          },
+          "rear": {
+            "stiffness": 321.024,
+            "muX": 0.9555000000000001,
+            "muY": 0.9555000000000001,
+            "slide": 0.82,
+            "nominalLoad": 23.544,
+            "loadSensitivity": 0,
+            "stiffnessExponent": 1,
+            "adaptation": {
+              "hard": 1,
+              "loose": 0.72,
+              "wet": 0.85
+            }
+          }
+        },
+        "steering": {
+          "maxAngle": 0.5934119456780721,
+          "response": 0.19,
+          "rate": 2.007128639793479
+        },
+        "drift": {
+          "brakeBase": 0.4,
+          "brakeGain": 3,
+          "maxBeta": 0.08726646259971647,
+          "minSpeed": 1.5,
+          "fullSpeed": 3.6,
+          "demandRate": 0.55,
+          "enterTime": 0.3,
+          "exitTime": 0.22,
+          "betaRate": 0.7853981633974483
+        },
+        "assist": {
+          "routeGain": 2.058600941862662,
+          "betaGain": 1.142523522733777,
+          "yawGain": 0.4352470562795342,
+          "maxRouteRate": 2,
+          "gripReserve": 0.55,
+          "referenceTime": 0.1
+        },
+        "wheels": {
+          "radius": 0.12,
+          "inertia": 0.0024
+        },
+        "acceptance": {
+          "normalWindow": 5,
+          "recoveryWindow": 6,
+          "recoverySpeed": 0.5,
+          "recoveryHeading": 0.19198621771937624,
+          "recoveryYaw": 0.22056438662814232,
+          "recoverySteer": 0.17453292519943295,
+          "recoveryBlend": 1,
+          "target": "刚性等效轴、大转弯半径、低动力重量比"
+        }
+      },
+      "engine": {
+        "idleRpm": 600,
+        "redlineRpm": 3500,
+        "maxPower": 260,
+        "maxTorque": 1300,
+        "torqueCurve": [
+          [
+            600,
+            0.75
+          ],
+          [
+            1200,
+            1
+          ],
+          [
+            2200,
+            0.95
+          ],
+          [
+            3500,
+            0.55
+          ]
+        ],
+        "fuelConsumption": 0.02
+      },
+      "gearbox": {
+        "ratios": [
+          8,
+          5.4,
+          3.7,
+          2.5,
+          1.8,
+          1.3,
+          1,
+          0.75
+        ],
+        "finalDrive": 4.8,
+        "shiftTime": 0.35,
+        "efficiency": 0.9,
+        "maxInputTorque": 1600
+      },
+      "centerOfMass": {
+        "x": -0.10394133822181484,
+        "y": -0.022878093492208977
+      },
+      "matrix": [
+        {
+          "family": "hard",
+          "fraction": 0.2,
+          "scenario": "side",
+          "peakSlip": 0.26421144970149785,
+          "peakYaw": 0.7708486401277813,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "hard",
+          "fraction": 0.2,
+          "scenario": "behind",
+          "peakSlip": 0.26421372151730216,
+          "peakYaw": 0.7998006294370711,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "hard",
+          "fraction": 0.2,
+          "scenario": "switch",
+          "peakSlip": 0.2541869616074041,
+          "peakYaw": 0.692641614237202,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "hard",
+          "fraction": 0.5,
+          "scenario": "side",
+          "peakSlip": 0.10812565021868559,
+          "peakYaw": 0.9776931149835867,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "hard",
+          "fraction": 0.5,
+          "scenario": "behind",
+          "peakSlip": 0.11737981403870124,
+          "peakYaw": 1.0347332962367504,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "hard",
+          "fraction": 0.5,
+          "scenario": "switch",
+          "peakSlip": 0.0988786318363184,
+          "peakYaw": 0.8929432871232226,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "hard",
+          "fraction": 1,
+          "scenario": "side",
+          "peakSlip": 0.008091738356997391,
+          "peakYaw": 0.49412512382309,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "hard",
+          "fraction": 1,
+          "scenario": "behind",
+          "peakSlip": 0.0066038846142929646,
+          "peakYaw": 0.49412512382309,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "hard",
+          "fraction": 1,
+          "scenario": "switch",
+          "peakSlip": 0.01624733669175529,
+          "peakYaw": 0.42591337740596874,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "loose",
+          "fraction": 0.2,
+          "scenario": "side",
+          "peakSlip": 0.26516174750996874,
+          "peakYaw": 0.7386212327767525,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "loose",
+          "fraction": 0.2,
+          "scenario": "behind",
+          "peakSlip": 0.26516174750996874,
+          "peakYaw": 0.7650864906595676,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "loose",
+          "fraction": 0.2,
+          "scenario": "switch",
+          "peakSlip": 0.25021595695922333,
+          "peakYaw": 0.6562965792298087,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "loose",
+          "fraction": 0.5,
+          "scenario": "side",
+          "peakSlip": 0.0671980865993448,
+          "peakYaw": 0.5836530741609575,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "loose",
+          "fraction": 0.5,
+          "scenario": "behind",
+          "peakSlip": 0.0671980865993448,
+          "peakYaw": 0.5836530741609575,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "loose",
+          "fraction": 0.5,
+          "scenario": "switch",
+          "peakSlip": 0.05936201921113234,
+          "peakYaw": 0.5116047686571406,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "loose",
+          "fraction": 1,
+          "scenario": "side",
+          "peakSlip": 0.004949141761050991,
+          "peakYaw": 0.28079109703125643,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "loose",
+          "fraction": 1,
+          "scenario": "behind",
+          "peakSlip": 0.0037381416923399405,
+          "peakYaw": 0.28079109703125643,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "loose",
+          "fraction": 1,
+          "scenario": "switch",
+          "peakSlip": 0.009164337095018127,
+          "peakYaw": 0.24019181843798096,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "wet",
+          "fraction": 0.2,
+          "scenario": "side",
+          "peakSlip": 0.2643197533608886,
+          "peakYaw": 0.7704031179646802,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "wet",
+          "fraction": 0.2,
+          "scenario": "behind",
+          "peakSlip": 0.2643197533608886,
+          "peakYaw": 0.7972744230793863,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "wet",
+          "fraction": 0.2,
+          "scenario": "switch",
+          "peakSlip": 0.2457617763652985,
+          "peakYaw": 0.6689646683494,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "wet",
+          "fraction": 0.5,
+          "scenario": "side",
+          "peakSlip": 0.04565148256138018,
+          "peakYaw": 0.43570386276542755,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "wet",
+          "fraction": 0.5,
+          "scenario": "behind",
+          "peakSlip": 0.04565148256138018,
+          "peakYaw": 0.43570386276542755,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "wet",
+          "fraction": 0.5,
+          "scenario": "switch",
+          "peakSlip": 0.04100801478558472,
+          "peakYaw": 0.40322622332641184,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "wet",
+          "fraction": 1,
+          "scenario": "side",
+          "peakSlip": 0.0029262838065089516,
+          "peakYaw": 0.2141336308462027,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "wet",
+          "fraction": 1,
+          "scenario": "behind",
+          "peakSlip": 0.0029262838065089516,
+          "peakYaw": 0.2141336308462027,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "wet",
+          "fraction": 1,
+          "scenario": "switch",
+          "peakSlip": 0.007199435472955692,
+          "peakYaw": 0.18858710576212148,
+          "finite": true,
+          "passed": true
+        }
+      ],
+      "passed": true
+    },
+    {
+      "name": "heavy-truck:stock",
+      "loadout": {
+        "version": "vehicle-loadout-1",
+        "chassisId": "heavy-truck",
+        "parts": [
+          {
+            "instanceId": "stock:heavy-truck:0",
+            "partId": "driver-seat",
+            "layer": "inner",
+            "x": 11,
+            "y": 0,
+            "rotation": 0,
+            "facing": 0
+          },
+          {
+            "instanceId": "stock:heavy-truck:1",
+            "partId": "engine-diesel",
+            "layer": "inner",
+            "x": -11,
+            "y": -3,
+            "rotation": 0,
+            "facing": 0
+          },
+          {
+            "instanceId": "stock:heavy-truck:2",
+            "partId": "gearbox-heavy",
+            "layer": "inner",
+            "x": -11,
+            "y": -1,
+            "rotation": 0,
+            "facing": 0
+          },
+          {
+            "instanceId": "stock:heavy-truck:3",
+            "partId": "fuel-tank",
+            "layer": "inner",
+            "x": -11,
+            "y": 0,
+            "rotation": 0,
+            "facing": 0
+          },
+          {
+            "instanceId": "stock:heavy-truck:4",
+            "partId": "battery",
+            "layer": "inner",
+            "x": -11,
+            "y": 1,
+            "rotation": 0,
+            "facing": 0
+          },
+          {
+            "instanceId": "stock:heavy-truck:5",
+            "partId": "ammo-box",
+            "layer": "inner",
+            "x": -11,
+            "y": 2,
+            "rotation": 0,
+            "facing": 0
+          },
+          {
+            "instanceId": "stock:heavy-truck:6",
+            "partId": "machine-gun",
+            "layer": "outer",
+            "x": -12,
+            "y": -4,
+            "rotation": 0,
+            "facing": 0
+          }
+        ]
+      },
+      "parameters": {
+        "modelVersion": "vehicle-physics-4",
+        "profileSchemaVersion": "vehicle-profile-4",
+        "profileId": "heavy-truck",
+        "profileRevision": "4",
+        "label": "重型卡车",
+        "category": "heavy-truck",
+        "geometry": {
+          "wheelbase": 1.9319999999999997,
+          "cgFromRear": 0.4528510070292905,
+          "cgLateral": -0.014419410745233967,
+          "width": 0.858,
+          "track": 0.725999999868,
+          "frontOverhang": 0.414,
+          "rearOverhang": 0.414,
+          "heightCG": 0.36
+        },
+        "mass": 8.655,
+        "kYaw": 0.4033851049902707,
+        "power": {
+          "driveForce": 149.76,
+          "brakeForce": 26.88,
+          "accelerationCurve": 2,
+          "maxSpeed": 8.656857193611792,
+          "driveFront": 0,
+          "brakeFront": 0.6,
+          "rolling": 0.012,
+          "aero": 0
+        },
+        "tires": {
+          "front": {
+            "stiffness": 476,
+            "muX": 0.9450000000000001,
+            "muY": 0.9450000000000001,
+            "slide": 0.82,
+            "nominalLoad": 39.24,
+            "loadSensitivity": 0,
+            "stiffnessExponent": 1,
+            "adaptation": {
+              "hard": 1,
+              "loose": 0.74,
+              "wet": 0.85
+            }
+          },
+          "rear": {
+            "stiffness": 516.8,
+            "muX": 0.9450000000000001,
+            "muY": 0.9450000000000001,
+            "slide": 0.82,
+            "nominalLoad": 39.24,
+            "loadSensitivity": 0,
+            "stiffnessExponent": 1,
+            "adaptation": {
+              "hard": 1,
+              "loose": 0.74,
+              "wet": 0.85
+            }
+          }
+        },
+        "steering": {
+          "maxAngle": 0.5934119456780721,
+          "response": 0.24,
+          "rate": 1.4835298641951802
+        },
+        "drift": {
+          "brakeBase": 0.4,
+          "brakeGain": 3,
+          "maxBeta": 0.06981317007977318,
+          "minSpeed": 1.4000000000000001,
+          "fullSpeed": 3.15,
+          "demandRate": 0.55,
+          "enterTime": 0.3,
+          "exitTime": 0.22,
+          "betaRate": 0.7853981633974483
+        },
+        "assist": {
+          "routeGain": 1.4,
+          "betaGain": 0.5,
+          "yawGain": 0.8,
+          "maxRouteRate": 2,
+          "gripReserve": 0.55,
+          "referenceTime": 0.1
+        },
+        "wheels": {
+          "radius": 0.12,
+          "inertia": 0.004
+        },
+        "acceptance": {
+          "normalWindow": 6,
+          "recoveryWindow": 7,
+          "recoverySpeed": 0.5,
+          "recoveryHeading": 0.17453292519943295,
+          "recoveryYaw": 0.19781414201873612,
+          "recoverySteer": 0.17453292519943295,
+          "recoveryBlend": 1,
+          "target": "刚性等效轴、最大占地、最慢响应与窄侧滑包络"
+        }
+      },
+      "engine": {
+        "idleRpm": 600,
+        "redlineRpm": 3500,
+        "maxPower": 260,
+        "maxTorque": 1300,
+        "torqueCurve": [
+          [
+            600,
+            0.75
+          ],
+          [
+            1200,
+            1
+          ],
+          [
+            2200,
+            0.95
+          ],
+          [
+            3500,
+            0.55
+          ]
+        ],
+        "fuelConsumption": 0.02
+      },
+      "gearbox": {
+        "ratios": [
+          8,
+          5.4,
+          3.7,
+          2.5,
+          1.8,
+          1.3,
+          1,
+          0.75
+        ],
+        "finalDrive": 4.8,
+        "shiftTime": 0.35,
+        "efficiency": 0.9,
+        "maxInputTorque": 1600
+      },
+      "centerOfMass": {
+        "x": -0.09109185441941076,
+        "y": -0.014419410745233967
+      },
+      "matrix": [
+        {
+          "family": "hard",
+          "fraction": 0.2,
+          "scenario": "side",
+          "peakSlip": 0.2831650629830542,
+          "peakYaw": 0.5570895200103697,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "hard",
+          "fraction": 0.2,
+          "scenario": "behind",
+          "peakSlip": 0.2831764121416285,
+          "peakYaw": 0.5683146896731683,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "hard",
+          "fraction": 0.2,
+          "scenario": "switch",
+          "peakSlip": 0.25822886610495543,
+          "peakYaw": 0.462332521709892,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "hard",
+          "fraction": 0.5,
+          "scenario": "side",
+          "peakSlip": 0.2110474535294843,
+          "peakYaw": 1.0803763290494452,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "hard",
+          "fraction": 0.5,
+          "scenario": "behind",
+          "peakSlip": 0.2392717868740861,
+          "peakYaw": 1.197287866341012,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "hard",
+          "fraction": 0.5,
+          "scenario": "switch",
+          "peakSlip": 0.16860889921150796,
+          "peakYaw": 0.9029603702340727,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "hard",
+          "fraction": 1,
+          "scenario": "side",
+          "peakSlip": 0.023710597255428567,
+          "peakYaw": 0.564065109016319,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "hard",
+          "fraction": 1,
+          "scenario": "behind",
+          "peakSlip": 0.024170527009337306,
+          "peakYaw": 0.5653333589870678,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "hard",
+          "fraction": 1,
+          "scenario": "switch",
+          "peakSlip": 0.02430492317615701,
+          "peakYaw": 0.4474196308720512,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "loose",
+          "fraction": 0.2,
+          "scenario": "side",
+          "peakSlip": 0.28376582451273874,
+          "peakYaw": 0.5299534028717978,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "loose",
+          "fraction": 0.2,
+          "scenario": "behind",
+          "peakSlip": 0.28376795935628907,
+          "peakYaw": 0.5396073771828293,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "loose",
+          "fraction": 0.2,
+          "scenario": "switch",
+          "peakSlip": 0.25571536340185447,
+          "peakYaw": 0.43510907192703874,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "loose",
+          "fraction": 0.5,
+          "scenario": "side",
+          "peakSlip": 0.13211538656412336,
+          "peakYaw": 0.6882033931363175,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "loose",
+          "fraction": 0.5,
+          "scenario": "behind",
+          "peakSlip": 0.13211538656412336,
+          "peakYaw": 0.6882033931363175,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "loose",
+          "fraction": 0.5,
+          "scenario": "switch",
+          "peakSlip": 0.09938574767170855,
+          "peakYaw": 0.5481222375602937,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "loose",
+          "fraction": 1,
+          "scenario": "side",
+          "peakSlip": 0.01495016350805356,
+          "peakYaw": 0.3312013720514838,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "loose",
+          "fraction": 1,
+          "scenario": "behind",
+          "peakSlip": 0.01495016350805356,
+          "peakYaw": 0.3312013720514838,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "loose",
+          "fraction": 1,
+          "scenario": "switch",
+          "peakSlip": 0.015392062802587037,
+          "peakYaw": 0.25971842686481905,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "wet",
+          "fraction": 0.2,
+          "scenario": "side",
+          "peakSlip": 0.2832133822296221,
+          "peakYaw": 0.5550140868552667,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "wet",
+          "fraction": 0.2,
+          "scenario": "behind",
+          "peakSlip": 0.2832235918336993,
+          "peakYaw": 0.5661111829722721,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "wet",
+          "fraction": 0.2,
+          "scenario": "switch",
+          "peakSlip": 0.24848183873772647,
+          "peakYaw": 0.4474708227435576,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "wet",
+          "fraction": 0.5,
+          "scenario": "side",
+          "peakSlip": 0.08839668617225549,
+          "peakYaw": 0.4975190344919083,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "wet",
+          "fraction": 0.5,
+          "scenario": "behind",
+          "peakSlip": 0.08839668617225549,
+          "peakYaw": 0.4975190344919083,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "wet",
+          "fraction": 0.5,
+          "scenario": "switch",
+          "peakSlip": 0.07430640791782869,
+          "peakYaw": 0.4230104776608145,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "wet",
+          "fraction": 1,
+          "scenario": "side",
+          "peakSlip": 0.009108234979245844,
+          "peakYaw": 0.2444813622311062,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "wet",
+          "fraction": 1,
+          "scenario": "behind",
+          "peakSlip": 0.009108234979245844,
+          "peakYaw": 0.2444813622311062,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "wet",
+          "fraction": 1,
+          "scenario": "switch",
+          "peakSlip": 0.010380113808286148,
+          "peakYaw": 0.1988167049361028,
+          "finite": true,
+          "passed": true
+        }
+      ],
+      "passed": true
+    },
+    {
+      "name": "sports-car:stock",
+      "loadout": {
+        "version": "vehicle-loadout-1",
+        "chassisId": "sports-car",
+        "parts": [
+          {
+            "instanceId": "stock:sports-car:0",
+            "partId": "driver-seat",
+            "layer": "inner",
+            "x": 4,
+            "y": 0,
+            "rotation": 0,
+            "facing": 0
+          },
+          {
+            "instanceId": "stock:sports-car:1",
+            "partId": "engine-l4",
+            "layer": "inner",
+            "x": -4,
+            "y": -1,
+            "rotation": 0,
+            "facing": 0
+          },
+          {
+            "instanceId": "stock:sports-car:2",
+            "partId": "gearbox",
+            "layer": "inner",
+            "x": -4,
+            "y": 1,
+            "rotation": 0,
+            "facing": 0
+          },
+          {
+            "instanceId": "stock:sports-car:3",
+            "partId": "fuel-tank",
+            "layer": "inner",
+            "x": -2,
+            "y": -1,
+            "rotation": 0,
+            "facing": 0
+          },
+          {
+            "instanceId": "stock:sports-car:4",
+            "partId": "battery",
+            "layer": "inner",
+            "x": -2,
+            "y": 0,
+            "rotation": 0,
+            "facing": 0
+          },
+          {
+            "instanceId": "stock:sports-car:5",
+            "partId": "ammo-box",
+            "layer": "inner",
+            "x": -2,
+            "y": 1,
+            "rotation": 0,
+            "facing": 0
+          },
+          {
+            "instanceId": "stock:sports-car:6",
+            "partId": "machine-gun",
+            "layer": "outer",
+            "x": -5,
+            "y": -2,
+            "rotation": 0,
+            "facing": 0
+          }
+        ]
+      },
+      "parameters": {
+        "modelVersion": "vehicle-physics-4",
+        "profileSchemaVersion": "vehicle-profile-4",
+        "profileId": "sports-car",
+        "profileRevision": "4",
+        "label": "跑车",
+        "category": "sports-car",
+        "geometry": {
+          "wheelbase": 0.84,
+          "cgFromRear": 0.39656084656084656,
+          "cgLateral": -0.007999999999999997,
+          "width": 0.52,
+          "track": 0.43999999992,
+          "frontOverhang": 0.18,
+          "rearOverhang": 0.18,
+          "heightCG": 0.12
+        },
+        "mass": 1.35,
+        "kYaw": 0.21840464992581393,
+        "power": {
+          "driveForce": 10.86336,
+          "brakeForce": 8,
+          "accelerationCurve": 2,
+          "maxSpeed": 12,
+          "driveFront": 0,
+          "brakeFront": 0.6,
+          "rolling": 0.012,
+          "aero": 0
+        },
+        "tires": {
+          "front": {
+            "stiffness": 70,
+            "muX": 1.05,
+            "muY": 1.05,
+            "slide": 0.82,
+            "nominalLoad": 4.905,
+            "loadSensitivity": 0,
+            "stiffnessExponent": 1,
+            "adaptation": {
+              "hard": 1,
+              "loose": 0.72,
+              "wet": 0.85
+            }
+          },
+          "rear": {
+            "stiffness": 76,
+            "muX": 1.05,
+            "muY": 1.05,
+            "slide": 0.82,
+            "nominalLoad": 4.905,
+            "loadSensitivity": 0,
+            "stiffnessExponent": 1,
+            "adaptation": {
+              "hard": 1,
+              "loose": 0.72,
+              "wet": 0.85
+            }
+          }
+        },
+        "steering": {
+          "maxAngle": 0.5934119456780721,
+          "response": 0.055,
+          "rate": 5.235987755982989
+        },
+        "drift": {
+          "brakeBase": 0.4,
+          "brakeGain": 3,
+          "maxBeta": 0.2617993877991494,
+          "minSpeed": 1.5,
+          "fullSpeed": 4,
+          "demandRate": 0.55,
+          "enterTime": 0.3,
+          "exitTime": 0.22,
+          "betaRate": 0.7853981633974483
+        },
+        "assist": {
+          "routeGain": 3.5,
+          "betaGain": 1.4,
+          "yawGain": 0.32,
+          "maxRouteRate": 2,
+          "gripReserve": 0.55,
+          "referenceTime": 0.1
+        },
+        "wheels": {
+          "radius": 0.12,
+          "inertia": 0.0005
+        },
+        "acceptance": {
+          "normalWindow": 3,
+          "recoveryWindow": 4,
+          "recoverySpeed": 0.65,
+          "recoveryHeading": 0.4363323129985824,
+          "recoveryYaw": 0.6,
+          "recoverySteer": 0.2617993877991494,
+          "recoveryBlend": 1,
+          "target": "干硬路高抓地、快速回正与精细响应"
+        }
+      },
+      "engine": {
+        "idleRpm": 800,
+        "redlineRpm": 7000,
+        "maxPower": 170,
+        "maxTorque": 240,
+        "torqueCurve": [
+          [
+            800,
+            0.5
+          ],
+          [
+            2500,
+            0.85
+          ],
+          [
+            4500,
+            1
+          ],
+          [
+            7000,
+            0.65
+          ]
+        ],
+        "fuelConsumption": 0.012
+      },
+      "gearbox": {
+        "ratios": [
+          3.6,
+          2.3,
+          1.55,
+          1.15,
+          0.9,
+          0.72
+        ],
+        "finalDrive": 4.1,
+        "shiftTime": 0.22,
+        "efficiency": 0.92,
+        "maxInputTorque": 400
+      },
+      "centerOfMass": {
+        "x": -0.08688888888888889,
+        "y": -0.007999999999999997
+      },
+      "matrix": [
+        {
+          "family": "hard",
+          "fraction": 0.2,
+          "scenario": "side",
+          "peakSlip": 0.22080548916064727,
+          "peakYaw": 1.727066357613784,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "hard",
+          "fraction": 0.2,
+          "scenario": "behind",
+          "peakSlip": 0.22080548916064727,
+          "peakYaw": 1.7417169558207406,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "hard",
+          "fraction": 0.2,
+          "scenario": "switch",
+          "peakSlip": 0.22317920155453796,
+          "peakYaw": 1.7373227548550245,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "hard",
+          "fraction": 0.5,
+          "scenario": "side",
+          "peakSlip": 0.015246093004867171,
+          "peakYaw": 0.85787400221208,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "hard",
+          "fraction": 0.5,
+          "scenario": "behind",
+          "peakSlip": 0.015246093004867171,
+          "peakYaw": 0.8585659149077258,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "hard",
+          "fraction": 0.5,
+          "scenario": "switch",
+          "peakSlip": 0.019351943959678156,
+          "peakYaw": 0.8566049621668088,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "hard",
+          "fraction": 1,
+          "scenario": "side",
+          "peakSlip": 0.02321953438276947,
+          "peakYaw": 0.4256107813688638,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "hard",
+          "fraction": 1,
+          "scenario": "behind",
+          "peakSlip": 0.023048687967500037,
+          "peakYaw": 0.4256107813688638,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "hard",
+          "fraction": 1,
+          "scenario": "switch",
+          "peakSlip": 0.023672762567518657,
+          "peakYaw": 0.4126876079701298,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "loose",
+          "fraction": 0.2,
+          "scenario": "side",
+          "peakSlip": 0.16843837572498405,
+          "peakYaw": 1.3158571969064887,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "loose",
+          "fraction": 0.2,
+          "scenario": "behind",
+          "peakSlip": 0.16843837572498405,
+          "peakYaw": 1.3158571969064887,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "loose",
+          "fraction": 0.2,
+          "scenario": "switch",
+          "peakSlip": 0.18298813549397286,
+          "peakYaw": 1.3262382498126606,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "loose",
+          "fraction": 0.5,
+          "scenario": "side",
+          "peakSlip": 0.00860413103363648,
+          "peakYaw": 0.4844314780189566,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "loose",
+          "fraction": 0.5,
+          "scenario": "behind",
+          "peakSlip": 0.00860413103363648,
+          "peakYaw": 0.48446853366704473,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "loose",
+          "fraction": 0.5,
+          "scenario": "switch",
+          "peakSlip": 0.011592187495387402,
+          "peakYaw": 0.48609682013566835,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "loose",
+          "fraction": 1,
+          "scenario": "side",
+          "peakSlip": 0.012967333602340812,
+          "peakYaw": 0.2402353889940646,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "loose",
+          "fraction": 1,
+          "scenario": "behind",
+          "peakSlip": 0.012967333602340812,
+          "peakYaw": 0.2402353889940646,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "loose",
+          "fraction": 1,
+          "scenario": "switch",
+          "peakSlip": 0.013264258893542685,
+          "peakYaw": 0.2318482054055128,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "wet",
+          "fraction": 0.2,
+          "scenario": "side",
+          "peakSlip": 0.12516392825774353,
+          "peakYaw": 1.0201854080343975,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "wet",
+          "fraction": 0.2,
+          "scenario": "behind",
+          "peakSlip": 0.12516392825774353,
+          "peakYaw": 1.0201854080343975,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "wet",
+          "fraction": 0.2,
+          "scenario": "switch",
+          "peakSlip": 0.1378021406050942,
+          "peakYaw": 1.053182392163509,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "wet",
+          "fraction": 0.5,
+          "scenario": "side",
+          "peakSlip": 0.0067562360981052475,
+          "peakYaw": 0.3775836278090503,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "wet",
+          "fraction": 0.5,
+          "scenario": "behind",
+          "peakSlip": 0.0067562360981052475,
+          "peakYaw": 0.3775836278090503,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "wet",
+          "fraction": 0.5,
+          "scenario": "switch",
+          "peakSlip": 0.00896476346918082,
+          "peakYaw": 0.37720583106073174,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "wet",
+          "fraction": 1,
+          "scenario": "side",
+          "peakSlip": 0.010307523374284422,
+          "peakYaw": 0.18761616036659537,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "wet",
+          "fraction": 1,
+          "scenario": "behind",
+          "peakSlip": 0.010307523374284422,
+          "peakYaw": 0.18761616036659537,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "wet",
+          "fraction": 1,
+          "scenario": "switch",
+          "peakSlip": 0.010480798861586066,
+          "peakYaw": 0.18231292803379218,
+          "finite": true,
+          "passed": true
+        }
+      ],
+      "passed": true
+    },
+    {
+      "name": "rally-car:stock",
+      "loadout": {
+        "version": "vehicle-loadout-1",
+        "chassisId": "rally-car",
+        "parts": [
+          {
+            "instanceId": "stock:rally-car:0",
+            "partId": "driver-seat",
+            "layer": "inner",
+            "x": 4,
+            "y": 0,
+            "rotation": 0,
+            "facing": 0
+          },
+          {
+            "instanceId": "stock:rally-car:1",
+            "partId": "engine-l4",
+            "layer": "inner",
+            "x": -4,
+            "y": -1,
+            "rotation": 0,
+            "facing": 0
+          },
+          {
+            "instanceId": "stock:rally-car:2",
+            "partId": "gearbox",
+            "layer": "inner",
+            "x": -4,
+            "y": 1,
+            "rotation": 0,
+            "facing": 0
+          },
+          {
+            "instanceId": "stock:rally-car:3",
+            "partId": "fuel-tank",
+            "layer": "inner",
+            "x": -2,
+            "y": -1,
+            "rotation": 0,
+            "facing": 0
+          },
+          {
+            "instanceId": "stock:rally-car:4",
+            "partId": "battery",
+            "layer": "inner",
+            "x": -2,
+            "y": 0,
+            "rotation": 0,
+            "facing": 0
+          },
+          {
+            "instanceId": "stock:rally-car:5",
+            "partId": "ammo-box",
+            "layer": "inner",
+            "x": -2,
+            "y": 1,
+            "rotation": 0,
+            "facing": 0
+          },
+          {
+            "instanceId": "stock:rally-car:6",
+            "partId": "machine-gun",
+            "layer": "outer",
+            "x": -5,
+            "y": -2,
+            "rotation": 0,
+            "facing": 0
+          }
+        ]
+      },
+      "parameters": {
+        "modelVersion": "vehicle-physics-4",
+        "profileSchemaVersion": "vehicle-profile-4",
+        "profileId": "rally-car",
+        "profileRevision": "4",
+        "label": "拉力赛车",
+        "category": "rally-car",
+        "geometry": {
+          "wheelbase": 0.7979999999999999,
+          "cgFromRear": 0.3950053705692803,
+          "cgLateral": -0.007714285714285712,
+          "width": 0.5328414398298992,
+          "track": 0.4508658336202468,
+          "frontOverhang": 0.17099999999999999,
+          "rearOverhang": 0.17099999999999999,
+          "heightCG": 0.14
+        },
+        "mass": 1.4000000000000001,
+        "kYaw": 0.2343548945950702,
+        "power": {
+          "driveForce": 10.86336,
+          "brakeForce": 6.048,
+          "accelerationCurve": 2,
+          "maxSpeed": 11.5,
+          "driveFront": 0.5,
+          "brakeFront": 0.6,
+          "rolling": 0.012,
+          "aero": 0
+        },
+        "tires": {
+          "front": {
+            "stiffness": 69.825,
+            "muX": 1.008,
+            "muY": 1.008,
+            "slide": 0.82,
+            "nominalLoad": 5.150250000000001,
+            "loadSensitivity": 0,
+            "stiffnessExponent": 1,
+            "adaptation": {
+              "hard": 1,
+              "loose": 1.25,
+              "wet": 0.85
+            }
+          },
+          "rear": {
+            "stiffness": 75.81,
+            "muX": 1.008,
+            "muY": 1.008,
+            "slide": 0.82,
+            "nominalLoad": 5.150250000000001,
+            "loadSensitivity": 0,
+            "stiffnessExponent": 1,
+            "adaptation": {
+              "hard": 1,
+              "loose": 1.25,
+              "wet": 0.85
+            }
+          }
+        },
+        "steering": {
+          "maxAngle": 0.5934119456780721,
+          "response": 0.035,
+          "rate": 7.3303828583761845
+        },
+        "drift": {
+          "brakeBase": 0.4,
+          "brakeGain": 3,
+          "maxBeta": 0.29670597283903605,
+          "minSpeed": 1.5,
+          "fullSpeed": 4,
+          "demandRate": 0.55,
+          "enterTime": 0.3,
+          "exitTime": 0.22,
+          "betaRate": 0.7853981633974483
+        },
+        "assist": {
+          "routeGain": 3.5909242322980397,
+          "betaGain": 1.3645512082732547,
+          "yawGain": 0.31189741903388685,
+          "maxRouteRate": 2,
+          "gripReserve": 0.55,
+          "referenceTime": 0.1
+        },
+        "wheels": {
+          "radius": 0.12,
+          "inertia": 0.0005250000000000001
+        },
+        "acceptance": {
+          "normalWindow": 3,
+          "recoveryWindow": 4,
+          "recoverySpeed": 0.65,
+          "recoveryHeading": 0.4363323129985824,
+          "recoveryYaw": 0.6,
+          "recoverySteer": 0.2617993877991494,
+          "recoveryBlend": 1,
+          "target": "四驱、松散地适应、快速转向与持续侧滑"
+        }
+      },
+      "engine": {
+        "idleRpm": 800,
+        "redlineRpm": 7000,
+        "maxPower": 170,
+        "maxTorque": 240,
+        "torqueCurve": [
+          [
+            800,
+            0.5
+          ],
+          [
+            2500,
+            0.85
+          ],
+          [
+            4500,
+            1
+          ],
+          [
+            7000,
+            0.65
+          ]
+        ],
+        "fuelConsumption": 0.012
+      },
+      "gearbox": {
+        "ratios": [
+          3.6,
+          2.3,
+          1.55,
+          1.15,
+          0.9,
+          0.72
+        ],
+        "finalDrive": 4.1,
+        "shiftTime": 0.22,
+        "efficiency": 0.92,
+        "maxInputTorque": 400
+      },
+      "centerOfMass": {
+        "x": -0.08378571428571428,
+        "y": -0.007714285714285712
+      },
+      "matrix": [
+        {
+          "family": "hard",
+          "fraction": 0.2,
+          "scenario": "side",
+          "peakSlip": 0.22060471027393855,
+          "peakYaw": 1.7494794465553927,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "hard",
+          "fraction": 0.2,
+          "scenario": "behind",
+          "peakSlip": 0.22060471027393855,
+          "peakYaw": 1.7707714300528106,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "hard",
+          "fraction": 0.2,
+          "scenario": "switch",
+          "peakSlip": 0.2240558140496146,
+          "peakYaw": 1.758124604480877,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "hard",
+          "fraction": 0.5,
+          "scenario": "side",
+          "peakSlip": 0.015529261214740886,
+          "peakYaw": 0.8601683667809016,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "hard",
+          "fraction": 0.5,
+          "scenario": "behind",
+          "peakSlip": 0.015529261214740886,
+          "peakYaw": 0.860847287065667,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "hard",
+          "fraction": 0.5,
+          "scenario": "switch",
+          "peakSlip": 0.02032599306120253,
+          "peakYaw": 0.8581213870655447,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "hard",
+          "fraction": 1,
+          "scenario": "side",
+          "peakSlip": 0.02371727891159847,
+          "peakYaw": 0.4262234187587452,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "hard",
+          "fraction": 1,
+          "scenario": "behind",
+          "peakSlip": 0.0235046671778405,
+          "peakYaw": 0.4262234187587452,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "hard",
+          "fraction": 1,
+          "scenario": "switch",
+          "peakSlip": 0.024466787234082465,
+          "peakYaw": 0.41214023623194107,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "loose",
+          "fraction": 0.2,
+          "scenario": "side",
+          "peakSlip": 0.22182192709614934,
+          "peakYaw": 1.7123095624943923,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "loose",
+          "fraction": 0.2,
+          "scenario": "behind",
+          "peakSlip": 0.22182192709614934,
+          "peakYaw": 1.7215841934205018,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "loose",
+          "fraction": 0.2,
+          "scenario": "switch",
+          "peakSlip": 0.22652023515259367,
+          "peakYaw": 1.7254500278498541,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "loose",
+          "fraction": 0.5,
+          "scenario": "side",
+          "peakSlip": 0.01514493551864695,
+          "peakYaw": 0.8500191790487662,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "loose",
+          "fraction": 0.5,
+          "scenario": "behind",
+          "peakSlip": 0.01514493551864695,
+          "peakYaw": 0.8514380198398708,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "loose",
+          "fraction": 0.5,
+          "scenario": "switch",
+          "peakSlip": 0.020248831761721767,
+          "peakYaw": 0.8506116994785702,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "loose",
+          "fraction": 1,
+          "scenario": "side",
+          "peakSlip": 0.022963365732741714,
+          "peakYaw": 0.41872068494432607,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "loose",
+          "fraction": 1,
+          "scenario": "behind",
+          "peakSlip": 0.022756523121084893,
+          "peakYaw": 0.41872068494432607,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "loose",
+          "fraction": 1,
+          "scenario": "switch",
+          "peakSlip": 0.023725984023383995,
+          "peakYaw": 0.4019335677274095,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "wet",
+          "fraction": 0.2,
+          "scenario": "side",
+          "peakSlip": 0.12435104137711657,
+          "peakYaw": 1.0248741907113768,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "wet",
+          "fraction": 0.2,
+          "scenario": "behind",
+          "peakSlip": 0.12435104137711657,
+          "peakYaw": 1.0248741907113768,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "wet",
+          "fraction": 0.2,
+          "scenario": "switch",
+          "peakSlip": 0.13797353890028913,
+          "peakYaw": 1.0588782321416974,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "wet",
+          "fraction": 0.5,
+          "scenario": "side",
+          "peakSlip": 0.006882962128509375,
+          "peakYaw": 0.3783753349399474,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "wet",
+          "fraction": 0.5,
+          "scenario": "behind",
+          "peakSlip": 0.006882962128509375,
+          "peakYaw": 0.3783753349399474,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "wet",
+          "fraction": 0.5,
+          "scenario": "switch",
+          "peakSlip": 0.00973514467870884,
+          "peakYaw": 0.37800103554842185,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "wet",
+          "fraction": 1,
+          "scenario": "side",
+          "peakSlip": 0.01051891564373397,
+          "peakYaw": 0.18796138833546366,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "wet",
+          "fraction": 1,
+          "scenario": "behind",
+          "peakSlip": 0.01051891564373397,
+          "peakYaw": 0.18796138833546366,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "wet",
+          "fraction": 1,
+          "scenario": "switch",
+          "peakSlip": 0.010855907863812115,
+          "peakYaw": 0.1822453332738546,
+          "finite": true,
+          "passed": true
+        }
+      ],
+      "passed": true
+    },
+    {
+      "name": "muscle-car:stock",
+      "loadout": {
+        "version": "vehicle-loadout-1",
+        "chassisId": "muscle-car",
+        "parts": [
+          {
+            "instanceId": "stock:muscle-car:0",
+            "partId": "driver-seat",
+            "layer": "inner",
+            "x": 4,
+            "y": 0,
+            "rotation": 0,
+            "facing": 0
+          },
+          {
+            "instanceId": "stock:muscle-car:1",
+            "partId": "engine-l4",
+            "layer": "inner",
+            "x": -4,
+            "y": -2,
+            "rotation": 0,
+            "facing": 0
+          },
+          {
+            "instanceId": "stock:muscle-car:2",
+            "partId": "gearbox",
+            "layer": "inner",
+            "x": -4,
+            "y": 0,
+            "rotation": 0,
+            "facing": 0
+          },
+          {
+            "instanceId": "stock:muscle-car:3",
+            "partId": "fuel-tank",
+            "layer": "inner",
+            "x": -4,
+            "y": 1,
+            "rotation": 0,
+            "facing": 0
+          },
+          {
+            "instanceId": "stock:muscle-car:4",
+            "partId": "battery",
+            "layer": "inner",
+            "x": -4,
+            "y": 2,
+            "rotation": 0,
+            "facing": 0
+          },
+          {
+            "instanceId": "stock:muscle-car:5",
+            "partId": "ammo-box",
+            "layer": "inner",
+            "x": -3,
+            "y": 1,
+            "rotation": 0,
+            "facing": 0
+          },
+          {
+            "instanceId": "stock:muscle-car:6",
+            "partId": "machine-gun",
+            "layer": "outer",
+            "x": -5,
+            "y": -3,
+            "rotation": 0,
+            "facing": 0
+          }
+        ]
+      },
+      "parameters": {
+        "modelVersion": "vehicle-physics-4",
+        "profileSchemaVersion": "vehicle-profile-4",
+        "profileId": "muscle-car",
+        "profileRevision": "4",
+        "label": "肌肉车",
+        "category": "muscle-car",
+        "geometry": {
+          "wheelbase": 0.9072,
+          "cgFromRear": 0.41457231040564374,
+          "cgLateral": -0.010666666666666666,
+          "width": 0.6261629180971994,
+          "track": 0.5298301613705283,
+          "frontOverhang": 0.19440000000000002,
+          "rearOverhang": 0.19440000000000002,
+          "heightCG": 0.14
+        },
+        "mass": 1.8,
+        "kYaw": 0.2798073709206032,
+        "power": {
+          "driveForce": 10.86336,
+          "brakeForce": 8.12,
+          "accelerationCurve": 2,
+          "maxSpeed": 12,
+          "driveFront": 0,
+          "brakeFront": 0.6,
+          "rolling": 0.012,
+          "aero": 0
+        },
+        "tires": {
+          "front": {
+            "stiffness": 87.28999999999999,
+            "muX": 1.0185,
+            "muY": 1.0185,
+            "slide": 0.82,
+            "nominalLoad": 7.11225,
+            "loadSensitivity": 0,
+            "stiffnessExponent": 1,
+            "adaptation": {
+              "hard": 1,
+              "loose": 0.65,
+              "wet": 0.85
+            }
+          },
+          "rear": {
+            "stiffness": 85.2948,
+            "muX": 1.0185,
+            "muY": 1.0185,
+            "slide": 0.82,
+            "nominalLoad": 7.11225,
+            "loadSensitivity": 0,
+            "stiffnessExponent": 1,
+            "adaptation": {
+              "hard": 1,
+              "loose": 0.65,
+              "wet": 0.85
+            }
+          }
+        },
+        "steering": {
+          "maxAngle": 0.5934119456780721,
+          "response": 0.105,
+          "rate": 3.6651914291880923
+        },
+        "drift": {
+          "brakeBase": 0.4,
+          "brakeGain": 3,
+          "maxBeta": 0.3141592653589793,
+          "minSpeed": 1.5,
+          "fullSpeed": 4,
+          "demandRate": 0.55,
+          "enterTime": 0.3,
+          "exitTime": 0.22,
+          "betaRate": 0.7853981633974483
+        },
+        "assist": {
+          "routeGain": 3.3678765702728164,
+          "betaGain": 1.454922678357857,
+          "yawGain": 0.3325537550532245,
+          "maxRouteRate": 2,
+          "gripReserve": 0.55,
+          "referenceTime": 0.1
+        },
+        "wheels": {
+          "radius": 0.12,
+          "inertia": 0.000725
+        },
+        "acceptance": {
+          "normalWindow": 3.5,
+          "recoveryWindow": 4.5,
+          "recoverySpeed": 0.65,
+          "recoveryHeading": 0.4363323129985824,
+          "recoveryYaw": 0.6,
+          "recoverySteer": 0.2617993877991494,
+          "recoveryBlend": 1,
+          "target": "强直线动力、较慢姿态恢复与易失抓后轴"
+        }
+      },
+      "engine": {
+        "idleRpm": 800,
+        "redlineRpm": 7000,
+        "maxPower": 170,
+        "maxTorque": 240,
+        "torqueCurve": [
+          [
+            800,
+            0.5
+          ],
+          [
+            2500,
+            0.85
+          ],
+          [
+            4500,
+            1
+          ],
+          [
+            7000,
+            0.65
+          ]
+        ],
+        "fuelConsumption": 0.012
+      },
+      "gearbox": {
+        "ratios": [
+          3.6,
+          2.3,
+          1.55,
+          1.15,
+          0.9,
+          0.72
+        ],
+        "finalDrive": 4.1,
+        "shiftTime": 0.22,
+        "efficiency": 0.92,
+        "maxInputTorque": 400
+      },
+      "centerOfMass": {
+        "x": -0.07749999999999999,
+        "y": -0.010666666666666666
+      },
+      "matrix": [
+        {
+          "family": "hard",
+          "fraction": 0.2,
+          "scenario": "side",
+          "peakSlip": 0.22780297665295943,
+          "peakYaw": 1.5888243966832725,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "hard",
+          "fraction": 0.2,
+          "scenario": "behind",
+          "peakSlip": 0.22786949517181124,
+          "peakYaw": 1.609628162249494,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "hard",
+          "fraction": 0.2,
+          "scenario": "switch",
+          "peakSlip": 0.22811643537993676,
+          "peakYaw": 1.5775497833934389,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "hard",
+          "fraction": 0.5,
+          "scenario": "side",
+          "peakSlip": 0.015496852380883906,
+          "peakYaw": 0.8341324453110651,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "hard",
+          "fraction": 0.5,
+          "scenario": "behind",
+          "peakSlip": 0.015496852380883906,
+          "peakYaw": 0.835085640763381,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "hard",
+          "fraction": 0.5,
+          "scenario": "switch",
+          "peakSlip": 0.023081052346465014,
+          "peakYaw": 0.8444860050640385,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "hard",
+          "fraction": 1,
+          "scenario": "side",
+          "peakSlip": 0.030455377754943447,
+          "peakYaw": 0.41857718871409605,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "hard",
+          "fraction": 1,
+          "scenario": "behind",
+          "peakSlip": 0.030137921862453343,
+          "peakYaw": 0.41857718871409605,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "hard",
+          "fraction": 1,
+          "scenario": "switch",
+          "peakSlip": 0.030559165956446224,
+          "peakYaw": 0.4185285903328406,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "loose",
+          "fraction": 0.2,
+          "scenario": "side",
+          "peakSlip": 0.16174379882743453,
+          "peakYaw": 1.1353259523719454,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "loose",
+          "fraction": 0.2,
+          "scenario": "behind",
+          "peakSlip": 0.16174379882743453,
+          "peakYaw": 1.1353259523719454,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "loose",
+          "fraction": 0.2,
+          "scenario": "switch",
+          "peakSlip": 0.16260128399644824,
+          "peakYaw": 1.140752055513262,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "loose",
+          "fraction": 0.5,
+          "scenario": "side",
+          "peakSlip": 0.007959210960704495,
+          "peakYaw": 0.4243999652754194,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "loose",
+          "fraction": 0.5,
+          "scenario": "behind",
+          "peakSlip": 0.007959210960704495,
+          "peakYaw": 0.4243999652754194,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "loose",
+          "fraction": 0.5,
+          "scenario": "switch",
+          "peakSlip": 0.011935941514523457,
+          "peakYaw": 0.4326370513877535,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "loose",
+          "fraction": 1,
+          "scenario": "side",
+          "peakSlip": 0.015355395788056779,
+          "peakYaw": 0.2124543116684503,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "loose",
+          "fraction": 1,
+          "scenario": "behind",
+          "peakSlip": 0.015355395788056779,
+          "peakYaw": 0.2124543116684503,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "loose",
+          "fraction": 1,
+          "scenario": "switch",
+          "peakSlip": 0.015467719972593733,
+          "peakYaw": 0.21245441334812362,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "wet",
+          "fraction": 0.2,
+          "scenario": "side",
+          "peakSlip": 0.1339608564190484,
+          "peakYaw": 0.9767042842769693,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "wet",
+          "fraction": 0.2,
+          "scenario": "behind",
+          "peakSlip": 0.1339608564190484,
+          "peakYaw": 0.9767042842769693,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "wet",
+          "fraction": 0.2,
+          "scenario": "switch",
+          "peakSlip": 0.13497672959289764,
+          "peakYaw": 0.9835112136860812,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "wet",
+          "fraction": 0.5,
+          "scenario": "side",
+          "peakSlip": 0.006881200379558257,
+          "peakYaw": 0.36892587980206976,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "wet",
+          "fraction": 0.5,
+          "scenario": "behind",
+          "peakSlip": 0.006881200379558257,
+          "peakYaw": 0.36892587980206976,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "wet",
+          "fraction": 0.5,
+          "scenario": "switch",
+          "peakSlip": 0.010258534795127562,
+          "peakYaw": 0.37203613124490126,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "wet",
+          "fraction": 1,
+          "scenario": "side",
+          "peakSlip": 0.013506545767738798,
+          "peakYaw": 0.18503187385163705,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "wet",
+          "fraction": 1,
+          "scenario": "behind",
+          "peakSlip": 0.013506545767738798,
+          "peakYaw": 0.18503187385163705,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "wet",
+          "fraction": 1,
+          "scenario": "switch",
+          "peakSlip": 0.013525201591689127,
+          "peakYaw": 0.1850326991212134,
+          "finite": true,
+          "passed": true
+        }
+      ],
+      "passed": true
+    },
+    {
+      "name": "off-road:stock",
+      "loadout": {
+        "version": "vehicle-loadout-1",
+        "chassisId": "off-road",
+        "parts": [
+          {
+            "instanceId": "stock:off-road:0",
+            "partId": "driver-seat",
+            "layer": "inner",
+            "x": 4,
+            "y": 0,
+            "rotation": 0,
+            "facing": 0
+          },
+          {
+            "instanceId": "stock:off-road:1",
+            "partId": "engine-l4",
+            "layer": "inner",
+            "x": -4,
+            "y": -2,
+            "rotation": 0,
+            "facing": 0
+          },
+          {
+            "instanceId": "stock:off-road:2",
+            "partId": "gearbox",
+            "layer": "inner",
+            "x": -4,
+            "y": 0,
+            "rotation": 0,
+            "facing": 0
+          },
+          {
+            "instanceId": "stock:off-road:3",
+            "partId": "fuel-tank",
+            "layer": "inner",
+            "x": -4,
+            "y": 1,
+            "rotation": 0,
+            "facing": 0
+          },
+          {
+            "instanceId": "stock:off-road:4",
+            "partId": "battery",
+            "layer": "inner",
+            "x": -4,
+            "y": 2,
+            "rotation": 0,
+            "facing": 0
+          },
+          {
+            "instanceId": "stock:off-road:5",
+            "partId": "ammo-box",
+            "layer": "inner",
+            "x": -3,
+            "y": 1,
+            "rotation": 0,
+            "facing": 0
+          },
+          {
+            "instanceId": "stock:off-road:6",
+            "partId": "machine-gun",
+            "layer": "outer",
+            "x": -5,
+            "y": -3,
+            "rotation": 0,
+            "facing": 0
+          }
+        ]
+      },
+      "parameters": {
+        "modelVersion": "vehicle-physics-4",
+        "profileSchemaVersion": "vehicle-profile-4",
+        "profileId": "off-road",
+        "profileRevision": "4",
+        "label": "越野车",
+        "category": "off-road",
+        "geometry": {
+          "wheelbase": 0.84,
+          "cgFromRear": 0.41259398496240607,
+          "cgLateral": -0.010105263157894735,
+          "width": 0.6473947790954141,
+          "track": 0.547795582211905,
+          "frontOverhang": 0.18,
+          "rearOverhang": 0.18,
+          "heightCG": 0.24
+        },
+        "mass": 1.9000000000000001,
+        "kYaw": 0.2842295240811006,
+        "power": {
+          "driveForce": 10.86336,
+          "brakeForce": 6.820000000000001,
+          "accelerationCurve": 2,
+          "maxSpeed": 8.5,
+          "driveFront": 0.5,
+          "brakeFront": 0.6,
+          "rolling": 0.012,
+          "aero": 0
+        },
+        "tires": {
+          "front": {
+            "stiffness": 94.395,
+            "muX": 0.987,
+            "muY": 0.987,
+            "slide": 0.82,
+            "nominalLoad": 7.60275,
+            "loadSensitivity": 0,
+            "stiffnessExponent": 1,
+            "adaptation": {
+              "hard": 1,
+              "loose": 1.35,
+              "wet": 0.85
+            }
+          },
+          "rear": {
+            "stiffness": 102.486,
+            "muX": 0.987,
+            "muY": 0.987,
+            "slide": 0.82,
+            "nominalLoad": 7.60275,
+            "loadSensitivity": 0,
+            "stiffnessExponent": 1,
+            "adaptation": {
+              "hard": 1,
+              "loose": 1.35,
+              "wet": 0.85
+            }
+          }
+        },
+        "steering": {
+          "maxAngle": 0.5934119456780721,
+          "response": 0.095,
+          "rate": 3.490658503988659
+        },
+        "drift": {
+          "brakeBase": 0.4,
+          "brakeGain": 3,
+          "maxBeta": 0.17453292519943295,
+          "minSpeed": 1.5,
+          "fullSpeed": 3.825,
+          "demandRate": 0.55,
+          "enterTime": 0.3,
+          "exitTime": 0.22,
+          "betaRate": 0.7853981633974483
+        },
+        "assist": {
+          "routeGain": 3.5,
+          "betaGain": 1.4,
+          "yawGain": 0.32,
+          "maxRouteRate": 2,
+          "gripReserve": 0.55,
+          "referenceTime": 0.1
+        },
+        "wheels": {
+          "radius": 0.12,
+          "inertia": 0.0007750000000000001
+        },
+        "acceptance": {
+          "normalWindow": 4,
+          "recoveryWindow": 5,
+          "recoverySpeed": 0.65,
+          "recoveryHeading": 0.4363323129985824,
+          "recoveryYaw": 0.6,
+          "recoverySteer": 0.2617993877991494,
+          "recoveryBlend": 1,
+          "target": "较高质心、低速灵活、松散地牵引与较长制动距离"
+        }
+      },
+      "engine": {
+        "idleRpm": 800,
+        "redlineRpm": 7000,
+        "maxPower": 170,
+        "maxTorque": 240,
+        "torqueCurve": [
+          [
+            800,
+            0.5
+          ],
+          [
+            2500,
+            0.85
+          ],
+          [
+            4500,
+            1
+          ],
+          [
+            7000,
+            0.65
+          ]
+        ],
+        "fuelConsumption": 0.012
+      },
+      "gearbox": {
+        "ratios": [
+          3.6,
+          2.3,
+          1.55,
+          1.15,
+          0.9,
+          0.72
+        ],
+        "finalDrive": 4.1,
+        "shiftTime": 0.22,
+        "efficiency": 0.92,
+        "maxInputTorque": 400
+      },
+      "centerOfMass": {
+        "x": -0.07342105263157893,
+        "y": -0.010105263157894735
+      },
+      "matrix": [
+        {
+          "family": "hard",
+          "fraction": 0.2,
+          "scenario": "side",
+          "peakSlip": 0.24550492413633995,
+          "peakYaw": 1.2555926044251846,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "hard",
+          "fraction": 0.2,
+          "scenario": "behind",
+          "peakSlip": 0.24550492413633995,
+          "peakYaw": 1.2728155861934385,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "hard",
+          "fraction": 0.2,
+          "scenario": "switch",
+          "peakSlip": 0.2479439062366017,
+          "peakYaw": 1.2452852861814783,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "hard",
+          "fraction": 0.5,
+          "scenario": "side",
+          "peakSlip": 0.053844313786595016,
+          "peakYaw": 1.1429202869403468,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "hard",
+          "fraction": 0.5,
+          "scenario": "behind",
+          "peakSlip": 0.053910073448069536,
+          "peakYaw": 1.1429202869403468,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "hard",
+          "fraction": 0.5,
+          "scenario": "switch",
+          "peakSlip": 0.05791191073627988,
+          "peakYaw": 1.1854358085134966,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "hard",
+          "fraction": 1,
+          "scenario": "side",
+          "peakSlip": 0.016424044049301312,
+          "peakYaw": 0.5665405555735892,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "hard",
+          "fraction": 1,
+          "scenario": "behind",
+          "peakSlip": 0.016424108354583297,
+          "peakYaw": 0.5665405555735892,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "hard",
+          "fraction": 1,
+          "scenario": "switch",
+          "peakSlip": 0.020804498376325285,
+          "peakYaw": 0.5595307524512533,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "loose",
+          "fraction": 0.2,
+          "scenario": "side",
+          "peakSlip": 0.24704282575728906,
+          "peakYaw": 1.211950430202583,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "loose",
+          "fraction": 0.2,
+          "scenario": "behind",
+          "peakSlip": 0.24704282575728906,
+          "peakYaw": 1.2195255337878042,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "loose",
+          "fraction": 0.2,
+          "scenario": "switch",
+          "peakSlip": 0.24923223099384,
+          "peakYaw": 1.2123215041058213,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "loose",
+          "fraction": 0.5,
+          "scenario": "side",
+          "peakSlip": 0.059876664428220705,
+          "peakYaw": 1.2097026695082571,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "loose",
+          "fraction": 0.5,
+          "scenario": "behind",
+          "peakSlip": 0.06093458675631025,
+          "peakYaw": 1.2137573279081473,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "loose",
+          "fraction": 0.5,
+          "scenario": "switch",
+          "peakSlip": 0.06567505491483716,
+          "peakYaw": 1.2755760378875407,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "loose",
+          "fraction": 1,
+          "scenario": "side",
+          "peakSlip": 0.016812039115848165,
+          "peakYaw": 0.6034066569543161,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "loose",
+          "fraction": 1,
+          "scenario": "behind",
+          "peakSlip": 0.016804979833275446,
+          "peakYaw": 0.6034066569543161,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "loose",
+          "fraction": 1,
+          "scenario": "switch",
+          "peakSlip": 0.02173666081057629,
+          "peakYaw": 0.5954914196226795,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "wet",
+          "fraction": 0.2,
+          "scenario": "side",
+          "peakSlip": 0.2460780735901665,
+          "peakYaw": 1.2404674399568003,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "wet",
+          "fraction": 0.2,
+          "scenario": "behind",
+          "peakSlip": 0.2460780735901665,
+          "peakYaw": 1.2404674399568003,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "wet",
+          "fraction": 0.2,
+          "scenario": "switch",
+          "peakSlip": 0.24782211077086405,
+          "peakYaw": 1.212537329368769,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "wet",
+          "fraction": 0.5,
+          "scenario": "side",
+          "peakSlip": 0.02370791283100336,
+          "peakYaw": 0.5095623258250206,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "wet",
+          "fraction": 0.5,
+          "scenario": "behind",
+          "peakSlip": 0.02370791283100336,
+          "peakYaw": 0.5095623258250206,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "wet",
+          "fraction": 0.5,
+          "scenario": "switch",
+          "peakSlip": 0.02449304215843932,
+          "peakYaw": 0.5225366954798275,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "wet",
+          "fraction": 1,
+          "scenario": "side",
+          "peakSlip": 0.006770518658429481,
+          "peakYaw": 0.2491418959789133,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "wet",
+          "fraction": 1,
+          "scenario": "behind",
+          "peakSlip": 0.006770518658429481,
+          "peakYaw": 0.2491418959789133,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "wet",
+          "fraction": 1,
+          "scenario": "switch",
+          "peakSlip": 0.009278593150398973,
+          "peakYaw": 0.2464555570705706,
+          "finite": true,
+          "passed": true
+        }
+      ],
+      "passed": true
+    },
+    {
+      "name": "sports-car:cannon:-1",
+      "loadout": {
+        "version": "vehicle-loadout-1",
+        "chassisId": "sports-car",
+        "parts": [
+          {
+            "instanceId": "stock:sports-car:0",
+            "partId": "driver-seat",
+            "layer": "inner",
+            "x": 4,
+            "y": 0,
+            "rotation": 0,
+            "facing": 0
+          },
+          {
+            "instanceId": "stock:sports-car:1",
+            "partId": "engine-l4",
+            "layer": "inner",
+            "x": -4,
+            "y": -1,
+            "rotation": 0,
+            "facing": 0
+          },
+          {
+            "instanceId": "stock:sports-car:2",
+            "partId": "gearbox",
+            "layer": "inner",
+            "x": -4,
+            "y": 1,
+            "rotation": 0,
+            "facing": 0
+          },
+          {
+            "instanceId": "stock:sports-car:3",
+            "partId": "fuel-tank",
+            "layer": "inner",
+            "x": -2,
+            "y": -1,
+            "rotation": 0,
+            "facing": 0
+          },
+          {
+            "instanceId": "stock:sports-car:4",
+            "partId": "battery",
+            "layer": "inner",
+            "x": -2,
+            "y": 0,
+            "rotation": 0,
+            "facing": 0
+          },
+          {
+            "instanceId": "stock:sports-car:5",
+            "partId": "ammo-box",
+            "layer": "inner",
+            "x": -2,
+            "y": 1,
+            "rotation": 0,
+            "facing": 0
+          },
+          {
+            "instanceId": "stock:sports-car:6",
+            "partId": "machine-gun",
+            "layer": "outer",
+            "x": -5,
+            "y": -2,
+            "rotation": 0,
+            "facing": 0
+          },
+          {
+            "instanceId": "extra",
+            "partId": "cannon",
+            "layer": "outer",
+            "x": 4,
+            "y": -1,
+            "rotation": 0,
+            "facing": 0
+          }
+        ]
+      },
+      "parameters": {
+        "modelVersion": "vehicle-physics-4",
+        "profileSchemaVersion": "vehicle-profile-4",
+        "profileId": "sports-car",
+        "profileRevision": "4",
+        "label": "跑车",
+        "category": "sports-car",
+        "geometry": {
+          "wheelbase": 0.84,
+          "cgFromRear": 0.5055456965394853,
+          "cgLateral": -0.026086956521739126,
+          "width": 0.52,
+          "track": 0.43999999992,
+          "frontOverhang": 0.18,
+          "rearOverhang": 0.18,
+          "heightCG": 0.12
+        },
+        "mass": 1.61,
+        "kYaw": 0.24721430854661222,
+        "power": {
+          "driveForce": 10.86336,
+          "brakeForce": 8,
+          "accelerationCurve": 2,
+          "maxSpeed": 12,
+          "driveFront": 0,
+          "brakeFront": 0.6,
+          "rolling": 0.012,
+          "aero": 0
+        },
+        "tires": {
+          "front": {
+            "stiffness": 70,
+            "muX": 1.05,
+            "muY": 1.05,
+            "slide": 0.82,
+            "nominalLoad": 4.905,
+            "loadSensitivity": 0,
+            "stiffnessExponent": 1,
+            "adaptation": {
+              "hard": 1,
+              "loose": 0.72,
+              "wet": 0.85
+            }
+          },
+          "rear": {
+            "stiffness": 76,
+            "muX": 1.05,
+            "muY": 1.05,
+            "slide": 0.82,
+            "nominalLoad": 4.905,
+            "loadSensitivity": 0,
+            "stiffnessExponent": 1,
+            "adaptation": {
+              "hard": 1,
+              "loose": 0.72,
+              "wet": 0.85
+            }
+          }
+        },
+        "steering": {
+          "maxAngle": 0.5934119456780721,
+          "response": 0.055,
+          "rate": 5.235987755982989
+        },
+        "drift": {
+          "brakeBase": 0.4,
+          "brakeGain": 3,
+          "maxBeta": 0.2617993877991494,
+          "minSpeed": 1.5,
+          "fullSpeed": 4,
+          "demandRate": 0.55,
+          "enterTime": 0.3,
+          "exitTime": 0.22,
+          "betaRate": 0.7853981633974483
+        },
+        "assist": {
+          "routeGain": 3.5,
+          "betaGain": 1.4,
+          "yawGain": 0.32,
+          "maxRouteRate": 2,
+          "gripReserve": 0.55,
+          "referenceTime": 0.1
+        },
+        "wheels": {
+          "radius": 0.12,
+          "inertia": 0.0005
+        },
+        "acceptance": {
+          "normalWindow": 3,
+          "recoveryWindow": 4,
+          "recoverySpeed": 0.65,
+          "recoveryHeading": 0.4363323129985824,
+          "recoveryYaw": 0.6,
+          "recoverySteer": 0.2617993877991494,
+          "recoveryBlend": 1,
+          "target": "干硬路高抓地、快速回正与精细响应"
+        }
+      },
+      "engine": {
+        "idleRpm": 800,
+        "redlineRpm": 7000,
+        "maxPower": 170,
+        "maxTorque": 240,
+        "torqueCurve": [
+          [
+            800,
+            0.5
+          ],
+          [
+            2500,
+            0.85
+          ],
+          [
+            4500,
+            1
+          ],
+          [
+            7000,
+            0.65
+          ]
+        ],
+        "fuelConsumption": 0.012
+      },
+      "gearbox": {
+        "ratios": [
+          3.6,
+          2.3,
+          1.55,
+          1.15,
+          0.9,
+          0.72
+        ],
+        "finalDrive": 4.1,
+        "shiftTime": 0.22,
+        "efficiency": 0.92,
+        "maxInputTorque": 400
+      },
+      "centerOfMass": {
+        "x": 0.004658385093167704,
+        "y": -0.026086956521739126
+      },
+      "matrix": [
+        {
+          "family": "hard",
+          "fraction": 0.2,
+          "scenario": "side",
+          "peakSlip": 0.28479071798940975,
+          "peakYaw": 1.6724818061400408,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "hard",
+          "fraction": 0.2,
+          "scenario": "behind",
+          "peakSlip": 0.28479071798940975,
+          "peakYaw": 1.6920508393247813,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "hard",
+          "fraction": 0.2,
+          "scenario": "switch",
+          "peakSlip": 0.29647528818184266,
+          "peakYaw": 1.7142059157704592,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "hard",
+          "fraction": 0.5,
+          "scenario": "side",
+          "peakSlip": 0.02662736202218905,
+          "peakYaw": 0.860800192576714,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "hard",
+          "fraction": 0.5,
+          "scenario": "behind",
+          "peakSlip": 0.02662736202218905,
+          "peakYaw": 0.860800192576714,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "hard",
+          "fraction": 0.5,
+          "scenario": "switch",
+          "peakSlip": 0.029904752144795512,
+          "peakYaw": 0.8738841412432464,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "hard",
+          "fraction": 1,
+          "scenario": "side",
+          "peakSlip": 0.020225125465524355,
+          "peakYaw": 0.4263409904618275,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "hard",
+          "fraction": 1,
+          "scenario": "behind",
+          "peakSlip": 0.019708815276592073,
+          "peakYaw": 0.4263409904618275,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "hard",
+          "fraction": 1,
+          "scenario": "switch",
+          "peakSlip": 0.022286876113004506,
+          "peakYaw": 0.41403014577187813,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "loose",
+          "fraction": 0.2,
+          "scenario": "side",
+          "peakSlip": 0.22178740304941447,
+          "peakYaw": 1.3003527441016882,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "loose",
+          "fraction": 0.2,
+          "scenario": "behind",
+          "peakSlip": 0.22178740304941447,
+          "peakYaw": 1.3003527441016882,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "loose",
+          "fraction": 0.2,
+          "scenario": "switch",
+          "peakSlip": 0.24367626586199076,
+          "peakYaw": 1.3379989113000745,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "loose",
+          "fraction": 0.5,
+          "scenario": "side",
+          "peakSlip": 0.015074499416275623,
+          "peakYaw": 0.48625144652240737,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "loose",
+          "fraction": 0.5,
+          "scenario": "behind",
+          "peakSlip": 0.015074499416275623,
+          "peakYaw": 0.48625144652240737,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "loose",
+          "fraction": 0.5,
+          "scenario": "switch",
+          "peakSlip": 0.017505862976077563,
+          "peakYaw": 0.49528896911233106,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "loose",
+          "fraction": 1,
+          "scenario": "side",
+          "peakSlip": 0.011019484848264314,
+          "peakYaw": 0.24007093769809298,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "loose",
+          "fraction": 1,
+          "scenario": "behind",
+          "peakSlip": 0.011019484848264314,
+          "peakYaw": 0.24007093769809298,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "loose",
+          "fraction": 1,
+          "scenario": "switch",
+          "peakSlip": 0.012505840865855808,
+          "peakYaw": 0.2327672636678642,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "wet",
+          "fraction": 0.2,
+          "scenario": "side",
+          "peakSlip": 0.16592738489103775,
+          "peakYaw": 1.0192989927585665,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "wet",
+          "fraction": 0.2,
+          "scenario": "behind",
+          "peakSlip": 0.16592738489103775,
+          "peakYaw": 1.0192989927585665,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "wet",
+          "fraction": 0.2,
+          "scenario": "switch",
+          "peakSlip": 0.1803914690825867,
+          "peakYaw": 1.0426133381508589,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "wet",
+          "fraction": 0.5,
+          "scenario": "side",
+          "peakSlip": 0.011839712334770474,
+          "peakYaw": 0.38055438116185425,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "wet",
+          "fraction": 0.5,
+          "scenario": "behind",
+          "peakSlip": 0.011839712334770474,
+          "peakYaw": 0.38055438116185425,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "wet",
+          "fraction": 0.5,
+          "scenario": "switch",
+          "peakSlip": 0.013324266238733035,
+          "peakYaw": 0.3840936339862932,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "wet",
+          "fraction": 1,
+          "scenario": "side",
+          "peakSlip": 0.008822335221364998,
+          "peakYaw": 0.18769048797710344,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "wet",
+          "fraction": 1,
+          "scenario": "behind",
+          "peakSlip": 0.008822335221364998,
+          "peakYaw": 0.18769048797710344,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "wet",
+          "fraction": 1,
+          "scenario": "switch",
+          "peakSlip": 0.00987062954233435,
+          "peakYaw": 0.1829989891243699,
+          "finite": true,
+          "passed": true
+        }
+      ],
+      "passed": true
+    },
+    {
+      "name": "sports-car:cannon:1",
+      "loadout": {
+        "version": "vehicle-loadout-1",
+        "chassisId": "sports-car",
+        "parts": [
+          {
+            "instanceId": "stock:sports-car:0",
+            "partId": "driver-seat",
+            "layer": "inner",
+            "x": 4,
+            "y": 0,
+            "rotation": 0,
+            "facing": 0
+          },
+          {
+            "instanceId": "stock:sports-car:1",
+            "partId": "engine-l4",
+            "layer": "inner",
+            "x": -4,
+            "y": -1,
+            "rotation": 0,
+            "facing": 0
+          },
+          {
+            "instanceId": "stock:sports-car:2",
+            "partId": "gearbox",
+            "layer": "inner",
+            "x": -4,
+            "y": 1,
+            "rotation": 0,
+            "facing": 0
+          },
+          {
+            "instanceId": "stock:sports-car:3",
+            "partId": "fuel-tank",
+            "layer": "inner",
+            "x": -2,
+            "y": -1,
+            "rotation": 0,
+            "facing": 0
+          },
+          {
+            "instanceId": "stock:sports-car:4",
+            "partId": "battery",
+            "layer": "inner",
+            "x": -2,
+            "y": 0,
+            "rotation": 0,
+            "facing": 0
+          },
+          {
+            "instanceId": "stock:sports-car:5",
+            "partId": "ammo-box",
+            "layer": "inner",
+            "x": -2,
+            "y": 1,
+            "rotation": 0,
+            "facing": 0
+          },
+          {
+            "instanceId": "stock:sports-car:6",
+            "partId": "machine-gun",
+            "layer": "outer",
+            "x": -5,
+            "y": -2,
+            "rotation": 0,
+            "facing": 0
+          },
+          {
+            "instanceId": "extra",
+            "partId": "cannon",
+            "layer": "outer",
+            "x": 4,
+            "y": 1,
+            "rotation": 0,
+            "facing": 0
+          }
+        ]
+      },
+      "parameters": {
+        "modelVersion": "vehicle-physics-4",
+        "profileSchemaVersion": "vehicle-profile-4",
+        "profileId": "sports-car",
+        "profileRevision": "4",
+        "label": "跑车",
+        "category": "sports-car",
+        "geometry": {
+          "wheelbase": 0.84,
+          "cgFromRear": 0.5055456965394853,
+          "cgLateral": 0.01267080745341615,
+          "width": 0.52,
+          "track": 0.43999999992,
+          "frontOverhang": 0.18,
+          "rearOverhang": 0.18,
+          "heightCG": 0.12
+        },
+        "mass": 1.61,
+        "kYaw": 0.24795124156680146,
+        "power": {
+          "driveForce": 10.86336,
+          "brakeForce": 8,
+          "accelerationCurve": 2,
+          "maxSpeed": 12,
+          "driveFront": 0,
+          "brakeFront": 0.6,
+          "rolling": 0.012,
+          "aero": 0
+        },
+        "tires": {
+          "front": {
+            "stiffness": 70,
+            "muX": 1.05,
+            "muY": 1.05,
+            "slide": 0.82,
+            "nominalLoad": 4.905,
+            "loadSensitivity": 0,
+            "stiffnessExponent": 1,
+            "adaptation": {
+              "hard": 1,
+              "loose": 0.72,
+              "wet": 0.85
+            }
+          },
+          "rear": {
+            "stiffness": 76,
+            "muX": 1.05,
+            "muY": 1.05,
+            "slide": 0.82,
+            "nominalLoad": 4.905,
+            "loadSensitivity": 0,
+            "stiffnessExponent": 1,
+            "adaptation": {
+              "hard": 1,
+              "loose": 0.72,
+              "wet": 0.85
+            }
+          }
+        },
+        "steering": {
+          "maxAngle": 0.5934119456780721,
+          "response": 0.055,
+          "rate": 5.235987755982989
+        },
+        "drift": {
+          "brakeBase": 0.4,
+          "brakeGain": 3,
+          "maxBeta": 0.2617993877991494,
+          "minSpeed": 1.5,
+          "fullSpeed": 4,
+          "demandRate": 0.55,
+          "enterTime": 0.3,
+          "exitTime": 0.22,
+          "betaRate": 0.7853981633974483
+        },
+        "assist": {
+          "routeGain": 3.5,
+          "betaGain": 1.4,
+          "yawGain": 0.32,
+          "maxRouteRate": 2,
+          "gripReserve": 0.55,
+          "referenceTime": 0.1
+        },
+        "wheels": {
+          "radius": 0.12,
+          "inertia": 0.0005
+        },
+        "acceptance": {
+          "normalWindow": 3,
+          "recoveryWindow": 4,
+          "recoverySpeed": 0.65,
+          "recoveryHeading": 0.4363323129985824,
+          "recoveryYaw": 0.6,
+          "recoverySteer": 0.2617993877991494,
+          "recoveryBlend": 1,
+          "target": "干硬路高抓地、快速回正与精细响应"
+        }
+      },
+      "engine": {
+        "idleRpm": 800,
+        "redlineRpm": 7000,
+        "maxPower": 170,
+        "maxTorque": 240,
+        "torqueCurve": [
+          [
+            800,
+            0.5
+          ],
+          [
+            2500,
+            0.85
+          ],
+          [
+            4500,
+            1
+          ],
+          [
+            7000,
+            0.65
+          ]
+        ],
+        "fuelConsumption": 0.012
+      },
+      "gearbox": {
+        "ratios": [
+          3.6,
+          2.3,
+          1.55,
+          1.15,
+          0.9,
+          0.72
+        ],
+        "finalDrive": 4.1,
+        "shiftTime": 0.22,
+        "efficiency": 0.92,
+        "maxInputTorque": 400
+      },
+      "centerOfMass": {
+        "x": 0.004658385093167704,
+        "y": 0.01267080745341615
+      },
+      "matrix": [
+        {
+          "family": "hard",
+          "fraction": 0.2,
+          "scenario": "side",
+          "peakSlip": 0.29232887173243766,
+          "peakYaw": 1.7088462680419054,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "hard",
+          "fraction": 0.2,
+          "scenario": "behind",
+          "peakSlip": 0.29232887173243766,
+          "peakYaw": 1.7319239235326458,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "hard",
+          "fraction": 0.2,
+          "scenario": "switch",
+          "peakSlip": 0.29381046897235996,
+          "peakYaw": 1.6778893934203476,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "hard",
+          "fraction": 0.5,
+          "scenario": "side",
+          "peakSlip": 0.02682859700901241,
+          "peakYaw": 0.8620112103017806,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "hard",
+          "fraction": 0.5,
+          "scenario": "behind",
+          "peakSlip": 0.02682859700901241,
+          "peakYaw": 0.8620112103017806,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "hard",
+          "fraction": 0.5,
+          "scenario": "switch",
+          "peakSlip": 0.029963286882214335,
+          "peakYaw": 0.8734717268194161,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "hard",
+          "fraction": 1,
+          "scenario": "side",
+          "peakSlip": 0.02041541502331623,
+          "peakYaw": 0.4263785660083114,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "hard",
+          "fraction": 1,
+          "scenario": "behind",
+          "peakSlip": 0.019890709945655338,
+          "peakYaw": 0.4263785660083114,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "hard",
+          "fraction": 1,
+          "scenario": "switch",
+          "peakSlip": 0.02227858985678141,
+          "peakYaw": 0.4138468049172862,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "loose",
+          "fraction": 0.2,
+          "scenario": "side",
+          "peakSlip": 0.22751265077094684,
+          "peakYaw": 1.3300285340578109,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "loose",
+          "fraction": 0.2,
+          "scenario": "behind",
+          "peakSlip": 0.22751265077094684,
+          "peakYaw": 1.3300285340578109,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "loose",
+          "fraction": 0.2,
+          "scenario": "switch",
+          "peakSlip": 0.24314032185826293,
+          "peakYaw": 1.3081939627111556,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "loose",
+          "fraction": 0.5,
+          "scenario": "side",
+          "peakSlip": 0.015142300173186667,
+          "peakYaw": 0.4868498890097878,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "loose",
+          "fraction": 0.5,
+          "scenario": "behind",
+          "peakSlip": 0.015142300173186667,
+          "peakYaw": 0.4868498890097878,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "loose",
+          "fraction": 0.5,
+          "scenario": "switch",
+          "peakSlip": 0.017503434885634953,
+          "peakYaw": 0.4950776726661531,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "loose",
+          "fraction": 1,
+          "scenario": "side",
+          "peakSlip": 0.011229601934578337,
+          "peakYaw": 0.24063812443488822,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "loose",
+          "fraction": 1,
+          "scenario": "behind",
+          "peakSlip": 0.011229601934578337,
+          "peakYaw": 0.24063812443488822,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "loose",
+          "fraction": 1,
+          "scenario": "switch",
+          "peakSlip": 0.012488756293181622,
+          "peakYaw": 0.23245745627269454,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "wet",
+          "fraction": 0.2,
+          "scenario": "side",
+          "peakSlip": 0.1689731604637345,
+          "peakYaw": 1.0366068397479564,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "wet",
+          "fraction": 0.2,
+          "scenario": "behind",
+          "peakSlip": 0.1689731604637345,
+          "peakYaw": 1.0366068397479564,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "wet",
+          "fraction": 0.2,
+          "scenario": "switch",
+          "peakSlip": 0.17994382584282698,
+          "peakYaw": 1.0333271329594342,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "wet",
+          "fraction": 0.5,
+          "scenario": "side",
+          "peakSlip": 0.01188614375178456,
+          "peakYaw": 0.3809002336028214,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "wet",
+          "fraction": 0.5,
+          "scenario": "behind",
+          "peakSlip": 0.01188614375178456,
+          "peakYaw": 0.3809002336028214,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "wet",
+          "fraction": 0.5,
+          "scenario": "switch",
+          "peakSlip": 0.013298840597414402,
+          "peakYaw": 0.3844526101498708,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "wet",
+          "fraction": 1,
+          "scenario": "side",
+          "peakSlip": 0.008927924126302278,
+          "peakYaw": 0.18775373249333194,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "wet",
+          "fraction": 1,
+          "scenario": "behind",
+          "peakSlip": 0.008927924126302278,
+          "peakYaw": 0.18775373249333194,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "wet",
+          "fraction": 1,
+          "scenario": "switch",
+          "peakSlip": 0.009871120820393112,
+          "peakYaw": 0.18300971226498156,
+          "finite": true,
+          "passed": true
+        }
+      ],
+      "passed": true
+    },
+    {
+      "name": "truck:cannon:-1",
+      "loadout": {
+        "version": "vehicle-loadout-1",
+        "chassisId": "truck",
+        "parts": [
+          {
+            "instanceId": "stock:truck:0",
+            "partId": "driver-seat",
+            "layer": "inner",
+            "x": 8,
+            "y": 0,
+            "rotation": 0,
+            "facing": 0
+          },
+          {
+            "instanceId": "stock:truck:1",
+            "partId": "engine-diesel",
+            "layer": "inner",
+            "x": -8,
+            "y": -3,
+            "rotation": 0,
+            "facing": 0
+          },
+          {
+            "instanceId": "stock:truck:2",
+            "partId": "gearbox-heavy",
+            "layer": "inner",
+            "x": -8,
+            "y": -1,
+            "rotation": 0,
+            "facing": 0
+          },
+          {
+            "instanceId": "stock:truck:3",
+            "partId": "fuel-tank",
+            "layer": "inner",
+            "x": -8,
+            "y": 0,
+            "rotation": 0,
+            "facing": 0
+          },
+          {
+            "instanceId": "stock:truck:4",
+            "partId": "battery",
+            "layer": "inner",
+            "x": -8,
+            "y": 1,
+            "rotation": 0,
+            "facing": 0
+          },
+          {
+            "instanceId": "stock:truck:5",
+            "partId": "ammo-box",
+            "layer": "inner",
+            "x": -8,
+            "y": 2,
+            "rotation": 0,
+            "facing": 0
+          },
+          {
+            "instanceId": "stock:truck:6",
+            "partId": "machine-gun",
+            "layer": "outer",
+            "x": -9,
+            "y": -4,
+            "rotation": 0,
+            "facing": 0
+          },
+          {
+            "instanceId": "extra",
+            "partId": "cannon",
+            "layer": "outer",
+            "x": 4,
+            "y": -1,
+            "rotation": 0,
+            "facing": 0
+          }
+        ]
+      },
+      "parameters": {
+        "modelVersion": "vehicle-physics-4",
+        "profileSchemaVersion": "vehicle-profile-4",
+        "profileId": "truck",
+        "profileRevision": "4",
+        "label": "卡车",
+        "category": "truck",
+        "geometry": {
+          "wheelbase": 1.554,
+          "cgFromRear": 0.45020892658687933,
+          "cgLateral": -0.027296587926509193,
+          "width": 0.858,
+          "track": 0.725999999868,
+          "frontOverhang": 0.333,
+          "rearOverhang": 0.333,
+          "heightCG": 0.3
+        },
+        "mass": 5.715,
+        "kYaw": 0.3391310476844406,
+        "power": {
+          "driveForce": 149.76,
+          "brakeForce": 19.968,
+          "accelerationCurve": 2,
+          "maxSpeed": 9.893551078413477,
+          "driveFront": 0,
+          "brakeFront": 0.6,
+          "rolling": 0.012,
+          "aero": 0
+        },
+        "tires": {
+          "front": {
+            "stiffness": 295.68,
+            "muX": 0.9555000000000001,
+            "muY": 0.9555000000000001,
+            "slide": 0.82,
+            "nominalLoad": 23.544,
+            "loadSensitivity": 0,
+            "stiffnessExponent": 1,
+            "adaptation": {
+              "hard": 1,
+              "loose": 0.72,
+              "wet": 0.85
+            }
+          },
+          "rear": {
+            "stiffness": 321.024,
+            "muX": 0.9555000000000001,
+            "muY": 0.9555000000000001,
+            "slide": 0.82,
+            "nominalLoad": 23.544,
+            "loadSensitivity": 0,
+            "stiffnessExponent": 1,
+            "adaptation": {
+              "hard": 1,
+              "loose": 0.72,
+              "wet": 0.85
+            }
+          }
+        },
+        "steering": {
+          "maxAngle": 0.5934119456780721,
+          "response": 0.19,
+          "rate": 2.007128639793479
+        },
+        "drift": {
+          "brakeBase": 0.4,
+          "brakeGain": 3,
+          "maxBeta": 0.08726646259971647,
+          "minSpeed": 1.5,
+          "fullSpeed": 3.6,
+          "demandRate": 0.55,
+          "enterTime": 0.3,
+          "exitTime": 0.22,
+          "betaRate": 0.7853981633974483
+        },
+        "assist": {
+          "routeGain": 2.058600941862662,
+          "betaGain": 1.142523522733777,
+          "yawGain": 0.4352470562795342,
+          "maxRouteRate": 2,
+          "gripReserve": 0.55,
+          "referenceTime": 0.1
+        },
+        "wheels": {
+          "radius": 0.12,
+          "inertia": 0.0024
+        },
+        "acceptance": {
+          "normalWindow": 5,
+          "recoveryWindow": 6,
+          "recoverySpeed": 0.5,
+          "recoveryHeading": 0.19198621771937624,
+          "recoveryYaw": 0.22056438662814232,
+          "recoverySteer": 0.17453292519943295,
+          "recoveryBlend": 1,
+          "target": "刚性等效轴、大转弯半径、低动力重量比"
+        }
+      },
+      "engine": {
+        "idleRpm": 600,
+        "redlineRpm": 3500,
+        "maxPower": 260,
+        "maxTorque": 1300,
+        "torqueCurve": [
+          [
+            600,
+            0.75
+          ],
+          [
+            1200,
+            1
+          ],
+          [
+            2200,
+            0.95
+          ],
+          [
+            3500,
+            0.55
+          ]
+        ],
+        "fuelConsumption": 0.02
+      },
+      "gearbox": {
+        "ratios": [
+          8,
+          5.4,
+          3.7,
+          2.5,
+          1.8,
+          1.3,
+          1,
+          0.75
+        ],
+        "finalDrive": 4.8,
+        "shiftTime": 0.35,
+        "efficiency": 0.9,
+        "maxInputTorque": 1600
+      },
+      "centerOfMass": {
+        "x": -0.0773753280839895,
+        "y": -0.027296587926509193
+      },
+      "matrix": [
+        {
+          "family": "hard",
+          "fraction": 0.2,
+          "scenario": "side",
+          "peakSlip": 0.2742323108643409,
+          "peakYaw": 0.7670984288351722,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "hard",
+          "fraction": 0.2,
+          "scenario": "behind",
+          "peakSlip": 0.27424170828969563,
+          "peakYaw": 0.7961226946126939,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "hard",
+          "fraction": 0.2,
+          "scenario": "switch",
+          "peakSlip": 0.2647033367023608,
+          "peakYaw": 0.6931075155837403,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "hard",
+          "fraction": 0.5,
+          "scenario": "side",
+          "peakSlip": 0.11345475566085604,
+          "peakYaw": 0.9750780122917291,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "hard",
+          "fraction": 0.5,
+          "scenario": "behind",
+          "peakSlip": 0.12324155876542854,
+          "peakYaw": 1.033919593701418,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "hard",
+          "fraction": 0.5,
+          "scenario": "switch",
+          "peakSlip": 0.1036757256008973,
+          "peakYaw": 0.8933325031445137,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "hard",
+          "fraction": 1,
+          "scenario": "side",
+          "peakSlip": 0.007151194331014521,
+          "peakYaw": 0.49397702916836245,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "hard",
+          "fraction": 1,
+          "scenario": "behind",
+          "peakSlip": 0.007040707118575754,
+          "peakYaw": 0.49397702916836245,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "hard",
+          "fraction": 1,
+          "scenario": "switch",
+          "peakSlip": 0.016004450981868007,
+          "peakYaw": 0.4277592146037064,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "loose",
+          "fraction": 0.2,
+          "scenario": "side",
+          "peakSlip": 0.2751752055788313,
+          "peakYaw": 0.7347966496498421,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "loose",
+          "fraction": 0.2,
+          "scenario": "behind",
+          "peakSlip": 0.2751752055788313,
+          "peakYaw": 0.7613506202651097,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "loose",
+          "fraction": 0.2,
+          "scenario": "switch",
+          "peakSlip": 0.26053370881334165,
+          "peakYaw": 0.656640190744058,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "loose",
+          "fraction": 0.5,
+          "scenario": "side",
+          "peakSlip": 0.07066178442056592,
+          "peakYaw": 0.5835927021352683,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "loose",
+          "fraction": 0.5,
+          "scenario": "behind",
+          "peakSlip": 0.07066178442056592,
+          "peakYaw": 0.5835927021352683,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "loose",
+          "fraction": 0.5,
+          "scenario": "switch",
+          "peakSlip": 0.06236223424850853,
+          "peakYaw": 0.5121649377266959,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "loose",
+          "fraction": 1,
+          "scenario": "side",
+          "peakSlip": 0.004413782743395434,
+          "peakYaw": 0.2807352399248324,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "loose",
+          "fraction": 1,
+          "scenario": "behind",
+          "peakSlip": 0.003986154362621903,
+          "peakYaw": 0.2807352399248324,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "loose",
+          "fraction": 1,
+          "scenario": "switch",
+          "peakSlip": 0.00903488143209623,
+          "peakYaw": 0.24120419878729463,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "wet",
+          "fraction": 0.2,
+          "scenario": "side",
+          "peakSlip": 0.2743386611611104,
+          "peakYaw": 0.766925565910548,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "wet",
+          "fraction": 0.2,
+          "scenario": "behind",
+          "peakSlip": 0.2743386611611104,
+          "peakYaw": 0.7936117712124133,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "wet",
+          "fraction": 0.2,
+          "scenario": "switch",
+          "peakSlip": 0.2558596005059779,
+          "peakYaw": 0.6701789175950406,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "wet",
+          "fraction": 0.5,
+          "scenario": "side",
+          "peakSlip": 0.048105510759597236,
+          "peakYaw": 0.4356240961701929,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "wet",
+          "fraction": 0.5,
+          "scenario": "behind",
+          "peakSlip": 0.048105510759597236,
+          "peakYaw": 0.4356240961701929,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "wet",
+          "fraction": 0.5,
+          "scenario": "switch",
+          "peakSlip": 0.04313329905098854,
+          "peakYaw": 0.4037791081218616,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "wet",
+          "fraction": 1,
+          "scenario": "side",
+          "peakSlip": 0.0031205873806080878,
+          "peakYaw": 0.21410706848497235,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "wet",
+          "fraction": 1,
+          "scenario": "behind",
+          "peakSlip": 0.0031205873806080878,
+          "peakYaw": 0.21410706848497235,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "wet",
+          "fraction": 1,
+          "scenario": "switch",
+          "peakSlip": 0.007089201925380276,
+          "peakYaw": 0.18942147522882619,
+          "finite": true,
+          "passed": true
+        }
+      ],
+      "passed": true
+    },
+    {
+      "name": "truck:cannon:1",
+      "loadout": {
+        "version": "vehicle-loadout-1",
+        "chassisId": "truck",
+        "parts": [
+          {
+            "instanceId": "stock:truck:0",
+            "partId": "driver-seat",
+            "layer": "inner",
+            "x": 8,
+            "y": 0,
+            "rotation": 0,
+            "facing": 0
+          },
+          {
+            "instanceId": "stock:truck:1",
+            "partId": "engine-diesel",
+            "layer": "inner",
+            "x": -8,
+            "y": -3,
+            "rotation": 0,
+            "facing": 0
+          },
+          {
+            "instanceId": "stock:truck:2",
+            "partId": "gearbox-heavy",
+            "layer": "inner",
+            "x": -8,
+            "y": -1,
+            "rotation": 0,
+            "facing": 0
+          },
+          {
+            "instanceId": "stock:truck:3",
+            "partId": "fuel-tank",
+            "layer": "inner",
+            "x": -8,
+            "y": 0,
+            "rotation": 0,
+            "facing": 0
+          },
+          {
+            "instanceId": "stock:truck:4",
+            "partId": "battery",
+            "layer": "inner",
+            "x": -8,
+            "y": 1,
+            "rotation": 0,
+            "facing": 0
+          },
+          {
+            "instanceId": "stock:truck:5",
+            "partId": "ammo-box",
+            "layer": "inner",
+            "x": -8,
+            "y": 2,
+            "rotation": 0,
+            "facing": 0
+          },
+          {
+            "instanceId": "stock:truck:6",
+            "partId": "machine-gun",
+            "layer": "outer",
+            "x": -9,
+            "y": -4,
+            "rotation": 0,
+            "facing": 0
+          },
+          {
+            "instanceId": "extra",
+            "partId": "cannon",
+            "layer": "outer",
+            "x": 4,
+            "y": 1,
+            "rotation": 0,
+            "facing": 0
+          }
+        ]
+      },
+      "parameters": {
+        "modelVersion": "vehicle-physics-4",
+        "profileSchemaVersion": "vehicle-profile-4",
+        "profileId": "truck",
+        "profileRevision": "4",
+        "label": "卡车",
+        "category": "truck",
+        "geometry": {
+          "wheelbase": 1.554,
+          "cgFromRear": 0.45020892658687933,
+          "cgLateral": -0.01637795275590551,
+          "width": 0.858,
+          "track": 0.725999999868,
+          "frontOverhang": 0.333,
+          "rearOverhang": 0.333,
+          "heightCG": 0.3
+        },
+        "mass": 5.715,
+        "kYaw": 0.339328514749943,
+        "power": {
+          "driveForce": 149.76,
+          "brakeForce": 19.968,
+          "accelerationCurve": 2,
+          "maxSpeed": 9.893551078413477,
+          "driveFront": 0,
+          "brakeFront": 0.6,
+          "rolling": 0.012,
+          "aero": 0
+        },
+        "tires": {
+          "front": {
+            "stiffness": 295.68,
+            "muX": 0.9555000000000001,
+            "muY": 0.9555000000000001,
+            "slide": 0.82,
+            "nominalLoad": 23.544,
+            "loadSensitivity": 0,
+            "stiffnessExponent": 1,
+            "adaptation": {
+              "hard": 1,
+              "loose": 0.72,
+              "wet": 0.85
+            }
+          },
+          "rear": {
+            "stiffness": 321.024,
+            "muX": 0.9555000000000001,
+            "muY": 0.9555000000000001,
+            "slide": 0.82,
+            "nominalLoad": 23.544,
+            "loadSensitivity": 0,
+            "stiffnessExponent": 1,
+            "adaptation": {
+              "hard": 1,
+              "loose": 0.72,
+              "wet": 0.85
+            }
+          }
+        },
+        "steering": {
+          "maxAngle": 0.5934119456780721,
+          "response": 0.19,
+          "rate": 2.007128639793479
+        },
+        "drift": {
+          "brakeBase": 0.4,
+          "brakeGain": 3,
+          "maxBeta": 0.08726646259971647,
+          "minSpeed": 1.5,
+          "fullSpeed": 3.6,
+          "demandRate": 0.55,
+          "enterTime": 0.3,
+          "exitTime": 0.22,
+          "betaRate": 0.7853981633974483
+        },
+        "assist": {
+          "routeGain": 2.058600941862662,
+          "betaGain": 1.142523522733777,
+          "yawGain": 0.4352470562795342,
+          "maxRouteRate": 2,
+          "gripReserve": 0.55,
+          "referenceTime": 0.1
+        },
+        "wheels": {
+          "radius": 0.12,
+          "inertia": 0.0024
+        },
+        "acceptance": {
+          "normalWindow": 5,
+          "recoveryWindow": 6,
+          "recoverySpeed": 0.5,
+          "recoveryHeading": 0.19198621771937624,
+          "recoveryYaw": 0.22056438662814232,
+          "recoverySteer": 0.17453292519943295,
+          "recoveryBlend": 1,
+          "target": "刚性等效轴、大转弯半径、低动力重量比"
+        }
+      },
+      "engine": {
+        "idleRpm": 600,
+        "redlineRpm": 3500,
+        "maxPower": 260,
+        "maxTorque": 1300,
+        "torqueCurve": [
+          [
+            600,
+            0.75
+          ],
+          [
+            1200,
+            1
+          ],
+          [
+            2200,
+            0.95
+          ],
+          [
+            3500,
+            0.55
+          ]
+        ],
+        "fuelConsumption": 0.02
+      },
+      "gearbox": {
+        "ratios": [
+          8,
+          5.4,
+          3.7,
+          2.5,
+          1.8,
+          1.3,
+          1,
+          0.75
+        ],
+        "finalDrive": 4.8,
+        "shiftTime": 0.35,
+        "efficiency": 0.9,
+        "maxInputTorque": 1600
+      },
+      "centerOfMass": {
+        "x": -0.0773753280839895,
+        "y": -0.01637795275590551
+      },
+      "matrix": [
+        {
+          "family": "hard",
+          "fraction": 0.2,
+          "scenario": "side",
+          "peakSlip": 0.2753784872968008,
+          "peakYaw": 0.7699805731389506,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "hard",
+          "fraction": 0.2,
+          "scenario": "behind",
+          "peakSlip": 0.2753874146461679,
+          "peakYaw": 0.7994446718829196,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "hard",
+          "fraction": 0.2,
+          "scenario": "switch",
+          "peakSlip": 0.2636362187530166,
+          "peakYaw": 0.6909515931750855,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "hard",
+          "fraction": 0.5,
+          "scenario": "side",
+          "peakSlip": 0.1136221915877178,
+          "peakYaw": 0.976187314314521,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "hard",
+          "fraction": 0.5,
+          "scenario": "behind",
+          "peakSlip": 0.12344496740627099,
+          "peakYaw": 1.0355617527137873,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "hard",
+          "fraction": 0.5,
+          "scenario": "switch",
+          "peakSlip": 0.10381228283654834,
+          "peakYaw": 0.8921810164878976,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "hard",
+          "fraction": 1,
+          "scenario": "side",
+          "peakSlip": 0.00720855628010586,
+          "peakYaw": 0.49401185730275654,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "hard",
+          "fraction": 1,
+          "scenario": "behind",
+          "peakSlip": 0.007046285184639043,
+          "peakYaw": 0.49401185730275654,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "hard",
+          "fraction": 1,
+          "scenario": "switch",
+          "peakSlip": 0.01600488225800048,
+          "peakYaw": 0.4277331904720759,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "loose",
+          "fraction": 0.2,
+          "scenario": "side",
+          "peakSlip": 0.276328797576898,
+          "peakYaw": 0.7377579245947141,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "loose",
+          "fraction": 0.2,
+          "scenario": "behind",
+          "peakSlip": 0.276328797576898,
+          "peakYaw": 0.7647588186728986,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "loose",
+          "fraction": 0.2,
+          "scenario": "switch",
+          "peakSlip": 0.25949912436337697,
+          "peakYaw": 0.6546050436487867,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "loose",
+          "fraction": 0.5,
+          "scenario": "side",
+          "peakSlip": 0.0707044813315516,
+          "peakYaw": 0.5843172665302212,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "loose",
+          "fraction": 0.5,
+          "scenario": "behind",
+          "peakSlip": 0.0707044813315516,
+          "peakYaw": 0.5843172665302212,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "loose",
+          "fraction": 0.5,
+          "scenario": "switch",
+          "peakSlip": 0.06240328669938816,
+          "peakYaw": 0.5117564932548498,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "loose",
+          "fraction": 1,
+          "scenario": "side",
+          "peakSlip": 0.004450683233949259,
+          "peakYaw": 0.2807480373271342,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "loose",
+          "fraction": 1,
+          "scenario": "behind",
+          "peakSlip": 0.003987792088554185,
+          "peakYaw": 0.2807480373271342,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "loose",
+          "fraction": 1,
+          "scenario": "switch",
+          "peakSlip": 0.00903496203606012,
+          "peakYaw": 0.24117183485069477,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "wet",
+          "fraction": 0.2,
+          "scenario": "side",
+          "peakSlip": 0.2754862940451444,
+          "peakYaw": 0.769844770624114,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "wet",
+          "fraction": 0.2,
+          "scenario": "behind",
+          "peakSlip": 0.2754862940451444,
+          "peakYaw": 0.7969318688988823,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "wet",
+          "fraction": 0.2,
+          "scenario": "switch",
+          "peakSlip": 0.2548598394811419,
+          "peakYaw": 0.6682943288525488,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "wet",
+          "fraction": 0.5,
+          "scenario": "side",
+          "peakSlip": 0.04812259019540199,
+          "peakYaw": 0.43601075171958764,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "wet",
+          "fraction": 0.5,
+          "scenario": "behind",
+          "peakSlip": 0.04812259019540199,
+          "peakYaw": 0.43601075171958764,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "wet",
+          "fraction": 0.5,
+          "scenario": "switch",
+          "peakSlip": 0.04315172164027996,
+          "peakYaw": 0.4035285250562817,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "wet",
+          "fraction": 1,
+          "scenario": "side",
+          "peakSlip": 0.0031220455034971857,
+          "peakYaw": 0.21411277223821512,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "wet",
+          "fraction": 1,
+          "scenario": "behind",
+          "peakSlip": 0.0031220455034971857,
+          "peakYaw": 0.21411277223821512,
+          "finite": true,
+          "passed": true
+        },
+        {
+          "family": "wet",
+          "fraction": 1,
+          "scenario": "switch",
+          "peakSlip": 0.0070899488039720265,
+          "peakYaw": 0.1894018643577592,
+          "finite": true,
+          "passed": true
+        }
+      ],
+      "passed": true
+    }
+  ],
+  "limitations": [
+    "固定步离散实体圆接触未覆盖高速连续扫掠",
+    "普通控制验收仅覆盖所列稳定初态与装配，不保证碰撞或任意装配下可恢复",
+    "未执行真实手机驾驶与性能验收"
+  ]
+}

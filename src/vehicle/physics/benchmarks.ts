@@ -285,10 +285,10 @@ export function energyReport(p: VehicleProfile) {
       budgetResidual =
         previous -
         initial -
-        e.driveWork +
+        e.driveWork - e.boostWork - e.externalWork - e.configurationWork +
         e.tireDissipation +
         e.rollingDissipation +
-        e.brakeDissipation;
+        e.brakeDissipation + e.collisionDissipation;
     return {
       name: c.name,
       initial,

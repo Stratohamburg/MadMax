@@ -10,6 +10,9 @@ export function renderWeapons(ctx: CanvasRenderingContext2D, visuals: readonly W
     ctx.fillStyle = visual.overheated ? "#f3a05e0b" : "#a7e3bb08";
     ctx.beginPath(); ctx.moveTo(visual.origin.x, visual.origin.y); ctx.arc(visual.origin.x, visual.origin.y, visual.range, start, end); ctx.closePath(); ctx.fill();
     ctx.strokeStyle = "#b4d8b13b"; ctx.lineWidth = 0.025; ctx.stroke();
+    ctx.strokeStyle = "#d8e7c999"; ctx.lineWidth = .014;
+    ctx.beginPath(); ctx.moveTo(visual.origin.x, visual.origin.y);
+    ctx.lineTo(visual.origin.x + Math.cos(visual.aimAngle) * visual.range, visual.origin.y + Math.sin(visual.aimAngle) * visual.range); ctx.stroke();
     ctx.strokeStyle = visual.overheated ? "#fa886c" : "#c9ddb999"; ctx.lineWidth = 0.045;
     ctx.beginPath(); ctx.arc(visual.origin.x, visual.origin.y, visual.range, start, start + visual.arc * visual.rimProgress); ctx.stroke();
     if (visual.heatProgress > 0) {

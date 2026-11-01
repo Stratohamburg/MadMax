@@ -24,3 +24,6 @@ export {
 } from "./physical";
 export { createPhysicalState, physicalFrom } from "./state";
 export type { Actuation, PhysicalState, PhysicalData } from "./state";
+export * from "./mechanics";
+export * from "./reconfigure";
+export * from "./body-contact";

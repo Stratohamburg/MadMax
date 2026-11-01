@@ -19,21 +19,9 @@ export interface ChassisDefinition {
   layers: Readonly<Record<Layer, readonly ChassisCell[]>>;
   maxMassKg: number;
 }
-export interface EngineDefinition {
-  idleRpm: number;
-  redlineRpm: number;
-  maxPower: number;
-  maxTorque: number;
-  torqueCurve: readonly (readonly [number, number])[];
-  fuelConsumption: number;
-}
-export interface GearboxDefinition {
-  ratios: readonly number[];
-  finalDrive: number;
-  shiftTime: number;
-  efficiency: number;
-  maxInputTorque: number;
-}
+import type { EngineParameters, GearboxParameters } from "../vehicle/physics/mechanics";
+export type EngineDefinition = EngineParameters;
+export type GearboxDefinition = GearboxParameters;
 export interface PartDefinition {
   id: string;
   name: string;

@@ -1,0 +1,50 @@
+{
+  "date": "2026-11-01",
+  "modelVersion": "vehicle-physics-4",
+  "profileSchemaVersion": "vehicle-profile-4",
+  "controllerVersion": "route-assist-3",
+  "snapshotVersion": "vehicle-snapshot-4",
+  "coreRunId": "99e4b5beb9ac",
+  "unit": {
+    "command": "npx vitest run --reporter=default --reporter=json --outputFile=openspec/changes/add-assembly-physics/evidence/vehicle-physics-4/unit-results.json",
+    "passed": true,
+    "files": 31,
+    "total": 232,
+    "passedTests": 232,
+    "failed": 0
+  },
+  "browser": {
+    "command": "npx playwright test --reporter=list,json --output=test-results/physics-v4",
+    "source": "本轮 Playwright CLI 完成输出及退出码0",
+    "passed": true,
+    "total": 45,
+    "passedTests": 45,
+    "failed": 0,
+    "skipped": 0,
+    "flaky": 0,
+    "engine": "Chromium / Edge"
+  },
+  "build": {
+    "command": "npm run build",
+    "passed": true
+  },
+  "openspec": {
+    "command": "openspec validate --all --strict",
+    "passed": true,
+    "total": 11
+  },
+  "assemblyMatrix": {
+    "path": "assembly-matrix.json",
+    "passed": true,
+    "configurations": 14,
+    "scenarios": 378,
+    "peakSlipDegrees": 16.9867827427444,
+    "implementationHash": "0f3085cd694648d9e7f009ea385b00cf41b020a87764696bc7f7fb847ad12450"
+  },
+  "historicalEvidenceUnchanged": true,
+  "notExecuted": [
+    "真实手机驾驶/触控验收",
+    "真实手机战斗性能验收"
+  ],
+  "coreImplementationHash": "99e4b5beb9ac53f37de810f57a4abb337fc384f08c4e044374414490e9cf528a"
+}

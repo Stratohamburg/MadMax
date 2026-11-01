@@ -1,0 +1,15 @@
+{
+  "input": "Pointer Events 20% north, then release",
+  "initial": {
+    "x": -11,
+    "y": 19
+  },
+  "parked": {
+    "x": -11.000365989560319,
+    "y": 13.116512956508387
+  },
+  "speed": 1.0220119569845268e-50,
+  "station": "equipment",
+  "modal": "workbench",
+  "realPhone": false
+}

@@ -10,7 +10,7 @@ import {
 } from "../../src/vehicle/model";
 import { geometry } from "../../src/vehicle/physics/geometry";
 
-describe("vehicle-physics-3 接入合同", () => {
+describe("vehicle-physics-4 接入合同", () => {
   it("十车型都按自身Vmax映射距离，角度原样作为路线意图", () => {
     for (const profile of PROFILES) {
       const half = mapStick(25, 0, 50, false, profile);
@@ -50,7 +50,7 @@ describe("vehicle-physics-3 接入合同", () => {
     const intent = mapStick(50, 25, 50, false, profile);
     state = stepPhysicsVehicle(state, intent, profile);
     const obs = observePhysicsVehicle(state, profile, intent);
-    expect(obs.modelVersion).toBe("vehicle-physics-3");
+    expect(obs.modelVersion).toBe("vehicle-physics-4");
     expect(obs.profileId).toBe("rally-car");
     expect(obs.power).toHaveProperty("resistance");
     expect(obs.front).toHaveProperty("fx");

@@ -80,7 +80,7 @@ describe("系统整合回放", () => {
       return s;
     };
     const a = run(), b = run(); expect(a.snapshot()).toEqual(b.snapshot());
-    expect(a.spawned).toBe(3); expect(a.drive.drivetrain.fuel).toBeLessThan(a.composition.resources.fuelCapacity);
+    expect(a.spawned).toBe(SCRAPYARD.waves.filter(w => w.at === 0).reduce((sum, w) => sum + w.count, 0)); expect(a.drive.drivetrain.fuel).toBeLessThan(a.composition.resources.fuelCapacity);
   });
   it("区域触发三选一期间暂停，新局没有旧升级，终局不会继续模拟", () => {
     const s = new PveSession("upgrade", 7, loadout); s.start();

@@ -7,13 +7,16 @@ import type { Loadout } from "../../loadout/types";
 import { CATALOG } from "../../loadout/model";
 import { activeModifiers, advanceModifiers, chooseUpgrade, createModifierRun, offerChoices } from "../../progression/modifiers/run";
 import { adjacencyModifiers } from "../../progression/modifiers/adjacency";
-import { advanceAssemblyDrive, createAssemblyDrive } from "../../vehicle/assembly-drive";
+import { advanceAssemblyDrive, createAssemblyDrive, migrateAssemblyDrive } from "../../vehicle/assembly-drive";
 import { applyExternalImpulse } from "../../vehicle/physics/physical";
 import { stateFrom } from "../../vehicle/physics/state";
 import type { Intent } from "../../vehicle/physics/state";
 import { geometry } from "../../vehicle/physics/geometry";
 import { sweepVehicle } from "../../scene/contacts";
 import { WORLD } from "../../scene/world";
+import { resolveBodyContact } from "../../vehicle/physics/body-contact";
+import { motionEvents } from "../../combat/motion-events";
+import { ENEMIES } from "../../combat/enemies";
 import { SCRAPYARD, generateLevel } from "./level";
 import type { Level } from "./level";
 import { advanceRun, endRun, prepareRun, pickup, transition } from "./run";
@@ -40,7 +43,7 @@ export class PveSession {
     this.weapons = createWeaponSystem(this.composition, seed ^ 0x5212);
     this.world = new CombatWorld(seed ^ 0x2191);
     this.world.playerId = this.world.entities.spawn({ position: level.spawn, hp: 400, faction: 0,
-      radius: geometry(this.drive.vehicle, this.composition.profile).conservativeRadius, attack: 0 })!;
+      radius: geometry(this.drive.vehicle, this.composition.profile).conservativeRadius, mass: this.composition.profile.mass, attack: 0 })!;
     this.world.playerDamage = (amount, sourceId) => {
       const source = this.world.entities.slot(sourceId), p = this.drive.vehicle.position;
       const angle = source < 0 ? 0 : Math.atan2(this.world.entities.y[source] - p.y, this.world.entities.x[source] - p.x) - this.drive.vehicle.theta;
@@ -56,6 +59,14 @@ export class PveSession {
   }
   get tags() { return [...new Set(this.modules.loadout.parts.flatMap(p => CATALOG.parts[p.partId].tags))]; }
   get modifiers() { return this.modifierList; }
+  private syncPlayer(): void {
+    const p = this.world.entities, slot = p.slot(this.world.playerId);
+    if (slot < 0) return;
+    p.x[slot] = this.drive.vehicle.position.x; p.y[slot] = this.drive.vehicle.position.y;
+    p.vx[slot] = this.drive.vehicle.worldVelocity.x; p.vy[slot] = this.drive.vehicle.worldVelocity.y;
+    p.mass[slot] = this.composition.profile.mass;
+    p.radius[slot] = geometry(this.drive.vehicle, this.composition.profile).conservativeRadius;
+  }
   choose(id: string): void {
     if (this.run.phase !== "running") return;
     this.upgrades = chooseUpgrade(this.upgrades, id); this.refreshComposition(); this.offer();
@@ -70,7 +81,9 @@ export class PveSession {
     const signature = JSON.stringify([this.modules, this.upgrades.owned]);
     if (signature !== this.signature) {
       this.modifierList = [...(this.options.modifiers ?? []), ...activeModifiers(this.upgrades), ...adjacencyModifiers(this.modules.loadout)];
-      this.composition = moduleComposition(this.modules, this.modifiers); this.signature = signature;
+      const next = moduleComposition(this.modules, this.modifiers);
+      this.drive = migrateAssemblyDrive(this.drive, this.composition, next);
+      this.composition = next; this.signature = signature;
       this.weapons.energy = Math.min(this.weapons.energy, this.composition.resources.capacity);
       for (const kind of Object.keys(this.weapons.ammo)) this.weapons.ammo[kind] = Math.min(this.weapons.ammo[kind], this.composition.resources.ammo[kind] ?? 0);
       this.drive.drivetrain.fuel = Math.min(this.drive.drivetrain.fuel, this.composition.resources.fuelCapacity);
@@ -84,6 +97,7 @@ export class PveSession {
   step(intent: Intent): void {
     if (this.run.phase !== "running" || this.upgrades.offered.length) return;
     const dt = 1 / 120, p = this.world.entities;
+    this.world.events.length = 0;
     this.upgrades = advanceModifiers(this.upgrades, dt); this.refreshComposition();
     const before = this.drive.vehicle;
     // 武器与喷射使用同一电池。驾驶阶段只充电一次。
@@ -94,32 +108,44 @@ export class PveSession {
     this.drive.vehicle = stateFrom({ ...swept, assist: this.drive.vehicle.assist });
     let player = p.slot(this.world.playerId);
     if (player < 0) { this.finish("destroyed"); return; }
-    p.x[player] = this.drive.vehicle.position.x; p.y[player] = this.drive.vehicle.position.y;
-    p.radius[player] = geometry(this.drive.vehicle, this.composition.profile).conservativeRadius;
+    this.syncPlayer();
     while (this.spawned < this.generated.enemies.length && this.generated.enemies[this.spawned].at <= this.run.time + 1e-10) {
       const spawn = this.generated.enemies[this.spawned]; const id = p.spawn(spawn.entity);
       if (id === null) break;
       if (spawn.boss) this.bossIds.add(id); this.spawned++;
     }
-    this.world.rebuild();
-    if (intent.drift) this.events.push({ sequence: this.sequence++, type: "drift", magnitude: dt });
-    this.events.push({ sequence: this.sequence++, type: "speed", magnitude: this.drive.vehicle.speed });
-    if (this.drive.boost.remaining > 0) this.events.push({ sequence: this.sequence++, type: "boost", magnitude: dt });
-    // 接触伤害按实体冷却，避免每个逻辑步重复撞击结算。
-    for (let i = 0; i < p.capacity; i++) if (p.active[i] && p.faction[i] === 1 && this.drive.vehicle.speed > 1 &&
-      Math.hypot(p.x[i] - p.x[player], p.y[i] - p.y[player]) <= p.radius[i] + p.radius[player] &&
-      (this.collisionCooldown.get(p.id[i]) ?? 0) <= this.run.time) {
-      const raw = calculateDamage(this.drive.vehicle.speed * this.composition.profile.mass * 6, this.modifiers, ["collision"]).final;
-      const hp = p.hp[i]; this.world.hurt(i, raw, "physical", this.world.playerId); this.damage += hp - p.hp[i];
-      this.collisionCooldown.set(p.id[i], this.run.time + 0.5);
-      this.events.push({ sequence: this.sequence++, type: "collision", magnitude: raw });
-      this.world.hurt(player, Math.min(15, raw * 0.1), "physical", p.id[i]);
+    this.world.advanceEnemies(dt);
+    for (let i = 0; i < p.capacity; i++) if (p.active[i] && p.faction[i] === 1) {
+      const result = resolveBodyContact(this.drive.vehicle, this.composition.profile, {
+        position: { x: p.x[i], y: p.y[i] }, velocity: { x: p.vx[i], y: p.vy[i] }, mass: p.mass[i], radius: p.radius[i] });
+      if (!result.contact) continue;
+      this.drive.vehicle = stateFrom({ ...result.vehicle, assist: this.drive.vehicle.assist });
+      p.x[i] = result.other.position.x; p.y[i] = result.other.position.y;
+      p.vx[i] = result.other.velocity.x; p.vy[i] = result.other.velocity.y;
+      // 伤害冷却不干涉连续接触冲量；静态重叠或擦身不会产生撞击伤害。
+      if (result.contact.closingSpeed > 1 && result.contact.impulse > 0 && (this.collisionCooldown.get(p.id[i]) ?? 0) <= this.run.time) {
+        const raw = calculateDamage(result.contact.impulse * 6, this.modifiers, ["collision"]).final;
+        const definition = ENEMIES[p.archetype[i]];
+        const runOver = definition?.kind === "infantry" && result.contact.closingSpeed >= (definition.runOverSpeed ?? 1.2);
+        this.world.hurt(i, runOver ? p.hp[i] * (1 + p.armor[i] / 100) + 1 : raw, "physical", this.world.playerId);
+        this.world.present({ type: "impact", position: result.contact.point, angle: this.drive.vehicle.theta, weaponId: "spikes", faction: 0, size: 1 });
+        this.collisionCooldown.set(p.id[i], this.run.time + 0.5);
+        this.events.push({ sequence: this.sequence++, type: "collision", magnitude: result.contact.impulse });
+        // 碾压造成车体磨损，保证步兵撞击不会被外挂完全吸收而免费清场。
+        this.world.hurt(player, Math.max(runOver ? 3 : 0, Math.min(15, raw * 0.1)), "physical", p.id[i], runOver);
+      }
     }
+    // 实体接触可能将车身推向墙，继续按真实轮廓解接触，不按输入选择逃逸方向。
+    this.drive.vehicle = stateFrom({ ...sweepVehicle(this.drive.vehicle, this.drive.vehicle, this.composition.profile, dt, WORLD), assist: this.drive.vehicle.assist });
+    this.syncPlayer();
+    this.world.rebuild();
+    const movement = motionEvents(this.drive.vehicle, this.drive.output.boostForce, this.sequence, dt);
+    this.events.push(...movement); this.sequence += movement.length;
     const shot = stepWeapons(this.weapons, this.drive.vehicle, this.composition, this.world, { modifiers: this.modifiers, events: this.events });
     this.events = []; this.weapons = shot.state; this.visuals = shot.visuals;
     this.world.emit(shot.fire, this.world.playerId, 0, this.modifiers);
     for (const recoil of shot.recoil) this.drive.vehicle = stateFrom({ ...applyExternalImpulse(this.drive.vehicle, this.composition.profile, recoil.impulse, recoil.point), assist: this.drive.vehicle.assist });
-    this.world.step();
+    this.world.step(false, true);
     for (const event of this.world.events) {
       if (event.type === "damage" && event.targetId !== this.world.playerId) this.damage += event.amount;
       if (event.type === "death" && event.targetId !== this.world.playerId) this.events.push({ sequence: this.sequence++, type: "kill", magnitude: 1 });
@@ -150,6 +176,7 @@ export class PveSession {
     const bossDead = this.bossIds.size > 0 && [...this.bossIds].every(id => p.slot(id) < 0);
     this.run = advanceRun(this.run, this.level, position, dt, bossDead);
     this.refreshComposition();
+    this.syncPlayer();
     if (p.slot(this.world.playerId) < 0) this.finish("destroyed");
     else if (this.run.outcome) this.finish(this.run.outcome);
     else this.offer();

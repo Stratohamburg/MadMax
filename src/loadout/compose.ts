@@ -6,6 +6,7 @@ import { CATALOG, compareId, mounts, occupiedCells, validateLoadout } from "./mo
 import { resourceBudget } from "./resources";
 import { KG_PER_GAME_MASS } from "./types";
 import type { Loadout } from "./types";
+import { NM_PER_GAME_TORQUE, validateDrivetrain } from "../vehicle/physics/mechanics";
 
 export interface ComposeOptions {
   modifiers?: readonly AttributeModifier[];
@@ -43,15 +44,20 @@ export function compose(loadout: Loadout, options: ComposeOptions = {}) {
     maxPower: engineComponent.definition.engine!.maxPower * engineComponent.performance } : undefined;
   const gearbox = gearboxComponent ? { ...gearboxComponent.definition.gearbox!,
     shiftTime: gearboxComponent.definition.gearbox!.shiftTime * (gearboxComponent.performance < 1 ? 2 : 1) } : undefined;
-  if (engine && gearbox) {
-    profile.power.driveForce = Math.min(engine.maxTorque, gearbox.maxInputTorque) * gearbox.ratios[0] * gearbox.finalDrive * gearbox.efficiency / (2500 * profile.wheels.radius);
-    profile.power.maxSpeed = Math.min(base.power.maxSpeed * Math.sqrt(engine.maxPower / 170),
-      engine.redlineRpm * Math.PI / 30 * profile.wheels.radius / (gearbox.ratios.at(-1)! * gearbox.finalDrive));
-  }
   const tags = ["vehicle", loadout.chassisId, ...new Set(components.flatMap(c => c.definition.tags))];
   const modifiers = options.modifiers ?? [];
   const evaluate = (value: number, attribute: string) => evaluateAttribute(value, modifiers, "vehicle", attribute, tags).value;
-  profile.power.driveForce = evaluate(profile.power.driveForce, "power");
+  if (engine && gearbox) {
+    const originalForce = engine.maxTorque * gearbox.ratios[0] * gearbox.finalDrive * gearbox.efficiency / (NM_PER_GAME_TORQUE * profile.wheels.radius);
+    const gain = Math.max(0, evaluate(originalForce, "power")) / originalForce;
+    engine.maxTorque *= gain;
+    engine.maxPower *= gain;
+    // 加成先改变发动机能力，变速箱仍按自己的承载上限限制最终输出。
+    profile.power.driveForce = Math.min(engine.maxTorque, gearbox.maxInputTorque) * gearbox.ratios[0] * gearbox.finalDrive * gearbox.efficiency / (NM_PER_GAME_TORQUE * profile.wheels.radius);
+    profile.power.maxSpeed = Math.min(base.power.maxSpeed * Math.sqrt(engine.maxPower / 170),
+      engine.redlineRpm * Math.PI / 30 * profile.wheels.radius / (gearbox.ratios.at(-1)! * gearbox.finalDrive));
+  }
+  else profile.power.driveForce = evaluate(profile.power.driveForce, "power");
   profile.power.maxSpeed = evaluate(profile.power.maxSpeed, "maxSpeed");
   for (const axle of ["front", "rear"] as const) {
     for (const c of components.filter(c => c.performance > 0 && c.definition.tire)) {
@@ -75,16 +81,17 @@ export function compose(loadout: Loadout, options: ComposeOptions = {}) {
     const record = object as Record<string, unknown>;
     for (const [key, value] of Object.entries(record)) {
       const rule = PARAMETER_UNITS[key];
+      if (path === "profile.geometry" || (path === "profile" && (key === "mass" || key === "kYaw"))) continue;
       if (typeof value === "number" && rule) record[key] = clampValue(value, rule.min, rule.max, `${path}.${key}`);
       else if (value && typeof value === "object") constrain(value, `${path}.${key}`);
     }
   };
   constrain(profile);
-  profile.geometry.cgLateral = clampValue(profile.geometry.cgLateral, -profile.geometry.width / 2, profile.geometry.width / 2, "profile.geometry.cgLateral");
   profile.drift.fullSpeed = clampValue(profile.drift.fullSpeed, 0.1, profile.power.maxSpeed, "profile.drift.fullSpeed");
   profile.drift.minSpeed = clampValue(profile.drift.minSpeed, 0, Math.max(0, profile.drift.fullSpeed - 0.01), "profile.drift.minSpeed");
   const invalid = validateProfile(profile);
   if (invalid.length) throw new Error(`compose: ${invalid.join("; ")}`);
+  validateDrivetrain({ engine, gearbox, wheelRadius: profile.wheels.radius });
   const resources = resourceBudget(loadout);
   resources.capacity = components.reduce((sum, c) => sum + (c.definition.battery?.capacity ?? 0) * (c.performance > 0 ? 1 : 0), 0);
   resources.maxOutput = components.reduce((sum, c) => sum + (c.definition.battery?.maxOutput ?? 0) * c.performance, 0);
@@ -114,7 +121,7 @@ export function compose(loadout: Loadout, options: ComposeOptions = {}) {
     gripRating: (profile.tires.front.muY + profile.tires.rear.muY) / 2,
     turningRating: Math.tan(profile.steering.maxAngle) / profile.geometry.wheelbase,
     massLimitKg: evaluate(chassis.maxMassKg, "massLimit"), overloaded: profile.mass * KG_PER_GAME_MASS > evaluate(chassis.maxMassKg, "massLimit"),
-    canDrive: issues.length === 0, limitedVision, issues, resources, clamped,
+    canDrive: issues.length === 0, canControl: !!driver, limitedVision, issues, resources, clamped,
     inertia: d.inertia };
   return { loadout, profile, centerOfMass, inertia: d.inertia, summary, resources, engine, gearbox, boost,
     mounts: mounts(loadout).map(mount => ({ ...mount, position: { x: mount.position.x - centerOfMass.x, y: mount.position.y - centerOfMass.y } })),

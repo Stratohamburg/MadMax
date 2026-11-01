@@ -5,11 +5,12 @@ import { buyPart, deleteBlueprint, instanceModifiers, ownedStock, repairPart, re
 import type { Profile } from "../../persistence/profile";
 import type { ProfileRepository } from "../../persistence/repository";
 import { uniqueId } from "../../simulation/identity";
+import { boardGeometry, equipmentView, vehicleTopView } from "./vehicle-view";
 
-export function openWorkbench(initial: Loadout, repository: ProfileRepository, getProfile: () => Profile, setProfile: (p: Profile) => void, use: (loadout: Loadout) => void): void {
+export function openWorkbench(initial: Loadout, repository: ProfileRepository, getProfile: () => Profile, setProfile: (p: Profile) => void, use: (loadout: Loadout) => void): HTMLDialogElement {
   const dialog = document.createElement("dialog"); dialog.id = "workbench";
   dialog.innerHTML = `<header class="garage-header"><div><p class="eyebrow">MADMAX / MOTOR WORKS</p><h2>装配工作台</h2></div><button id="garage-close">关闭</button></header>
-    <p id="garage-wallet"></p><div class="garage-toolbar"><button data-layer="inner">车内剖面</button><button data-layer="outer">车顶外饰</button><label><input id="ghost-toggle" type="checkbox" checked>透视另一层</label></div>
+    <p id="garage-wallet"></p><div class="garage-toolbar"><button data-layer="inner">底盘俯视</button><button data-layer="outer">外观俯视</button><label><input id="ghost-toggle" type="checkbox" checked>透视另一层</label></div>
     <div class="garage-layout"><section><div class="grid-heading">↑ 车头 <span id="layer-name"></span></div><div class="board-scroll"><div id="loadout-board" aria-label="装配网格"></div></div>
     <div class="garage-toolbar"><button id="rotate-part">旋转 90°</button><button id="face-part">朝向 +45°</button><button id="remove-part">卸下</button><button id="restore-stock">还原出厂布局</button></div>
     <p id="selected-part">选择部件后点格摆放，或直接拖拽</p><output id="garage-summary"></output></section>
@@ -23,17 +24,23 @@ export function openWorkbench(initial: Loadout, repository: ProfileRepository, g
   const query = <T extends Element = HTMLElement>(selector: string) => dialog.querySelector<T>(selector)!;
   const message = (text: string) => { query("#garage-message").textContent = text; };
   const installed = () => loadout.parts.find(p => p.instanceId === selected);
-  const edit = (result: ReturnType<typeof movePart>) => { if (result.ok) { loadout = result.value; message("装配已更新"); } else message(result.errors.map(e => e.message).join("；")); render(); };
+  const edit = (result: ReturnType<typeof movePart>) => {
+    if (result.ok) {
+      try { composition(result.value); loadout = result.value; message("装配已更新"); }
+      catch (error) { message(`无法使用此装配：${String(error)}`); }
+    } else message(result.errors.map(e => e.message).join("；"));
+    render();
+  };
   const transact = async (operation: (p: Profile) => Profile) => {
     if (busy) return; busy = true;
     try { const p = await repository.update(operation); setProfile(p); message("已保存到本地档案"); render(); }
     catch (error) { message(String(error)); }
     finally { busy = false; }
   };
-  function composition() {
-    const modules = createModules(loadout), profile = getProfile();
-    for (const part of loadout.parts) modules.hp[part.instanceId] = profile.inventory[part.instanceId]?.hp ?? 0;
-    return moduleComposition(modules, instanceModifiers(profile, loadout));
+  function composition(candidate = loadout) {
+    const modules = createModules(candidate), profile = getProfile();
+    for (const part of candidate.parts) modules.hp[part.instanceId] = profile.inventory[part.instanceId]?.hp ?? 0;
+    return moduleComposition(modules, instanceModifiers(profile, candidate));
   }
   function place(x: number, y: number) {
     if (!selected) { message("先从仓库选择一个部件"); return; }
@@ -45,22 +52,38 @@ export function openWorkbench(initial: Loadout, repository: ProfileRepository, g
   function render() {
     const profile = getProfile(), chassis = CATALOG.chassis[loadout.chassisId], cells = chassis.layers[layer];
     query("#garage-wallet").textContent = `${chassis.name} · 货币 ${profile.currency} · 废料 ${profile.materials.scrap ?? 0} · ${Object.keys(profile.inventory).length} 件`;
-    query("#layer-name").textContent = layer === "inner" ? "车内剖面" : "车顶外饰";
+    query("#layer-name").textContent = layer === "inner" ? "车辆底盘 · 内层" : "车辆外观 · 外层";
     dialog.querySelectorAll<HTMLButtonElement>("[data-layer]").forEach(button => { button.setAttribute("aria-pressed", String(button.dataset.layer === layer)); });
-    const minY = Math.min(...cells.map(c => c.y)), maxY = Math.max(...cells.map(c => c.y)), maxX = Math.max(...cells.map(c => c.x));
-    const board = query("#loadout-board"); board.replaceChildren(); board.style.gridTemplateColumns = `repeat(${maxY - minY + 1}, minmax(30px, 1fr))`;
+    const { minY, maxX, columns, rows } = boardGeometry(loadout.chassisId);
+    const board = query("#loadout-board"); board.innerHTML = vehicleTopView(loadout.chassisId, layer);
+    board.style.setProperty("--columns", String(columns)); board.style.setProperty("--rows", String(rows));
+    const position = (element: HTMLElement, x: number, y: number, width = 1, height = 1) => {
+      Object.assign(element.style, { left: `${x / columns * 100}%`, top: `${y / rows * 100}%`, width: `${width / columns * 100}%`, height: `${height / rows * 100}%` });
+    };
     const occupied = new Map(loadout.parts.filter(p => p.layer === layer).flatMap(p => occupiedCells(p).map(c => [`${c.x},${c.y}`, p] as const)));
-    const ghosts = new Map(loadout.parts.filter(p => p.layer !== layer).flatMap(p => occupiedCells(p).map(c => [`${c.x},${c.y}`, p] as const)));
     for (const cell of cells) {
-      const part = occupied.get(`${cell.x},${cell.y}`), other = ghost ? ghosts.get(`${cell.x},${cell.y}`) : undefined;
+      const part = occupied.get(`${cell.x},${cell.y}`);
       const button = document.createElement("button"); button.className = `grid-cell ${cell.available ? "" : "unavailable"} ${part ? "occupied" : ""} ${cell.slot === "edge" ? "edge-slot" : ""} ${part?.instanceId === selected ? "selected" : ""}`;
-      button.style.gridRow = String(maxX - cell.x + 1); button.style.gridColumn = String(cell.y - minY + 1);
-      button.dataset.x = String(cell.x); button.dataset.y = String(cell.y); if (part) button.dataset.instance = part.instanceId;
+      position(button, cell.y - minY, maxX - cell.x);
+      button.dataset.x = String(cell.x); button.dataset.y = String(cell.y);
       button.setAttribute("aria-label", `${layer === "inner" ? "内" : "外"}层 ${cell.x},${cell.y}${part ? " " + CATALOG.parts[part.partId].name : " 空格"}`);
       button.title = `${cell.x},${cell.y} · ${cell.slot}${part ? " · " + CATALOG.parts[part.partId].name : ""}`;
-      if (part) button.textContent = part.x === cell.x && part.y === cell.y ? CATALOG.parts[part.partId].name.slice(0, 2) : "·";
-      if (other) { const hint = document.createElement("span"); hint.className = "ghost-part"; hint.textContent = CATALOG.parts[other.partId].name.slice(0, 2); button.append(hint); }
+      if (part) button.tabIndex = -1;
       board.append(button);
+    }
+    for (const part of loadout.parts) {
+      const other = part.layer !== layer; if (other && !ghost) continue;
+      const view = equipmentView(part, other), element = document.createElement(other ? "div" : "button");
+      element.className = other ? "ghost-equipment" : `installed-part ${part.instanceId === selected ? "selected" : ""}`;
+      position(element, view.minY - minY, maxX - view.maxX, view.width, view.height);
+      element.innerHTML = view.svg;
+      if (!other) {
+        element.dataset.instance = part.instanceId; element.setAttribute("aria-label", CATALOG.parts[part.partId].name);
+        element.title = `${CATALOG.parts[part.partId].name} · ${occupiedCells(part).length} 格`;
+        const label = document.createElement("span"); label.className = "equipment-label";
+        label.textContent = CATALOG.parts[part.partId].name.replace(/^.*? /, ""); element.append(label);
+      } else element.setAttribute("aria-hidden", "true");
+      board.append(element);
     }
     const list = query("#inventory-list"); list.replaceChildren();
     for (const instance of Object.values(profile.inventory)) {
@@ -75,30 +98,44 @@ export function openWorkbench(initial: Loadout, repository: ProfileRepository, g
     query<HTMLButtonElement>("#upgrade-part").disabled = !instance || instance.level >= 5;
     query("#upgrade-part").textContent = instance && instance.level < 5 ? `升级 L${instance.level + 1} · ${50 * (instance.level + 1)} / ${10 * (instance.level + 1)}` : "升级";
     query<HTMLButtonElement>("#repair-part").disabled = !instance || instance.hp >= CATALOG.parts[instance.definitionId].hp;
+    try {
     const c = composition();
-    query("#garage-summary").textContent = `总质量 ${Math.round(c.summary.massKg)} kg / 上限 ${Math.round(c.summary.massLimitKg)} kg${c.summary.overloaded ? " · 超重" : ""}\n质心 ${c.centerOfMass.x.toFixed(3)}, ${c.centerOfMass.y.toFixed(3)} · 前轴 ${Math.round(c.summary.frontLoadRatio * 100)}%\n动力 ${c.engine?.maxPower.toFixed(0) ?? 0} kW · 极速 ${c.profile.power.maxSpeed.toFixed(1)} · 抓地 ${c.summary.gripRating.toFixed(2)}\n供电 ${c.resources.powerDraw}/${c.resources.maxOutput} · 电量 ${c.resources.capacity} · 燃料 ${c.resources.fuelCapacity}\n弹药 ${Object.entries(c.resources.ammo).map(([type, n]) => `${type} ${n}`).join(" / ")}\n${c.summary.canDrive ? "装配可驾驶" : c.summary.issues.join("；")}${c.components.some(p => p.performance < 1) ? " · 受损部件降效/失效" : ""}`;
+    query("#garage-summary").textContent = `总质量 ${Math.round(c.summary.massKg)} kg / 上限 ${Math.round(c.summary.massLimitKg)} kg${c.summary.overloaded ? " · 超重" : ""}\n质心 ${c.centerOfMass.x.toFixed(3)}, ${c.centerOfMass.y.toFixed(3)} · 前轴 ${Math.round(c.summary.frontLoadRatio * 100)}%\n动力 ${c.engine?.maxPower.toFixed(0) ?? 0} kW · 最高目标速度 ${c.profile.power.maxSpeed.toFixed(1)} · 抓地 ${c.summary.gripRating.toFixed(2)}\n供电 ${c.resources.powerDraw}/${c.resources.maxOutput} · 电量 ${c.resources.capacity} · 燃料 ${c.resources.fuelCapacity}\n弹药 ${Object.entries(c.resources.ammo).map(([type, n]) => `${type} ${n}`).join(" / ")}\n${c.summary.canDrive ? "装配可驾驶" : c.summary.issues.join("；")}${c.components.some(p => p.performance < 1) ? " · 受损部件降效/失效" : ""}`;
     query<HTMLButtonElement>("#garage-use").disabled = !c.summary.canDrive;
+    } catch (error) {
+      query("#garage-summary").textContent = `此装配超出当前车辆支持范围：${String(error)}`;
+      query<HTMLButtonElement>("#garage-use").disabled = true;
+    }
     const options = (select: HTMLSelectElement, entries: { id: string; name: string }[]) => { select.replaceChildren(...entries.map(entry => { const option = document.createElement("option"); option.value = entry.id; option.textContent = entry.name; return option; })); };
     options(query("#buy-definition"), Object.values(CATALOG.parts).filter(p => profile.unlocks.parts.includes(p.id)));
     options(query("#unlock-chassis"), Object.values(CATALOG.chassis).filter(c => !profile.unlocks.chassis.includes(c.id)));
     options(query("#blueprint-select"), profile.blueprints); query<HTMLSelectElement>("#blueprint-select").value = blueprintId;
   }
-  let drag: { id: number; x: number; y: number; moved: boolean; instanceId: string; source: HTMLElement } | null = null, skipClick = false;
+  function boardCellAt(clientX: number, clientY: number) {
+    const board = query("#loadout-board"), rect = board.getBoundingClientRect();
+    if (clientX < rect.left || clientX >= rect.right || clientY < rect.top || clientY >= rect.bottom) return null;
+    const { columns, rows, maxX, minY } = boardGeometry(loadout.chassisId);
+    return { x: maxX - Math.floor((clientY - rect.top) / rect.height * rows), y: minY + Math.floor((clientX - rect.left) / rect.width * columns) };
+  }
+  let drag: { id: number; x: number; y: number; offsetX: number; offsetY: number; moved: boolean; instanceId: string; source: HTMLElement } | null = null, skipClick = false;
   dialog.addEventListener("pointerdown", event => {
     if (event.button !== 0) return;
     const source = (event.target as Element).closest<HTMLElement>("[data-instance]"); if (!source?.dataset.instance) return;
-    drag = { id: event.pointerId, x: event.clientX, y: event.clientY, moved: false, instanceId: source.dataset.instance, source }; source.setPointerCapture(event.pointerId);
+    skipClick = false;
+    const part = loadout.parts.find(p => p.instanceId === source.dataset.instance), cell = source.matches(".installed-part") ? boardCellAt(event.clientX, event.clientY) : null;
+    drag = { id: event.pointerId, x: event.clientX, y: event.clientY, offsetX: cell && part ? cell.x - part.x : 0, offsetY: cell && part ? cell.y - part.y : 0, moved: false, instanceId: source.dataset.instance, source }; source.setPointerCapture(event.pointerId);
   });
   dialog.addEventListener("pointermove", event => {
     if (!drag || drag.id !== event.pointerId) return;
     if (Math.hypot(event.clientX - drag.x, event.clientY - drag.y) > 5) drag.moved = true;
     dialog.querySelectorAll(".drop-target").forEach(e => e.classList.remove("drop-target"));
-    if (drag.moved) document.elementFromPoint(event.clientX, event.clientY)?.closest(".grid-cell")?.classList.add("drop-target");
+    const cell = boardCellAt(event.clientX, event.clientY);
+    if (drag.moved && cell) dialog.querySelector(`.grid-cell[data-x="${cell.x}"][data-y="${cell.y}"]`)?.classList.add("drop-target");
   });
   dialog.addEventListener("pointerup", event => {
     if (!drag || drag.id !== event.pointerId) return;
     const previousDrag = drag; drag = null; previousDrag.source.releasePointerCapture(event.pointerId);
-    if (previousDrag.moved) { skipClick = true; selected = previousDrag.instanceId; const target = document.elementFromPoint(event.clientX, event.clientY)?.closest<HTMLElement>(".grid-cell"); if (target) place(Number(target.dataset.x), Number(target.dataset.y)); else { message("已取消拖拽"); render(); } }
+    if (previousDrag.moved) { skipClick = true; selected = previousDrag.instanceId; const target = boardCellAt(event.clientX, event.clientY); if (target) place(target.x - previousDrag.offsetX, target.y - previousDrag.offsetY); else { message("已取消拖拽"); render(); } }
   });
   dialog.addEventListener("pointercancel", () => { drag = null; skipClick = true; render(); message("已取消拖拽"); });
   dialog.addEventListener("click", event => {
@@ -106,6 +143,9 @@ export function openWorkbench(initial: Loadout, repository: ProfileRepository, g
     const target = (event.target as Element).closest<HTMLElement>("button"); if (!target) return;
     if (target.matches(".inventory-part")) {
       selected = target.dataset.instance!; layer = CATALOG.parts[getProfile().inventory[selected].definitionId].layer; render();
+    } else if (target.matches(".installed-part")) {
+      if (!selected || selected === target.dataset.instance) { selected = target.dataset.instance!; render(); }
+      else { const cell = boardCellAt(event.clientX, event.clientY); if (cell) place(cell.x, cell.y); }
     } else if (target.matches(".grid-cell")) {
       if (target.dataset.instance && (!selected || selected === target.dataset.instance)) { selected = target.dataset.instance; render(); }
       else place(Number(target.dataset.x), Number(target.dataset.y));
@@ -136,4 +176,5 @@ export function openWorkbench(initial: Loadout, repository: ProfileRepository, g
     catch (error) { message(String(error)); } finally { busy = false; }
   });
   render();
+  return dialog;
 }

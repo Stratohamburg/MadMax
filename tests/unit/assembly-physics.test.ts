@@ -14,7 +14,7 @@ import { evaluateAttribute } from "../../src/stats/modifiers";
 describe("v3 质心、外力与版本", () => {
   it("拒绝 v2 profile 与 snapshot，v3 快照可继续逐步一致地模拟", () => {
     const p = getProfile("sports-car"), state = createState(p);
-    expect(MODEL_VERSION).toBe("vehicle-physics-3");
+    expect(MODEL_VERSION).toBe("vehicle-physics-4");
     expect(validateProfile({ ...p, modelVersion: "vehicle-physics-2", profileSchemaVersion: "vehicle-profile-2" }).length).toBeGreaterThan(0);
     expect(applyProfile(p, { ...p, profileSchemaVersion: "vehicle-profile-2" }).profile).toBe(p);
     const snapshot = createVehicleSnapshot(state, p, "assembly-test");
@@ -182,15 +182,18 @@ describe("动力链和喷射控制", () => {
     expect(energy).toBeCloseTo(100 - composition.boost.duration * composition.boost.energy, 8);
     expect(advanceBoost({ remaining: 0, cooldown: 0 }, composition, 0, true, 1 / 120).force).toBe(0);
   });
-  it("完整动力链与轮胎模拟中，同样重炮让跑车起步衰减大于卡车", () => {
+  it("完整动力链与轮胎模拟中，同样重炮让跑车达到共同速度的耗时增幅大于卡车", () => {
     const losses = ["sports-car", "truck"].map(id => {
       const stock = stockLoadout(id), loaded = { ...stock, parts: [...stock.parts, mounted("cannon", 4)] };
-      const speeds = [stock, loaded].map(loadout => {
+      const times = [stock, loaded].map(loadout => {
         const composition = compose(loadout); let drive = createAssemblyDrive(composition);
-        for (let i = 0; i < 120; i++) drive = advanceAssemblyDrive(drive, { targetSpeed: 20, angle: 0, drift: false }, composition);
-        return drive.vehicle.speed;
+        for (let i = 0; i < 1200; i++) {
+          drive = advanceAssemblyDrive(drive, { targetSpeed: 20, angle: 0, drift: false }, composition);
+          if (drive.vehicle.speed >= 5) return (i + 1) / 120;
+        }
+        throw new Error("未达到共同速度");
       });
-      expect(speeds[1]).toBeLessThan(speeds[0]); return 1 - speeds[1] / speeds[0];
+      expect(times[1]).toBeGreaterThan(times[0]); return times[1] / times[0] - 1;
     });
     expect(losses[0]).toBeGreaterThan(0.1); expect(losses[0]).toBeGreaterThan(losses[1]);
   });

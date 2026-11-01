@@ -27,7 +27,7 @@ import { createState } from "../src/vehicle/physics/state.ts";
 
 const output = resolve(
   process.argv[2] ??
-    "openspec/changes/add-assembly-physics/evidence/vehicle-physics-3/core",
+    "openspec/changes/add-assembly-physics/evidence/vehicle-physics-4/core",
 );
 const modes: AssistanceMode[] = ["none", "common", "final"];
 const common = getProfile("sports-car");
@@ -149,7 +149,7 @@ const pairs = SIMILAR_PAIRS.map(([left, right]) => {
   return result;
 });
 const summary = {
-  modelVersion: "vehicle-physics-3",
+  modelVersion: "vehicle-physics-4",
   benchmarkVersion: "vehicle-benchmark-2",
   runId,
   implementationHash,

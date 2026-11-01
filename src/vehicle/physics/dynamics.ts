@@ -20,6 +20,8 @@ export interface StepOptions {
   boostForce?: number;
   externalForce?: { x: number; y: number };
   externalTorque?: number;
+  /** 当前机械全油门轮端能力，供控制器换算请求；不直接施力。 */
+  driveCapacity?: number;
 }
 function actuatorRequest(base: Actuation, options: StepOptions): Actuation {
   let command = options.actuation ?? base;
@@ -56,6 +58,7 @@ export function observe(
       o.rear.stiffness,
       RULES.substep,
       o.loads,
+      options.driveCapacity,
     );
   const command = actuatorRequest(route.command, options),
     actualEnergy = mechanicalEnergy(s, p);
@@ -125,6 +128,7 @@ export function step(
         o.rear.stiffness,
         substep,
         o.loads,
+        options.driveCapacity,
       );
     const command = actuatorRequest(a.command, options);
     const next = advancePhysical(s, command, physical, substep, surface);

@@ -1,0 +1,236 @@
+{
+  "viewport": {
+    "width": 390,
+    "height": 844
+  },
+  "realPhone": false,
+  "time": 0.19999999999999998,
+  "weapons": [
+    {
+      "instanceId": "stock:sports-car:6",
+      "weaponId": "machine-gun",
+      "origin": {
+        "x": -11.232,
+        "y": 19.51311111111111
+      },
+      "baseAngle": -1.5707963267948966,
+      "aimAngle": -2.0707963267948966,
+      "arc": 6.283185307179586,
+      "range": 7,
+      "clearCenter": {
+        "x": -11,
+        "y": 19
+      },
+      "clearRadius": 1.10597955576845,
+      "rimProgress": 0.04166666666666663,
+      "heatProgress": 0.05,
+      "overheated": false,
+      "lockProgress": 0,
+      "target": {
+        "x": -13,
+        "y": 16.5
+      }
+    }
+  ],
+  "enemies": [
+    {
+      "id": 1,
+      "position": {
+        "x": -11,
+        "y": 19
+      },
+      "hp": 400,
+      "radius": 0.7373197038456333,
+      "threat": 1,
+      "faction": 0,
+      "cooldown": 0,
+      "velocity": {
+        "x": 0.005326950428935588,
+        "y": 0.009750917354337474
+      },
+      "mass": 1.35,
+      "archetype": "",
+      "theta": 0
+    },
+    {
+      "id": 2,
+      "position": {
+        "x": -13,
+        "y": 16.5
+      },
+      "hp": 40,
+      "radius": 0.17,
+      "threat": 1,
+      "faction": 1,
+      "cooldown": 0,
+      "velocity": {
+        "x": 0,
+        "y": 0
+      },
+      "mass": 0.08,
+      "archetype": "rifleman",
+      "theta": 0.7999999999999999
+    },
+    {
+      "id": 3,
+      "position": {
+        "x": -9.013867504905631,
+        "y": 16.020801257358446
+      },
+      "hp": 140,
+      "radius": 0.42,
+      "threat": 1,
+      "faction": 1,
+      "cooldown": 0,
+      "velocity": {
+        "x": -0.13312804709405496,
+        "y": 0.19969207064108252
+      },
+      "mass": 1.6,
+      "archetype": "raider-pickup",
+      "theta": 0.26
+    },
+    {
+      "id": 4,
+      "position": {
+        "x": -11,
+        "y": 14.5
+      },
+      "hp": 320,
+      "radius": 0.65,
+      "threat": 1,
+      "faction": 1,
+      "cooldown": 0,
+      "velocity": {
+        "x": 0,
+        "y": 0
+      },
+      "mass": 0,
+      "archetype": "bunker",
+      "theta": 1.5707963267948966
+    },
+    {
+      "id": 5,
+      "position": {
+        "x": -13.486024575140625,
+        "y": 14.02795084971875
+      },
+      "hp": 55,
+      "radius": 0.18,
+      "threat": 1,
+      "faction": 1,
+      "cooldown": 0,
+      "velocity": {
+        "x": 0.13416407864998736,
+        "y": 0.2683281572999748
+      },
+      "mass": 0.09,
+      "archetype": "rocketeer",
+      "theta": 0.7999999999999999
+    },
+    {
+      "id": 6,
+      "position": {
+        "x": -22.784182049323547,
+        "y": 11.504329914785401
+      },
+      "hp": 40,
+      "radius": 0.17,
+      "threat": 1,
+      "faction": 1,
+      "cooldown": 0,
+      "velocity": {
+        "x": 0.33750810931272657,
+        "y": 0.21468180208892543
+      },
+      "mass": 0.08,
+      "archetype": "rifleman",
+      "theta": 0.5665265581043687
+    },
+    {
+      "id": 7,
+      "position": {
+        "x": -21.869382458405248,
+        "y": 12.522445157732646
+      },
+      "hp": 40,
+      "radius": 0.17,
+      "threat": 1,
+      "faction": 1,
+      "cooldown": 0,
+      "velocity": {
+        "x": 0.3436103390903128,
+        "y": 0.2047728860719606
+      },
+      "mass": 0.08,
+      "archetype": "rifleman",
+      "theta": 0.537432596332931
+    },
+    {
+      "id": 8,
+      "position": {
+        "x": -22.934525835424434,
+        "y": 9.984756362701045
+      },
+      "hp": 40,
+      "radius": 0.17,
+      "threat": 1,
+      "faction": 1,
+      "cooldown": 0,
+      "velocity": {
+        "x": 0.3191720580718868,
+        "y": 0.24109997375809938
+      },
+      "mass": 0.08,
+      "archetype": "rifleman",
+      "theta": 0.6469429759973
+    },
+    {
+      "id": 9,
+      "position": {
+        "x": -8,
+        "y": 9
+      },
+      "hp": 320,
+      "radius": 0.65,
+      "threat": 1,
+      "faction": 1,
+      "cooldown": 0,
+      "velocity": {
+        "x": 0,
+        "y": 0
+      },
+      "mass": 0,
+      "archetype": "bunker",
+      "theta": 1.5707963267948966
+    },
+    {
+      "id": 10,
+      "position": {
+        "x": -15,
+        "y": -7
+      },
+      "hp": 220,
+      "radius": 0.5,
+      "threat": 1,
+      "faction": 1,
+      "cooldown": 0,
+      "velocity": {
+        "x": 0,
+        "y": 0
+      },
+      "mass": 0,
+      "archetype": "rocket-tower",
+      "theta": 1.5707963267948966
+    }
+  ],
+  "eventTypes": [
+    "1:muzzle",
+    "1:impact",
+    "0:muzzle"
+  ],
+  "effects": {
+    "active": 5,
+    "lastSequence": 4
+  }
+}

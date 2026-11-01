@@ -30,6 +30,7 @@ export interface BulletEmission {
   penetration: number; lifetime: number; burn?: { dps: number; duration: number };
   homingTarget?: number; turnRate?: number;
   source?: string;
+  weaponId?: string;
 }
 export interface FireEvent {
   weaponInstanceId: string; weaponId: string; origin: Vec2; angle: number; targetId: number | null;
@@ -38,6 +39,7 @@ export interface FireEvent {
 export interface RecoilEvent { weaponInstanceId: string; point: Vec2; impulse: Vec2 }
 export interface WeaponVisual {
   instanceId: string; origin: Vec2; baseAngle: number; aimAngle: number; arc: number; range: number;
+  weaponId?: string;
   clearCenter: Vec2; clearRadius: number; rimProgress: number; heatProgress: number;
   overheated: boolean; lockProgress: number; target: Vec2 | null;
 }

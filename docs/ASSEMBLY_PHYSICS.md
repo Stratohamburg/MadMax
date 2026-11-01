@@ -1,49 +1,44 @@
-# 装配物理与动力链
+# 装配物理与核心接入 v4
 
-当前核心版本为 `vehicle-physics-3` / `vehicle-profile-3`，快照为 `vehicle-snapshot-3`。v2 的驾驶数据与证据保留；v2 profile 和 snapshot 不能直接加载到 v3。
+当前核心为 `vehicle-physics-4` / `vehicle-profile-4`，快照为 `vehicle-snapshot-4`，控制器为 `route-assist-3`。v2/v3 证据保留，旧配置和快照不能静默解释为 v4。
 
-## 质量与质心
+## 归属与参数派生
 
-`compose(loadout, options)` 是无 DOM 的确定性派生入口，返回物理 profile、质心、惯量、挂点、能源预算和性能摘要。部件 kg 按 1000 kg = 1 game-M 换算；每格 0.12 game-L，位置取旋转占格中心。
+扭矩、功率、变速箱、有限助推、碰撞和质量参考点迁移由 [车辆物理核心](VEHICLE_PHYSICS.md) 定义。装配 spec 定义部件如何派生这些参数；`assembly-drive.ts` 负责接线和供给，没有另一套机械公式。部件名、健康状态、属性标签和普通/漂移模式不进入核心机械模块。
 
-底盘质量加上所有安装部件的质量得到总质量，质心按质量加权，惯量包含底盘原惯量和全部平行轴项。部件仍在车上时，即使内部件毁坏也有质量；外挂脱落后应从装配清单移除，再调用 compose。`options.health` 按实例 ID 接受 0～1 的耐久比例。
+`compose(loadout, options)` 确定性返回 profile、质心、惯量、挂点、资源预算及能力摘要。1000 kg = 1 game-M；每格 0.12 game-L，位置取旋转占格中心。总质量包含所有仍安装的部件，质心按质量加权，惯量包含底盘及各部件的平行轴项。毁坏的内部件仍有质量，脱落外挂从清单移除。
 
-profile 中 `cgFromRear` 控制纵向轴距比，`cgLateral` 控制横向质心。状态位置代表质心，车身、车轮、轮胎接地点速度、力矩和碰撞使用同一几何。物理校验范围截断保存在 `summary.clamped`，每项含字段、请求值和实际值。
+`cgFromRear` 和 `cgLateral`、挂点、摘要使用同一质量加权质心。质量/质心/惯量超出核心当前支持域时明确拒绝，工作台显示原因并阻止使用；不能截断某个字段后继续返回不一致几何。可调性能项的显式截断仍记入 `summary.clamped`，含请求值和实际值。
 
-空装配只用于底盘基线和性能比较，其 profile 与基础车型一致。可出击的装配须包含可用驾驶座、发动机、变速箱和油箱；`summary.canDrive` 与 `issues` 给出判断。非前置驾驶座没有潜望镜时 `limitedVision=true`，供玩法/界面限制视野。
+空装配用于底盘物理基线，其 profile 与基础车型一致。可出击装配需要可用驾驶座、发动机、变速箱和油箱；`summary.canDrive` 表示装配动力依赖，运行燃油另由状态决定。`summary.canControl` 独立表示驾驶权限。没油或发动机毁坏不冻结前轮、清除横摆或停掉独立制动；无驾驶权限时控制器不下发新转向/制动请求。非前置驾驶座缺潜望镜时标记视野限制。
 
-## 属性分层
+## 属性、损伤与动力
 
-`src/stats/modifiers.ts` 是装配、武器与伤害共享的求值器：
+共享属性求值为 `(base + flat总和) × (1 + increased总和) × more倍率积`，按来源和 ID 固定排序，支持标签过滤并保留各层贡献。车辆入口包括 `power`、`maxSpeed`、`grip`、`stiffness` 和 `massLimit`。
 
-```text
-(base + flat总和) × (1 + increased总和) × more倍率积
-```
+发动机受损使有效功率/扭矩减半，变速箱受损使换挡时间加倍，毁坏部件不提供功能。`power` 增益先写入有效发动机功率和扭矩，再受核心变速箱承载及功率限制；不能在轮端结果上乘倍率绕过限制。扭矩曲线、升降挡、断动力及燃油结算详见核心文档。
 
-`more.value` 直接表示倍率，如 1.5。按来源和 ID 固定排序，支持 allTags / anyTags，返回每层贡献和乘算分组。物理参数由 compose 做最终范围校验。当前车辆属性入口为 `power`、`maxSpeed`、`grip`、`stiffness`、`massLimit`。
+`profile.power.maxSpeed` 表示最高目标速度/能力估计，用于输入映射和控制请求，不是对实际速度的硬限制，也不保证带负载一定达到。重载会改变轮胎载荷、换挡阶段和加速轨迹；比较车辆应使用达到共同速度的时间等指标，不根据换挡中的单个时刻推断负载效果。
 
-## 动力链与单指驾驶
+自动喷射请求策略属于控制器：目标接近上限且路线与车头大致一致时请求。核心执行有限推力、持续时间、冷却和耗电。独立喷射器有驾驶权限和自身供给时可工作，不依赖发动机燃油；实际输出由执行器结果决定。
 
-`createAssemblyDrive` 和 `advanceAssemblyDrive` 在 1/120 秒外步上管理刚体、RPM、挡位、换挡剩余时间、油量、电量和喷射状态。发动机扭矩曲线线性插值，受额定功率、红线和变速箱承载上限限制。内容 Nm 按 2500 Nm = 1 game-M·game-L²/s² 标定，是游戏数值而非实车标定。
+## 状态迁移与生命周期
 
-自动升挡阈值为红线的 86%，降挡为 35%；换挡期间驱动力为零，接合后 RPM 根据新齿比下降。低挡总减速比使卡车保有较高起步推力储备。发动机受损时功率/扭矩减半，变速箱受损时换挡时间加倍，毁坏件不提供功能。
+`migrateAssemblyDrive` 用核心二维质心变换保留剩余车身位姿及运动，保留控制历史、横摆、轮速、挡位/换挡阶段、燃料、电量和喷射冷却；容量缩小时仅裁掉装不下的部分，容量增长不补满。附着/脱落能量差计入 `configurationWork`。挂点后坐力和外力分别计入 `externalWork`，喷射计入 `boostWork`。
 
-喷射在目标速度达到极速的 95%、车头与路线夹角小于 60° 时自动请求，不增加按钮。喷射有有限推力、持续时间、冷却与持续耗电；耗尽后进入冷却。没有可用驾驶/动力依赖时不输出驱动和助推。
+营地开关界面暂停/恢复同一状态；停车需同时满足速度和横摆阈值。拖车和更换底盘是显式生命周期事件，允许重置位姿/运动，保留资源和冷却。只有初次创建、明确补给或维修区规则能够补给。副本每步先更新部件和迁移参数，再推进驾驶、场景/实体接触、实际运动事件、武器与伤害；末尾再同步伤害带来的装配变化。
 
-## 外力与回放
+装配续算必须保存完整 `AssemblyDriveState` 及有效 Composition，包含 drivetrain/boost/energy；基础 `VehicleSnapshot` 只保存其声明的物理/控制器状态和 profile，不能单独代表装配局内存档。
 
-`StepOptions` / `Actuation` 接受 `driveForce`、`boostForce`、世界 `externalForce` 与 `externalTorque`。`applyExternalImpulse` 接受世界冲量和世界挂点，按质量与惯量产生平移/横摆。
-
-能量账本新增 `externalWork` 和 `boostWork`；原动力、轮胎、制动、滚阻和碰撞项继续独立记录。快照载入须使用权威字段恢复，不能注入 `speed` / `beta` 等派生值。装配驾驶的动力链、油量、能源和喷射状态也必须一并保存。
-
-## 验证入口
+## 验证与证据
 
 ```powershell
-npx vitest run tests/unit/assembly-physics.test.ts
+npx vitest run
 npm run physics:benchmark
 npm run physics:audit
+npm run physics:assembly-audit
 npm run validation:replay
 npm run test:e2e
 ```
 
-`tests/fixtures/vehicle-physics-2-baseline.json` 在升级前由 v2 核心采集，覆盖十车型各三场景。v3 空装配与该 fixture 比较，不能通过更新 fixture 来掩盖回归。新增核心证据位于 `openspec/changes/add-assembly-physics/evidence/vehicle-physics-3/core/`，网页截图/回放位于同版本的 `web/`。
+旧 `tests/fixtures/vehicle-physics-2-baseline.json` 不更新，继续核对十车型三场景空装配行为。v4 核心/网页证据在 `openspec/changes/add-assembly-physics/evidence/vehicle-physics-4/`，验收记录见同变更 `acceptance-v4.md`。真实装配矩阵使用实际发动机和变速箱，覆盖十车型出厂装配及跑车/卡车左右偏置重炮共 378 个普通驾驶工况，验收阈值不进入物理求解。

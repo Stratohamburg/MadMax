@@ -1,8 +1,8 @@
 import { rad } from "./math";
 
-export const MODEL_VERSION = "vehicle-physics-3" as const;
-export const PROFILE_SCHEMA_VERSION = "vehicle-profile-3" as const;
-export const CONTROLLER_VERSION = "route-assist-2" as const;
+export const MODEL_VERSION = "vehicle-physics-4" as const;
+export const PROFILE_SCHEMA_VERSION = "vehicle-profile-4" as const;
+export const CONTROLLER_VERSION = "route-assist-3" as const;
 export interface PhysicsRules {
   modelVersion: typeof MODEL_VERSION;
   units: { length: "game-L"; mass: "game-M"; time: "s" };
@@ -109,7 +109,7 @@ export const REFERENCE_PROFILE: VehicleProfile = {
   modelVersion: MODEL_VERSION,
   profileSchemaVersion: PROFILE_SCHEMA_VERSION,
   profileId: "sports-car",
-  profileRevision: "3",
+  profileRevision: "4",
   label: "跑车",
   category: "sports-car",
   geometry: {
@@ -306,7 +306,7 @@ export function validateProfile(value: unknown, rules = RULES): string[] {
       "profile.modelVersion: 不兼容；拒绝baseline-1与axle-dynamics-1",
     );
   if (p?.profileSchemaVersion !== PROFILE_SCHEMA_VERSION)
-    errors.push("profile.profileSchemaVersion: 必须为vehicle-profile-3");
+    errors.push("profile.profileSchemaVersion: 必须为vehicle-profile-4");
   if (errors.length) return errors;
   const g = p.geometry;
   if (g.track > g.width)

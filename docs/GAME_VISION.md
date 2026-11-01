@@ -57,7 +57,7 @@ MadMax 面向移动端竖屏，是一款以单指驾驶为核心的 2D 俯视角
 
 ### 局外：车库与长期成长
 
-玩家保存部件仓库、货币/材料、解锁、装配方案、主线进度与统计。车库中的双层网格工作台让玩家加载出厂预设或自由组装，并在出击前预览质量、质心、动力、极速、供电与弹药。
+玩家在试车场改造的营地驾驶，开到出生点前方的商店、装备或出击区域并停稳进入。局外保存部件仓库、货币/材料、解锁、装配方案、主线进度与统计。车库中的双层网格工作台以外观和底盘俯视呈现车辆，正方格上的多格部件显示完整外形，让玩家加载出厂预设或自由组装，并在出击前预览质量、质心、动力、极速、供电与弹药。
 
 本地档案必须版本化、可校验、可迁移，并在副本结算时原子写入，避免异常退出造成战利品复制或丢失。
 
@@ -96,6 +96,7 @@ MadMax 面向移动端竖屏，是一款以单指驾驶为核心的 2D 俯视角
 | `pve-extraction-mode` | run 生命周期、区域、搜刮、撤离、失败与结算 | 上述局内能力 |
 | `progression-persistence` | 档案、存档迁移、局外成长与结算入档 | 装配、PVE 结算 |
 | `vehicle-ui` | 改装工作台、状态纸娃娃与射界可视化 | 装配、武器、战斗 |
+| `driving-hub` | 可驾驶营地主界面、停车进入商店/装备/出击及返回营地 | 驾驶、装配、档案、工作台与副本 |
 
 推荐的基础实施链路为：
 
@@ -111,7 +112,7 @@ loadout-grid → assembly-physics → auto-weapons → combat-damage
 
 ## 6. 当前边界
 
-- 当前已实现驾驶验证场、双层装配、装配物理 v3、自动战斗、模块损毁、肉鸽升级、废弃货场搜打撤、原子本地档案和工作台。副本入口为 `/?mode=pve`，练习场为 `/`；使用说明见 [副本](PVE.md)、[档案](PERSISTENCE.md) 和 [车库](VEHICLE_UI.md)。
+- 当前已实现驾驶验证场、双层装配、装配物理 v4、自动战斗、模块损毁、肉鸽升级、废弃货场搜打撤、原子本地档案和工作台。默认首页 `/` 为驾驶营地；副本入口为 `/?mode=pve`，练习场为 `/?mode=practice`；使用说明见 [营地](DRIVING_HUB.md)、[副本](PVE.md)、[档案](PERSISTENCE.md) 和 [车库](VEHICLE_UI.md)。
 - 桌面逻辑、浏览器和布局验证独立于真实手机；当前未完成手机驾驶手感及战斗压测，不能视为移动端整体验收通过。
 - 本愿景不承诺 PVP、账号系统、云存档或联网匹配；未来可在不破坏确定性核心的前提下另行提案。
 - Canvas 2D 仍是当前渲染路线。是否更换框架取决于实际内容规模与性能验证，不能仅因愿景而提前引入。
@@ -127,5 +128,6 @@ loadout-grid → assembly-physics → auto-weapons → combat-damage
 - [PVE 搜打撤模式](../openspec/changes/add-pve-extraction-mode/proposal.md)
 - [局外成长与持久化](../openspec/changes/add-progression-persistence/proposal.md)
 - [车辆改装与战斗 UI](../openspec/changes/add-vehicle-ui/proposal.md)
+- [可驾驶营地主界面](../openspec/changes/add-driving-hub/proposal.md)
 
 武器和部件的数据草案见 [武器与车辆配件目录](WEAPONS_AND_PARTS.md)。当 Proposal 进入实施、归档或被替代时，应同步更新本节和“当前边界”，但不得将愿景文档当作可执行规范。

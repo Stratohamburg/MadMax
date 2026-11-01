@@ -40,6 +40,7 @@ npm run validation:replay
 ## 项目文档
 
 - [项目总览：大纲、技术路线与阶段规划](docs/PROJECT_OVERVIEW.md)
+- [游戏愿景：待实现玩法、设计护栏与能力路线](docs/GAME_VISION.md)
 - [第一阶段驾驶验证 Proposal](openspec/changes/validate-driving-prototype/proposal.md)
 - [第一阶段详细设计与验收矩阵](openspec/changes/validate-driving-prototype/design.md)
 - [第一阶段实施任务](openspec/changes/validate-driving-prototype/tasks.md)
@@ -68,7 +69,8 @@ npx --yes @fission-ai/openspec@1.15.0 list
 
 ## 目录约定
 
-- `docs/PROJECT_OVERVIEW.md`：项目定位、玩法与系统大纲、已确认规则、技术路线、架构和阶段规划。
+- `docs/PROJECT_OVERVIEW.md`：当前已实现内容、已确认驾驶规则、技术路线、架构和当前阶段。
+- `docs/GAME_VISION.md`：待实现的产品方向、设计护栏、能力依赖与范围边界；不替代 OpenSpec 规范。
 - `openspec/config.yaml`：工作流配置与项目上下文。文档正文使用简体中文，保留 OpenSpec 的英文结构标题及 SHALL/MUST 关键字。
 - `openspec/specs/`：项目当前生效的能力规范。
 - `openspec/changes/`：进行中的变更，每个变更包含提案、规范增量、设计和任务清单。

@@ -53,7 +53,7 @@ export function torqueAtRpm(rpm: number, curve: readonly (readonly [number, numb
   }
   return curve.at(-1)![1];
 }
-function rpmForGear(p: DrivetrainParameters, wheelSpeed: number, gear: number): number {
+export function rpmForGear(p: DrivetrainParameters, wheelSpeed: number, gear: number): number {
   return Math.max(p.engine!.idleRpm, Math.abs(wheelSpeed) * p.gearbox!.ratios[gear - 1] * p.gearbox!.finalDrive * 30 / Math.PI);
 }
 /** 当前挡位全油门能力；不推进时间或触发换挡。 */
@@ -65,7 +65,7 @@ export function drivetrainCapacity(s: DrivetrainState, p: DrivetrainParameters, 
   const torque = Math.max(0, Math.min(e.maxTorque * torqueAtRpm(rpm, e.torqueCurve), 9550 * e.maxPower / rpm, g.maxInputTorque));
   return { torque, wheelForce: torque * g.ratios[s.gear - 1] * g.finalDrive * g.efficiency / (NM_PER_GAME_TORQUE * p.wheelRadius) };
 }
-export function advanceDrivetrain(s: DrivetrainState, p: DrivetrainParameters, wheelSpeed: number, throttle: number, dt: number) {
+export function advanceDrivetrain(s: DrivetrainState, p: DrivetrainParameters, wheelSpeed: number, throttle: number, dt: number, requestedGear?: number) {
   if (!Number.isFinite(dt) || dt <= 0 || !Number.isFinite(wheelSpeed) || !Number.isFinite(throttle) ||
     ![s.rpm, s.shiftRemaining, s.fuel].every(Number.isFinite) || s.fuel < 0 || s.shiftRemaining < 0)
     throw new Error("drivetrain: 非法状态、步长或输入");
@@ -74,6 +74,7 @@ export function advanceDrivetrain(s: DrivetrainState, p: DrivetrainParameters, w
   if (![s.gear, s.targetGear].every(gear => Number.isInteger(gear) && gear >= 1 && gear <= g.ratios.length))
     throw new Error("drivetrain: 挡位非法");
   throttle = clamp(throttle, 0, 1);
+  if (requestedGear !== undefined && (!Number.isInteger(requestedGear) || requestedGear < 1 || requestedGear > g.ratios.length)) throw new Error("drivetrain: 请求挡位非法");
   const wheelRpm = rpmForGear(p, wheelSpeed, next.gear);
   next.rpm = clamp(wheelRpm, e.idleRpm, e.redlineRpm);
   if (next.shiftRemaining > 0) {
@@ -83,8 +84,9 @@ export function advanceDrivetrain(s: DrivetrainState, p: DrivetrainParameters, w
     return { state: next, wheelForce: 0, torque: 0, shifting: true };
   }
   if (next.fuel <= 0) return { state: next, wheelForce: 0, torque: 0, shifting: false };
-  if (wheelRpm >= e.redlineRpm * 0.86 && next.gear < g.ratios.length && throttle > 0) next.targetGear = next.gear + 1;
-  else if (wheelRpm < e.redlineRpm * 0.35 && next.gear > 1 && rpmForGear(p, wheelSpeed, next.gear - 1) < e.redlineRpm * 0.8) next.targetGear = next.gear - 1;
+  // 机械层只验证并执行目标挡位；没有新请求时保持当前挡位。
+  const requested = requestedGear ?? next.gear;
+  next.targetGear = requested < next.gear && rpmForGear(p, wheelSpeed, requested) >= e.redlineRpm ? next.gear : requested;
   if (next.targetGear !== next.gear) {
     next.shiftRemaining = g.shiftTime;
     return { state: next, wheelForce: 0, torque: 0, shifting: true };

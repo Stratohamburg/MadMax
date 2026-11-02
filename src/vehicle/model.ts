@@ -1,5 +1,5 @@
 /**
- * Web-consumer facade for vehicle-physics-4.
+ * Web-consumer facade for vehicle-physics-5.
  *
  * Production code uses the functions ending in `Physics`. The historical
  * baseline helpers are isolated in legacy-model.ts and remain available only

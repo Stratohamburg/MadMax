@@ -7,7 +7,7 @@ import {
   restoreVehicleSnapshot,
 } from "../../src/vehicle/model";
 import { SURFACES } from "../../src/vehicle/physics/surfaces";
-describe("vehicle-snapshot-4完整续算", () => {
+describe("vehicle-snapshot-5完整续算", () => {
   it("同ID自定义有效参数、时间、轮速、能量和控制历史经过JSON后精确续算", () => {
     const p = getProfile("rally-car");
     p.power.driveForce *= 0.8;

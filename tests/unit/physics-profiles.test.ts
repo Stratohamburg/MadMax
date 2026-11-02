@@ -16,7 +16,7 @@ describe("十车型 v2 矩阵", () => {
     expect(new Set(PROFILES.map((p) => p.profileId)).size).toBe(10);
     for (const p of PROFILES) {
       expect(validateProfile(p)).toEqual([]);
-      expect(p.profileRevision).toBe("4");
+      expect(p.profileRevision).toBe("5");
     }
     const q = getProfile("heavy-truck");
     q.mass = 1;

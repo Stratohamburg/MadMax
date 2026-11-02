@@ -14,6 +14,13 @@ const target = (id = 1, x = 2, y = 0): Target => ({ id, position: { x, y }, hp: 
 const query = (...targets: Target[]): TargetQuery => ({ query: () => targets });
 const definitions = (id: string, patch: Partial<WeaponDefinition>) => ({ ...WEAPONS, [id]: { ...WEAPONS[id], ...patch } });
 
+// 触发/冷却测试使用事先充满的武器；充能从整车电池扣除，空武器另测。
+function ready(c: ReturnType<typeof composition>) {
+  let state = createWeaponSystem(c);
+  for (let i = 0; i < 600; i++) state = stepWeapons(state, createState(c.profile), c, query()).state;
+  return state;
+}
+
 describe("自动武器合同", () => {
   it("目录覆盖四类，参数合法；播种状态可复现且零种子可运行", () => {
     expect(new Set(Object.values(WEAPONS).map(w => w.trigger)).size).toBe(4);
@@ -31,7 +38,7 @@ describe("自动武器合同", () => {
     expect(chooseTarget([{ ...a, hp: 2 }, b], { x: 0, y: 0 }, "lowest-hp")?.id).toBe(2);
   });
   it("无人为开火输入也会射击，无目标停火", () => {
-    const c = composition(), vehicle = createState(c.profile), state = createWeaponSystem(c);
+    const c = composition(), vehicle = createState(c.profile), state = ready(c);
     expect(stepWeapons(state, vehicle, c, query(target())).fire).toHaveLength(1);
     expect(stepWeapons(state, vehicle, c, query()).fire).toHaveLength(0);
   });
@@ -57,7 +64,7 @@ describe("自动武器合同", () => {
   });
   it("制导需保持同目标，切换/离开清零，重新锁定后发射", () => {
     const c = composition("missile"), vehicle = createState(c.profile);
-    let state = createWeaponSystem(c);
+    let state = ready(c);
     for (let i = 0; i < 40; i++) { const result = stepWeapons(state, vehicle, c, query(target())); state = result.state; expect(result.fire).toHaveLength(0); }
     state = stepWeapons(state, vehicle, c, query(target(2))).state;
     expect(state.weapons.weapon.lockProgress).toBeCloseTo(1 / 120);
@@ -88,7 +95,7 @@ describe("自动武器合同", () => {
   });
   it("过热停火，降低到恢复阈值后恢复射击", () => {
     const c = composition(), vehicle = createState(c.profile), options = { definitions: definitions("machine-gun", { heatPerShot: 2, heatMax: 2, heatRecovery: 0.5, cooling: 2 }) };
-    const first = stepWeapons(createWeaponSystem(c), vehicle, c, query(target()), options);
+    const first = stepWeapons(ready(c), vehicle, c, query(target()), options);
     expect(first.state.weapons.weapon.overheated).toBe(true);
     let state = first.state, shots = 0;
     for (let i = 0; i < 80; i++) { const result = stepWeapons(state, vehicle, c, query(target()), options); state = result.state; shots += result.fire.length; }
@@ -101,16 +108,19 @@ describe("自动武器合同", () => {
     const c = compose({ ...stock, parts: [...stock.parts.filter(p => p.partId !== "machine-gun"),
       { instanceId: "b", partId: "machine-gun", x: 0, y: 0, layer: "outer", rotation: 0, facing: 0 },
       { instanceId: "a", partId: "machine-gun", x: 1, y: 0, layer: "outer", rotation: 0, facing: 0 }] });
-    const vehicle = createState(c.profile), state = createWeaponSystem(c);
+    const vehicle = createState(c.profile), state = ready(c);
     state.ammo.ballistic = 1;
     const result = stepWeapons(state, vehicle, c, query(target()));
     expect(result.fire.map(f => f.weaponInstanceId)).toEqual(["a"]);
     expect(result.state.ammo.ballistic).toBe(0);
-    expect(stepWeapons({ ...state, energy: 0 }, vehicle, c, query(target())).fire).toHaveLength(0);
+    expect(stepWeapons({ ...createWeaponSystem(c), energy: 0 }, vehicle, c, query(target())).fire).toHaveLength(0);
     const low = { ...c, resources: { ...c.resources, maxOutput: 4 } };
-    const slowed = stepWeapons(createWeaponSystem(low), vehicle, low, query(target()));
-    const normal = stepWeapons(createWeaponSystem(c), vehicle, c, query(target()));
-    expect(slowed.state.weapons.a.cooldown).toBeGreaterThan(normal.state.weapons.a.cooldown);
+    const shots = (comp: typeof c) => {
+      let current = createWeaponSystem(comp), count = 0;
+      for (let i = 0; i < 240; i++) { const next = stepWeapons(current, vehicle, comp, query(target())); current = next.state; count += next.fire.length; }
+      return count;
+    };
+    expect(shots(low)).toBeLessThan(shots(c));
   });
   it("受损武器射速减半且散布加倍，毁坏停火", () => {
     const c = composition("shotgun"), vehicle = createState(c.profile), state = createWeaponSystem(c, 10);

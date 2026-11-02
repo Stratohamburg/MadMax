@@ -1,3 +1,4 @@
+import { vehicleSources } from "./vehicle-sources.ts";
 import assert from "node:assert/strict";
 import { createHash } from "node:crypto";
 import { execFileSync } from "node:child_process";
@@ -8,11 +9,10 @@ import { RULES } from "../src/vehicle/physics/config.ts";
 
 const folder = resolve(
   process.argv[2] ??
-    "openspec/changes/add-assembly-physics/evidence/vehicle-physics-4/core",
+    "openspec/changes/add-assembly-physics/evidence/vehicle-physics-5/core",
 );
 const hash = createHash("sha256");
-for (const file of readdirSync(resolve("src/vehicle/physics")).sort())
-  hash.update(file).update(readFileSync(resolve("src/vehicle/physics", file)));
+for (const file of vehicleSources) hash.update(file).update(readFileSync(resolve(file)));
 hash.update(readFileSync(resolve("scripts/physics-benchmark.ts")));
 const implementationHash = hash.digest("hex"),
   runId = implementationHash.slice(0, 12);
@@ -98,7 +98,7 @@ for (const pair of summary.pairs) {
 // 旧证据目录只读核对，不运行会直接覆盖它的旧e2e证据写入器。
 const baselinePath = "openspec/changes/validate-driving-prototype/evidence";
 const excludeCurrentEvidence =
-  ":(exclude)openspec/changes/add-assembly-physics/evidence/vehicle-physics-4/web";
+  ":(exclude)openspec/changes/add-assembly-physics/evidence/vehicle-physics-5/web";
 execFileSync("git", [
   "diff",
   "--quiet",
@@ -106,9 +106,11 @@ execFileSync("git", [
   "--",
   baselinePath,
   excludeCurrentEvidence,
-  "openspec/changes/build-vehicle-physics/evidence/vehicle-physics-1",
+  "openspec/changes/build-vehicle-physics/evidence",
+  "openspec/changes/add-assembly-physics/evidence/vehicle-physics-3",
+  "openspec/changes/add-assembly-physics/evidence/vehicle-physics-4",
 ]);
-const baselineTree = execFileSync('git',['ls-tree','-r','HEAD','--',baselinePath],{encoding:'utf8'}).split('\n').filter(line=>!line.includes(`${baselinePath}/vehicle-physics-4/`)).join('\n');
+const baselineTree = execFileSync('git',['ls-tree','-r','HEAD','--',baselinePath],{encoding:'utf8'}).split('\n').filter(line=>!line.includes(`${baselinePath}/vehicle-physics-5/`)).join('\n');
 const result = {
   auditVersion: "vehicle-core-audit-2",
   runId,

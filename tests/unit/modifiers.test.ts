@@ -17,7 +17,9 @@ describe("局内修饰符", () => {
     expect(compose(base.loadout, { modifiers: activeModifiers(state) }).profile.power.driveForce).toBeGreaterThan(base.profile.power.driveForce);
     const upgraded = grantUpgrade(createModifierRun(1), "damage"), c = compose(base.loadout, { modifiers: activeModifiers(upgraded) });
     const mount = c.mounts.find(m => m.weaponId)!;
-    const fired = stepWeapons(createWeaponSystem(c), createState(c.profile), c, { query: () => [{ id: 1, hp: 100, radius: 0.3, threat: 1, position: { x: mount.position.x + 3, y: mount.position.y } }] });
+    let weapons = createWeaponSystem(c);
+    for (let tick = 0; tick < 120; tick++) weapons = stepWeapons(weapons, createState(c.profile), c, { query: () => [] }).state;
+    const fired = stepWeapons(weapons, createState(c.profile), c, { query: () => [{ id: 1, hp: 100, radius: 0.3, threat: 1, position: { x: mount.position.x + 3, y: mount.position.y } }] });
     expect(fired.fire[0].bullets[0].damage).toBe(10);
     expect(calculateDamage(100, [{ id: "m", source: "s", group: "s", target: "damage", attribute: "damage", layer: "more", value: 2 }]).final).toBe(200);
   });

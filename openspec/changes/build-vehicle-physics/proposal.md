@@ -28,4 +28,8 @@ vehicle-physics-1将期望误作实际状态边界，导致85°锁角、减速�
 
 ## Core Ownership Revision
 
-本能力继续作为未归档车辆核心规范的唯一来源。发动机扭矩/功率与自动变速箱、有限助推、二维质心受力、质量变化迁移及实体接触冲量统一归入 vehicle-physics；assembly-physics 仅选择部件并派生参数。当前修订升级为 vehicle-physics-4 / vehicle-profile-4 / vehicle-snapshot-4、route-assist-3，历史 v2/v3 证据保留。
+本能力继续作为未归档车辆核心规范的唯一来源。发动机扭矩/功率与自动变速箱、有限助推、二维质心受力、质量变化迁移、实体接触冲量和外部作用去重统一归入 vehicle-physics；assembly-physics 仅选择部件并派生参数。当前修订为 vehicle-physics-5 / vehicle-profile-5 / vehicle-snapshot-5、route-assist-4，历史 v2/v3/v4 证据保留。
+
+## Architecture Revision
+
+输入层提供世界运动方向、目标速度和漂移/助推请求；angle 保留为输入兼容字段，其语义固定为 desiredTravelDirection。control/ 负责路线、速度、自动挡选择和喷射策略。物理核心只消费控制命令解析后的执行器、参数和外部作用，独立负责机械、轮胎、质量属性、场景接触和双刚体冲量。观测不推进控制；每个控制步仅推进一次控制历史。持续力和瞬时冲量有独立类型，冲量按 tick/source/sequence 去重，不乘 dt。外部状态只能经核心接口迁移。当前版本升级 v5；历史证据保留。完整悬挂、翻车、倒挡、动态燃油/弹药质量与附加外挂碰撞轮廓不在本轮实施；采用明确的固定消耗品质量和底盘轮廓近似。

@@ -11,7 +11,7 @@ test("客户端可加载并绘制画布", async ({ page, browser }) => {
       .evaluate((canvas: HTMLCanvasElement) => !!canvas.getContext("2d")),
   ).toBe(true);
   const directory =
-    "openspec/changes/add-assembly-physics/evidence/vehicle-physics-4/web/browser-regression";
+    "openspec/changes/add-assembly-physics/evidence/vehicle-physics-5/web/browser-regression";
   await mkdir(directory, { recursive: true });
   await writeFile(
     `${directory}/browser.json`,

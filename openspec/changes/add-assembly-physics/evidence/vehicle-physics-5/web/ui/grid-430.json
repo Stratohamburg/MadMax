@@ -1,0 +1,14 @@
+{
+  "viewport": {
+    "width": 430,
+    "height": 844
+  },
+  "layer": "inner",
+  "cellCount": 27,
+  "cell": {
+    "width": 34.390625,
+    "height": 34.390625
+  },
+  "maxSquareError": 0,
+  "realPhone": false
+}

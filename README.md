@@ -2,7 +2,7 @@
 
 MadMax 是一款面向移动端竖屏的网页版 2D 俯视角车辆冒险游戏，核心操控为单摇杆速度与方向输入、期望速度/路线、有限执行器和主动触发的侧滑漂移。
 
-当前网页已接入 `vehicle-physics-4` 驾驶核心，验证模式提供十个 `vehicle-profile-4` 车型和 `vehicle-surface-1` 三类路面。`baseline-1` 与 `vehicle-physics-1` 证据作为历史保留，真实手机驾驶仍单独验收。项目使用 [OpenSpec](https://github.com/Fission-AI/OpenSpec) 管理需求、设计与实施任务，采用 `spec-driven` 工作流。
+当前网页已接入 `vehicle-physics-5` 驾驶核心，验证模式提供十个 `vehicle-profile-5` 车型和 `vehicle-surface-1` 三类路面。`baseline-1` 与旧物理证据作为历史保留，真实手机驾驶仍单独验收。项目使用 [OpenSpec](https://github.com/Fission-AI/OpenSpec) 管理需求、设计与实施任务，采用 `spec-driven` 工作流。
 
 默认首页 `/` 是由试车场改造的可驾驶营地。出生点前方从左到右为商店、装备、出击停车区，开入后松开摇杆并停稳即可进入。装备界面提供车身外观/底盘俯视、正方格和一体化多格部件。`/?mode=pve` 保留副本准备入口，`/?mode=practice` 为独立驾驶练习；真实手机手感与战斗压测仍待设备。详细进度与证据见 [实施记录](docs/IMPLEMENTATION_STATUS.md)。
 
@@ -27,9 +27,9 @@ npm run preview -- --port 4173 --strictPort
 
 `build` 输出到 `dist/`，预览入口为 http://localhost:4173/；开发与预览进程用 Ctrl+C 结束。Playwright 自动使用或启动 5173 开发服务，优先使用已下载的 Chromium，未下载时可使用此 Windows 机器已安装的 Edge。两者均无时先运行 `npx playwright install chromium`。可用 `PLAYWRIGHT_CHANNEL` 环境变量指定浏览器通道。依赖由 `package-lock.json` 锁定，干净环境也可用 `npm ci` 安装。命令执行证据及实际版本见本变更的 [验收记录](openspec/changes/validate-driving-prototype/acceptance.md)。
 
-摇杆仅表达期望；普通/漂移差异属于控制器，物理层允许大侧滑、倒滑及spin。普通辅助会限制自身请求以预防失稳，撞击或已有失控仍可能继续spin。普通开发入口使用当前 `vehicle-physics-4` 运行模型，默认 profile 为 `sports-car`。`/?validate=1` 打开车型、分组参数和核心观测面板；`/?test=1` 仅在开发模式提供可重复测试初态注入，不属于玩家入口。旧 `baseline-1`、`axle-dynamics-1` 和 `vehicle-physics-1` 参数会被拒绝，不能静默转换成新版含义。
+摇杆仅表达期望；输入器输出 `Intent`，控制器负责路线、速度、自动挡和助推请求，物理层允许大侧滑、倒滑及 spin。装备层派生质量、重心、惯量和供给，触发/战斗层通过带来源和序号的外部作用提交后坐力与爆炸力；真实碰撞由物理核心求解，玩法消费接触结果。普通辅助会限制自身请求以预防失稳，撞击或已有失控仍可能继续 spin。普通开发入口使用当前 `vehicle-physics-5` 运行模型，默认 profile 为 `sports-car`。`/?validate=1` 打开车型、分组参数和核心观测面板；`/?test=1` 仅在开发模式提供可重复测试初态注入，不属于玩家入口。旧 `baseline-1`、`axle-dynamics-1` 和旧物理配置会被拒绝，不能静默转换成新版含义。
 
-独立的 `vehicle-physics-4` 核心入口位于 `src/vehicle/physics/index.ts`，不依赖 DOM；`build-vehicle-physics` 维护核心，`validate-driving-prototype` 负责输入、网页场景、碰撞、绘制、触控和手机证据。核心基准、审计和网页固定时钟回放可分别运行：
+独立的 `vehicle-physics-5` 核心入口位于 `src/vehicle/physics/index.ts`，不依赖 DOM；`src/vehicle/control/` 维护驾驶控制，`build-vehicle-physics` 维护核心，`validate-driving-prototype` 负责输入、网页场景、绘制、触控和手机证据。核心基准、审计和网页固定时钟回放可分别运行：
 
 ```powershell
 npm run physics:benchmark
@@ -37,7 +37,7 @@ npm run physics:audit
 npm run validation:replay
 ```
 
-这些命令使用 `vehicle-profile-4` 配置、`vehicle-surface-1` 路面和十个稳定车型 ID（十车型），覆盖干硬路、松散地和湿滑地，输出带 `modelVersion`、`profileRevision`、实现哈希和路面版本的证据。核心通过不等于网页接入或手机通过；迁移边界见 [接入清单](docs/VEHICLE_PHYSICS_INTEGRATION.md)，车型和三类路面见 [车型说明](docs/VEHICLE_PROFILES.md)。
+这些命令使用 `vehicle-profile-5` 配置、`vehicle-surface-1` 路面和十个稳定车型 ID（十车型），覆盖干硬路、松散地和湿滑地，输出带 `modelVersion`、`profileRevision`、实现哈希和路面版本的证据。核心通过不等于网页接入或手机通过；迁移边界见 [接入清单](docs/VEHICLE_PHYSICS_INTEGRATION.md)，车型和三类路面见 [车型说明](docs/VEHICLE_PROFILES.md)。装配审计和战斗压测分别使用 `npm run physics:assembly-audit` 与 `npm run combat:benchmark`。
 
 ## 项目文档
 
@@ -61,7 +61,8 @@ npm run validation:replay
 - [车辆物理接入清单](docs/VEHICLE_PHYSICS_INTEGRATION.md)
 - [武器与车辆配件目录](docs/WEAPONS_AND_PARTS.md)
 - [双层车辆装配：坐标、预设、编辑、资源与序列化](docs/LOADOUT.md)
-- [装配物理 v4：质心、动力链、喷射与能量](docs/ASSEMBLY_PHYSICS.md)
+- [装配物理 v5：质心、动力链、喷射与能量](docs/ASSEMBLY_PHYSICS.md)
+- [车辆架构 v5 验收与性能边界](openspec/changes/add-assembly-physics/acceptance-v5.md)
 - [自动武器：触发、供给、事件与射界数据](docs/AUTO_WEAPONS.md)
 - [战斗：伤害、弹丸池、损毁、维修与压测](docs/COMBAT.md)
 - [局内加成：标签、相邻协同、候选与数值诊断](docs/MODIFIERS.md)

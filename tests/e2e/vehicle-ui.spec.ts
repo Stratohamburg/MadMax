@@ -1,6 +1,6 @@
 import { test, expect } from "@playwright/test";
 import { mkdir, writeFile } from "node:fs/promises";
-const evidence = "openspec/changes/add-vehicle-ui/evidence";
+const evidence = "openspec/changes/add-assembly-physics/evidence/vehicle-physics-5/web/ui";
 test("工作台编辑、非法摆放、朝向、方案保存及真实 IndexedDB 重载", async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 });
   await page.goto("/?mode=pve&test=1"); await page.locator("#garage").click();

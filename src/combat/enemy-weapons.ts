@@ -3,6 +3,8 @@ import { stockLoadout } from "../loadout/presets";
 import { WEAPONS } from "./weapons/definitions";
 import { createWeaponSystem, stepWeapons } from "./weapons/system";
 import type { Target, WeaponSystemState } from "./weapons/types";
+import { enemyComposition } from "./enemy-vehicles";
+import type { AssemblyDriveState } from "../vehicle/assembly-drive";
 import { ENEMIES } from "./enemies";
 import type { EntityPool } from "./pools";
 const configurations = new Map<string, ReturnType<typeof makeConfiguration>>();
@@ -14,12 +16,12 @@ function makeConfiguration(id: string) {
   const original = WEAPONS[d.weaponId];
   return { composition, definitions: { [d.weaponId]: { ...original, damage: original.damage * d.weaponDamage, fireRate: original.fireRate * d.weaponRate, arc: d.id === "bunker" ? Math.PI : original.arc } } };
 }
-export function enemyWeaponStep(pool: EntityPool, slot: number, target: Target, state?: WeaponSystemState) {
+export function enemyWeaponStep(pool: EntityPool, slot: number, target: Target, state?: WeaponSystemState, drive?: AssemblyDriveState) {
   const id = pool.archetype[slot]; let config = configurations.get(id);
   if (!config) { config = makeConfiguration(id); configurations.set(id, config); }
-  const c = config.composition, current = state ?? createWeaponSystem(c, pool.id[slot]);
-  const charged = { ...current, energy: Math.min(c.resources.capacity, current.energy + 50 / 120) };
+  const c = drive ? enemyComposition(ENEMIES[id]) : config.composition, current = state ?? createWeaponSystem(c, pool.id[slot]);
+  const charged = { ...current, energy: drive ? drive.energy : Math.min(c.resources.capacity, current.energy + 50 / 120) };
   // 武器只消费挂载姿态；无需为每个敌人每步创建整套车辆轮胎/动力链状态。
   const pose = { position: { x: pool.x[slot], y: pool.y[slot] }, theta: pool.theta[slot], delta: 0 };
-  return stepWeapons(charged, pose, c, { query: () => [target] }, { definitions: config.definitions });
+  return stepWeapons(charged, pose, c, { query: () => [target] }, { definitions: config.definitions, powerAvailable: drive?.output.powerAvailable });
 }

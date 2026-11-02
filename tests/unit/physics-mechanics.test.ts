@@ -32,7 +32,7 @@ describe("独立核心动力链", () => {
   });
   it("换挡期间能力与输出均为零，接合后RPM回落，JSON续算一致", () => {
     const speed = 6300 * Math.PI / 30 / (3.6 * 4.1);
-    let result = advanceDrivetrain(initial, parameters, speed, 1, 1 / 120);
+    let result = advanceDrivetrain(initial, parameters, speed, 1, 1 / 120, 2);
     expect(result.shifting).toBe(true);
     const rpm = result.state.rpm;
     expect(drivetrainCapacity(result.state, parameters, speed).wheelForce).toBe(0);
@@ -80,8 +80,10 @@ describe("机械能力与装配接入", () => {
       const intent = { targetSpeed: 10, angle: 0.7, drift: false };
       const command = observe(drive.vehicle, c.profile, intent, { driveCapacity: capacity }).command;
       const next = advanceAssemblyDrive(drive, intent, c);
-      expect(next.output.driveForce).toBeLessThanOrEqual(capacity * command.drive + 1e-10);
-      if (!next.drivetrain.shiftRemaining) expect(next.output.driveForce).toBeCloseTo(capacity * command.drive, 9);
+      expect(next.output.driveRequest).toBeGreaterThanOrEqual(0);
+      expect(next.output.driveRequest).toBeLessThanOrEqual(1);
+      expect(next.output.driveForce).toBeLessThanOrEqual(next.output.driveCapacity! + 1e-10);
+      if (!next.output.shifting) expect(next.output.driveForce).toBeCloseTo(next.output.driveCapacity! * next.output.driveRequest!, 9);
     }
   });
   it("断油或发动机毁坏后滑行仍能转向与制动，初始惯性保持", () => {

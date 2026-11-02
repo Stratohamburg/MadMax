@@ -27,3 +27,8 @@ export type { Actuation, PhysicalState, PhysicalData } from "./state";
 export * from "./mechanics";
 export * from "./reconfigure";
 export * from "./body-contact";
+export * from "./world-contact";
+export * from "./vehicle-contact";
+export * from "./forces";
+export * from "./mass-properties";
+export * from "./supply";

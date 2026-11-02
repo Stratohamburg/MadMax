@@ -1,3 +1,4 @@
+import { vehicleSources } from "./vehicle-sources.ts";
 import { mkdirSync, writeFileSync, readFileSync, readdirSync } from "node:fs";
 import { resolve } from "node:path";
 import { createHash } from "node:crypto";
@@ -27,15 +28,12 @@ import { createState } from "../src/vehicle/physics/state.ts";
 
 const output = resolve(
   process.argv[2] ??
-    "openspec/changes/add-assembly-physics/evidence/vehicle-physics-4/core",
+    "openspec/changes/add-assembly-physics/evidence/vehicle-physics-5/core",
 );
 const modes: AssistanceMode[] = ["none", "common", "final"];
 const common = getProfile("sports-car");
 const sourceHash = createHash("sha256");
-for (const file of readdirSync(resolve("src/vehicle/physics")).sort())
-  sourceHash
-    .update(file)
-    .update(readFileSync(resolve("src/vehicle/physics", file)));
+for (const file of vehicleSources) sourceHash.update(file).update(readFileSync(resolve(file)));
 sourceHash.update(readFileSync(new URL(import.meta.url)));
 const implementationHash = sourceHash.digest("hex");
 const runId = implementationHash.slice(0, 12);
@@ -149,7 +147,7 @@ const pairs = SIMILAR_PAIRS.map(([left, right]) => {
   return result;
 });
 const summary = {
-  modelVersion: "vehicle-physics-4",
+  modelVersion: "vehicle-physics-5",
   benchmarkVersion: "vehicle-benchmark-2",
   runId,
   implementationHash,

@@ -9,6 +9,13 @@ import type { AttributeModifier } from "../stats/modifiers";
 import type { PresentationEvent } from "./presentation-events";
 import { ENEMIES } from "./enemies";
 import { enemyWeaponStep } from "./enemy-weapons";
+import { advanceEnemyVehicle, enemyComposition } from "./enemy-vehicles";
+import { applyImpulseEvents } from "../vehicle/physics/forces";
+import { stateFrom } from "../vehicle/physics/state";
+import { geometry } from "../vehicle/physics/geometry";
+import { resolveVehicleContact } from "../vehicle/physics/vehicle-contact";
+import { sweepVehicle, type StaticWorld } from "../vehicle/physics/scene-contact";
+import type { AssemblyDriveState } from "../vehicle/assembly-drive";
 export type CombatEvent = { type: "damage" | "death"; targetId: number; sourceId: number; amount: number; kind: string; position: Vec2 };
 interface Burn { source: string; owner: number; dps: number; remaining: number }
 export class CombatWorld implements TargetQuery {
@@ -16,6 +23,7 @@ export class CombatWorld implements TargetQuery {
   readonly events: CombatEvent[] = []; readonly burns = new Map<number, Burn[]>();
   readonly presentation: PresentationEvent[] = []; private presentationSequence = 0;
   readonly enemyWeapons = new Map<number, WeaponSystemState>(); enemyVisuals: WeaponVisual[] = [];
+  readonly enemyVehicles = new Map<number, AssemblyDriveState>();
   random: number; time = 0; playerId = 0; totalDamage = 0; kills = 0;
   /** 接入车辆模块护甲；返回真正到达车体的伤害。 */
   playerDamage?: (amount: number, sourceId: number, kind: (typeof DAMAGE_KINDS)[number]) => number;
@@ -54,6 +62,7 @@ export class CombatWorld implements TargetQuery {
       p.active[slot] = 0; this.burns.delete(p.id[slot]); if (p.faction[slot] === 1) this.kills++;
       this.events.push({ type: "death", targetId: p.id[slot], sourceId, amount: 0, kind, position: { x: p.x[slot], y: p.y[slot] } });
       this.enemyWeapons.delete(p.id[slot]);
+      this.enemyVehicles.delete(p.id[slot]);
       this.present({ type: "death", position: { x: p.x[slot], y: p.y[slot] }, angle: p.theta[slot], weaponId: ENEMIES[p.archetype[slot]]?.kind === "infantry" ? "spikes" : "reactive-armor", faction: p.faction[slot] as 0 | 1, size: p.radius[slot] * 2 });
     }
   }
@@ -91,10 +100,22 @@ export class CombatWorld implements TargetQuery {
     const player = p.slot(this.playerId);
     this.enemyVisuals = [];
     if (player >= 0) for (let i = 0; i < p.capacity; i++) if (p.active[i] && p.faction[i] === 1 && ENEMIES[p.archetype[i]]) {
-      const shot = enemyWeaponStep(p, i, p.target(player), this.enemyWeapons.get(p.id[i]));
+      const drive = this.enemyVehicles.get(p.id[i]);
+      const shot = enemyWeaponStep(p, i, p.target(player), this.enemyWeapons.get(p.id[i]), drive);
       this.enemyWeapons.set(p.id[i], shot.state);
       this.enemyVisuals.push(...shot.visuals.map(v => ({ ...v, instanceId: `enemy:${p.id[i]}` })));
       this.emit(shot.fire, p.id[i], 1);
+      if (drive) {
+        let next = { ...drive, energy: shot.state.energy };
+        if (shot.recoil.length) {
+          const tick = Math.round(this.time * 120), composition = enemyComposition(ENEMIES[p.archetype[i]]);
+          const result = applyImpulseEvents(drive.vehicle, composition.profile, drive.effects ?? { lastSequence: {} }, tick,
+            shot.recoil.map((r, index) => ({ ...r, source: r.weaponInstanceId, sequence: tick * 1024 + index, tick, frame: "world" as const })));
+          next = { ...next, vehicle: stateFrom({ ...result.state, assist: drive.vehicle.assist }), effects: result.history };
+        }
+        this.enemyVehicles.set(p.id[i], next);
+        if (shot.recoil.length) this.syncEnemyVehicle(i);
+      }
     }
     for (let i = 0; i < p.capacity; i++) if (p.active[i] && p.faction[i] === 1 && player >= 0) {
       p.cooldown[i] = Math.max(0, p.cooldown[i] - dt);
@@ -151,26 +172,58 @@ export class CombatWorld implements TargetQuery {
     return { time: this.time, random: this.random, kills: this.kills, totalDamage: this.totalDamage,
       entities: Array.from(p.active, (active, i) => active ? { ...p.target(i), faction: p.faction[i], cooldown: p.cooldown[i], velocity: { x: p.vx[i], y: p.vy[i] }, mass: p.mass[i], archetype: p.archetype[i], theta: p.theta[i] } : null),
       projectiles: Array.from(b.active, (active, i) => active ? { x: b.x[i], y: b.y[i], damage: b.damage[i], life: b.life[i], angle: b.angle[i], count: b.count[i] } : null),
-      events: structuredClone(this.events), aggregated: b.aggregated, enemyWeapons: Object.fromEntries(this.enemyWeapons), presentation: structuredClone(this.presentation) };
+      events: structuredClone(this.events), aggregated: b.aggregated, enemyWeapons: structuredClone(Object.fromEntries(this.enemyWeapons)),
+      enemyVehicles: structuredClone(Object.fromEntries(this.enemyVehicles)), presentation: structuredClone(this.presentation) };
   }
-  /** 追击仅施加有限速度变化，碰撞传入的速度不会瞬间清空。 */
-  advanceEnemies(dt = 1 / 120): void {
+  /** 实体池只保存权威车辆状态的投影，不能反向覆盖车辆运动和资源。 */
+  syncEnemyVehicle(slot: number): void {
+    const p = this.entities, state = this.enemyVehicles.get(p.id[slot]);
+    if (!state) return;
+    const profile = enemyComposition(ENEMIES[p.archetype[slot]]).profile, v = state.vehicle;
+    p.x[slot] = v.position.x; p.y[slot] = v.position.y; p.vx[slot] = v.worldVelocity.x; p.vy[slot] = v.worldVelocity.y;
+    p.theta[slot] = v.theta; p.mass[slot] = profile.mass; p.radius[slot] = geometry(v, profile).conservativeRadius;
+  }
+  advanceEnemies(dt = 1 / 120, scene?: StaticWorld): void {
     const p = this.entities, player = p.slot(this.playerId);
     if (player < 0) return;
     for (let i = 0; i < p.capacity; i++) if (p.active[i] && p.faction[i] === 1) {
       if (p.mass[i] === 0) { p.vx[i] = p.vy[i] = 0; continue; }
       const dx = p.x[player] - p.x[i], dy = p.y[player] - p.y[i], distance = Math.hypot(dx, dy);
+      const definition = ENEMIES[p.archetype[i]];
+      if (definition?.kind === "vehicle") {
+        const previous = this.enemyVehicles.get(p.id[i]);
+        const next = advanceEnemyVehicle(previous, definition,
+          { x: p.x[i], y: p.y[i] }, { x: p.vx[i], y: p.vy[i] }, p.theta[i],
+          { x: p.x[player], y: p.y[player] }, dt);
+        this.enemyVehicles.set(p.id[i], next);
+        if (scene) {
+          const before = previous?.vehicle ?? stateFrom({ ...next.vehicle, position: { x: p.x[i], y: p.y[i] }, theta: p.theta[i] });
+          next.vehicle = stateFrom({ ...sweepVehicle(before, next.vehicle, enemyComposition(definition).profile, dt, scene), assist: next.vehicle.assist });
+        }
+        this.syncEnemyVehicle(i);
+        continue;
+      }
       const speed = distance > Math.max(p.stopDistance[i], p.radius[i] + p.radius[player]) ? p.speed[i] : 0;
       const ax = (distance > 0 ? dx / distance * speed : 0) - p.vx[i];
       const ay = (distance > 0 ? dy / distance * speed : 0) - p.vy[i];
       const ratio = Math.min(1, p.acceleration[i] * dt / Math.max(1e-12, Math.hypot(ax, ay)));
       p.vx[i] += ax * ratio; p.vy[i] += ay * ratio;
       p.x[i] += p.vx[i] * dt; p.y[i] += p.vy[i] * dt;
-      const definition = ENEMIES[p.archetype[i]];
       if (definition && distance > 0) {
         const desired = definition.kind === "infantry" || speed === 0 ? Math.atan2(dy, dx) : Math.atan2(p.vy[i], p.vx[i]);
         p.theta[i] += clamp(wrap(desired - p.theta[i]), -dt * (definition.kind === "infantry" ? 4 : 1.3), dt * (definition.kind === "infantry" ? 4 : 1.3));
       }
+    }
+    const vehicles = [...this.enemyVehicles.keys()].sort((a, b) => a - b)
+      .map(id => ({ id, slot: p.slot(id) })).filter(v => v.slot >= 0);
+    for (let i = 0; i < vehicles.length; i++) for (let j = i + 1; j < vehicles.length; j++) {
+      const ai = vehicles[i].slot, bi = vehicles[j].slot;
+      if (Math.hypot(p.x[ai] - p.x[bi], p.y[ai] - p.y[bi]) > p.radius[ai] + p.radius[bi]) continue;
+      const a = this.enemyVehicles.get(vehicles[i].id)!, b = this.enemyVehicles.get(vehicles[j].id)!;
+      const hit = resolveVehicleContact(a.vehicle, enemyComposition(ENEMIES[p.archetype[ai]]).profile, b.vehicle, enemyComposition(ENEMIES[p.archetype[bi]]).profile);
+      if (!hit.contact) continue;
+      a.vehicle = stateFrom({ ...hit.vehicle, assist: a.vehicle.assist }); b.vehicle = stateFrom({ ...hit.other, assist: b.vehicle.assist });
+      this.syncEnemyVehicle(ai); this.syncEnemyVehicle(bi);
     }
   }
 }

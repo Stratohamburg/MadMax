@@ -238,7 +238,7 @@ const recipes: Recipe[] = [
 function materialize(r: Recipe): VehicleProfile {
   const p = structuredClone(REFERENCE_PROFILE);
   p.profileId = r.id;
-  p.profileRevision = "4";
+  p.profileRevision = "5";
   p.label = r.label;
   p.category = r.id;
   p.mass = r.mass;
@@ -252,6 +252,8 @@ function materialize(r: Recipe): VehicleProfile {
   p.geometry.heightCG = r.height;
   p.power.driveForce *= r.mass * r.power;
   p.power.brakeForce *= r.mass * r.brake;
+  p.power.handbrakeForce *= r.mass * r.brake;
+  p.power.aero *= Math.min(1.65, Math.sqrt(r.mass));
   p.power.maxSpeed = r.maxSpeed;
   p.power.driveFront = r.driveFront;
   p.steering.response = r.response;

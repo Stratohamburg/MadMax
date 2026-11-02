@@ -10,6 +10,7 @@ import type { Actuation, PhysicalState } from "./state";
 import { dryHard, validateSurface } from "./surfaces";
 import type { SurfaceSampler } from "./surfaces";
 import { availableDriveForce } from "./powertrain";
+import { worldEffect } from "./forces";
 import { tireProperties } from "./tires";
 export function mechanicalEnergy(s: PhysicalState, p: PhysicalProfile): number {
   return (
@@ -87,6 +88,8 @@ export function advancePhysical(
     )
   )
     throw new Error("actuation: 非有限");
+  if (command.handbrake !== undefined && !Number.isFinite(command.handbrake))
+    throw new Error("actuation.handbrake: 非有限");
   for (const value of [command.driveForce, command.boostForce, command.externalForce?.x, command.externalForce?.y, command.externalTorque])
     if (value !== undefined && !Number.isFinite(value)) throw new Error("actuation: 外部执行器非有限");
   if ((command.driveForce ?? 0) < 0 || (command.boostForce ?? 0) < 0)
@@ -137,6 +140,13 @@ export function advancePhysical(
     vx += direction.x * command.boostForce * dt / m;
     vy += direction.y * command.boostForce * dt / m;
     boostWork += energy() - before;
+  }
+  for (const effect of command.forces ?? []) {
+    const before = energy(), world = worldEffect(s, effect.force, effect.point, effect.frame);
+    if (effect.work !== "boost" && effect.work !== "external") throw new Error("effect: 非法功类型");
+    vx += world.vector.x * dt / m; vy += world.vector.y * dt / m;
+    r += ((world.point.x - s.position.x) * world.vector.y - (world.point.y - s.position.y) * world.vector.x) * dt / I;
+    if (effect.work === "boost") boostWork += energy() - before; else externalWork += energy() - before;
   }
   for (const name of ["front", "rear"] as const) {
     const before = energy();
@@ -243,10 +253,10 @@ export function advancePhysical(
       const fraction =
         name === "front" ? p.power.brakeFront : 1 - p.power.brakeFront;
       const capacity =
-        p.power.brakeForce *
         R *
-        (brake * fraction +
-          (name === "rear" ? clamp(command.rearBrake, 0, 1) : 0)) *
+        (p.power.brakeForce * brake * fraction +
+          (name === "rear" ? p.power.brakeForce * clamp(command.rearBrake, 0, 1) +
+            p.power.handbrakeForce * clamp(command.handbrake ?? 0, 0, 1) : 0)) *
         dt;
       const before = energy();
       const impulse = clamp(

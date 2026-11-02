@@ -11,6 +11,7 @@ export function stockLoadout(chassisId: string, catalog: Catalog = CATALOG): Loa
     const definition = catalog.parts[partId];
     const cells = [...catalog.chassis[chassisId].layers[definition.layer]];
     if (partId === "driver-seat") cells.sort((a, b) => b.x - a.x || Math.abs(a.y) - Math.abs(b.y) || a.y - b.y);
+    if (partId === "machine-gun") cells.sort((a, b) => a.x ** 2 + a.y ** 2 - b.x ** 2 - b.y ** 2 || b.x - a.x || a.y - b.y);
     let placed = false;
     for (const cell of cells) {
       const part: InstalledPart = { instanceId: `stock:${chassisId}:${index}`, partId,

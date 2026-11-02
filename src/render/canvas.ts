@@ -13,7 +13,7 @@ export class CanvasRenderer {
   constructor(private canvas: HTMLCanvasElement, private scene: { practiceLabels?: boolean; lookAheadY?: number; viewHeight?: number; miniMapBottom?: number; landmarks?: readonly { x: number; y: number; color: string }[] } = {}) { this.context = canvas.getContext('2d')!; }
   reset(state: PhysicsState): void { this.camera = { x: state.position.x, y: state.position.y, rotation: 0 }; }
 
-  render(previous: PhysicsState, current: PhysicsState, alpha: number, profile: VehicleProfile, trails: Trail[], time: number, validate: boolean, observation?: Observation, ground?: (ctx: CanvasRenderingContext2D, car: Vec2) => void, foreground?: (ctx: CanvasRenderingContext2D, car: Vec2) => void): void {
+  render(previous: PhysicsState, current: PhysicsState, alpha: number, profile: VehicleProfile, trails: Trail[], time: number, validate: boolean, observation?: Observation, ground?: (ctx: CanvasRenderingContext2D, car: Vec2) => void, foreground?: (ctx: CanvasRenderingContext2D, car: Vec2 & { theta: number }) => void): void {
     const ctx = this.context;
     const { width, height } = this.canvas.getBoundingClientRect();
     const dpr = window.devicePixelRatio || 1;

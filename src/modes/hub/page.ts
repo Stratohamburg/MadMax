@@ -15,12 +15,14 @@ import { openWorkbench } from "../../ui/loadout/workbench";
 import { openShop } from "../../ui/loadout/shop";
 import { advanceParking, emptyParking, HUB_SPAWN, STATIONS, type Station } from "./stations";
 import { drawHub } from "./ground";
+import { openGm } from "../../ui/gm/panel";
+import { renderWeaponBody } from "../../render/combat";
 
 export function mountHub(initial: Loadout, repository: ProfileRepository, getProfile: () => Profile, setProfile: (profile: Profile) => void, notice?: string) {
   document.title = "MadMax · 废土营地";
   const app = document.querySelector<HTMLDivElement>("#app")!;
   app.innerHTML = `<section id="game-view" aria-label="营地主界面"><canvas id="world" aria-label="营地车辆、商店、装备和出击停车区"></canvas>
-    <header class="topbar"><div class="brand">MADMAX <small>废土营地 / 自由驾驶</small></div><a class="button-link" href="?mode=practice">驾驶练习</a></header>
+    <header class="topbar"><div class="brand">MADMAX <small>废土营地 / 自由驾驶</small></div><div class="hub-tools"><button id="hub-gm">GM</button><a class="button-link" href="?mode=practice">驾驶练习</a></div></header>
     <nav class="hub-directory" aria-label="前方功能区"><span>01 商店</span><span>02 装备</span><span>03 出击</span></nav>
     <div class="hud"><div><strong id="speed">0.0</strong><span>世界单位 / 秒</span></div><div id="hub-wallet"></div></div>
     <div id="hub-notice" role="status"></div></section><section id="controls" aria-label="驾驶操控区">
@@ -48,15 +50,20 @@ export function mountHub(initial: Loadout, repository: ProfileRepository, getPro
     composition = nextComposition; previous = drive.vehicle;
     renderer.reset(drive.vehicle);
   }
-  function enter(station: Station) {
+  function openModal(open: () => HTMLDialogElement) {
+    if (modal) return;
     clearInput(); clock.pause(); refresh();
-    if (station.id === "deploy") { location.assign("?mode=pve"); return; }
-    modal = station.id === "shop" ? openShop(repository, getProfile, setProfile)
-      : openWorkbench(loadout, repository, getProfile, setProfile, next => refresh(next));
+    modal = open();
     modal.addEventListener("close", () => {
       modal = null; refresh(); clearInput(); stick.resize(); if (!document.hidden) clock.resume(performance.now() / 1000);
     }, { once: true });
   }
+  function enter(station: Station) {
+    if (station.id === "deploy") { clearInput(); clock.pause(); location.assign("?mode=pve"); return; }
+    openModal(() => station.id === "shop" ? openShop(repository, getProfile, setProfile)
+      : openWorkbench(loadout, repository, getProfile, setProfile, next => refresh(next)));
+  }
+  app.querySelector("#hub-gm")!.addEventListener("click", () => openModal(() => openGm(repository, getProfile, setProfile)));
   const tow = app.querySelector<HTMLButtonElement>("#hub-tow")!;
   tow.onclick = () => {
     if (modal) return;
@@ -78,7 +85,13 @@ export function mountHub(initial: Loadout, repository: ProfileRepository, getPro
       const next = advanceParking(parking, drive.vehicle.position, drive.vehicle.speed, input, dt, drive.vehicle.r); parking = next.state;
       if (next.entered) enter(next.entered);
     });
-    renderer.render(previous, drive.vehicle, clock.alpha, composition.profile, [], clock.time, false, undefined, ctx => drawHub(ctx, parking));
+    renderer.render(previous, drive.vehicle, clock.alpha, composition.profile, [], clock.time, false, undefined, ctx => drawHub(ctx, parking), (ctx, car) => {
+      ctx.save(); ctx.translate(car.x, car.y); ctx.rotate(car.theta);
+      for (const mount of composition.mounts) if (mount.weaponId && composition.components.some(c => c.part.instanceId === mount.instanceId && c.performance > 0)) {
+        renderWeaponBody(ctx, mount.weaponId, mount.position, mount.angle, mount.angle);
+      }
+      ctx.restore();
+    });
     app.querySelector("#speed")!.textContent = drive.vehicle.speed.toFixed(1);
     const profile = getProfile(); app.querySelector("#hub-wallet")!.textContent = `货币 ${profile.currency} · 废料 ${profile.materials.scrap ?? 0}`;
     tow.textContent = composition.summary.canDrive && drive.drivetrain.fuel > 0 ? "拖车到装备区" : "车辆无法驾驶 · 拖车维修";

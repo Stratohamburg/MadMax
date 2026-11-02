@@ -1,11 +1,14 @@
 import { CATALOG, movePart, occupiedCells, placePart, removePart, updatePart } from "../../loadout/model";
 import type { InstalledPart, Layer, Loadout } from "../../loadout/types";
-import { createModules, moduleComposition } from "../../combat/modules";
+import { createModules, moduleComposition, moduleCondition } from "../../combat/modules";
 import { buyPart, deleteBlueprint, instanceModifiers, ownedStock, repairPart, resolveLoadout, saveBlueprint, unlockContent, upgradePart } from "../../persistence/profile";
 import type { Profile } from "../../persistence/profile";
 import type { ProfileRepository } from "../../persistence/repository";
 import { uniqueId } from "../../simulation/identity";
 import { boardGeometry, equipmentView, vehicleTopView } from "./vehicle-view";
+
+const conditionText = (hp: number, maxHp: number) => ({ Normal: "正常", Damaged: "受损，性能降低", Destroyed: "已毁坏，需维修" })[moduleCondition(hp, maxHp)];
+const durabilityText = (hp: number, maxHp: number) => `耐久 ${Math.ceil(hp)}/${maxHp} · ${conditionText(hp, maxHp)}`;
 
 export function openWorkbench(initial: Loadout, repository: ProfileRepository, getProfile: () => Profile, setProfile: (p: Profile) => void, use: (loadout: Loadout) => void): HTMLDialogElement {
   const dialog = document.createElement("dialog"); dialog.id = "workbench";
@@ -77,11 +80,18 @@ export function openWorkbench(initial: Loadout, repository: ProfileRepository, g
       element.className = other ? "ghost-equipment" : `installed-part ${part.instanceId === selected ? "selected" : ""}`;
       position(element, view.minY - minY, maxX - view.maxX, view.width, view.height);
       element.innerHTML = view.svg;
+      const definition = CATALOG.parts[part.partId], hp = profile.inventory[part.instanceId]?.hp ?? 0;
+      const condition = moduleCondition(hp, definition.hp);
+      element.dataset.condition = condition;
       if (!other) {
-        element.dataset.instance = part.instanceId; element.setAttribute("aria-label", CATALOG.parts[part.partId].name);
-        element.title = `${CATALOG.parts[part.partId].name} · ${occupiedCells(part).length} 格`;
+        element.dataset.instance = part.instanceId; element.setAttribute("aria-label", `${definition.name} · ${durabilityText(hp, definition.hp)}`);
+        element.title = `${definition.name} · ${occupiedCells(part).length} 格 · ${durabilityText(hp, definition.hp)}`;
         const label = document.createElement("span"); label.className = "equipment-label";
         label.textContent = CATALOG.parts[part.partId].name.replace(/^.*? /, ""); element.append(label);
+        if (condition !== "Normal") {
+          const badge = document.createElement("span"); badge.className = "equipment-condition"; badge.setAttribute("aria-hidden", "true");
+          badge.textContent = condition === "Destroyed" ? "×" : "!"; element.append(badge);
+        }
       } else element.setAttribute("aria-hidden", "true");
       board.append(element);
     }
@@ -89,11 +99,12 @@ export function openWorkbench(initial: Loadout, repository: ProfileRepository, g
     for (const instance of Object.values(profile.inventory)) {
       const definition = CATALOG.parts[instance.definitionId], button = document.createElement("button");
       button.className = `inventory-part ${instance.id === selected ? "selected" : ""}`; button.dataset.instance = instance.id;
-      button.textContent = `${definition.name} L${instance.level} · ${Math.ceil(instance.hp)}/${definition.hp}${loadout.parts.some(p => p.instanceId === instance.id) ? " · 已装" : ""}`;
+      button.dataset.condition = moduleCondition(instance.hp, definition.hp);
+      button.textContent = `${definition.name} L${instance.level} · ${durabilityText(instance.hp, definition.hp)}${loadout.parts.some(p => p.instanceId === instance.id) ? " · 已装" : ""}`;
       button.title = `${definition.massKg} kg · ${definition.layer === "inner" ? "内层" : "外层"}`; list.append(button);
     }
     const part = installed(), instance = selected ? profile.inventory[selected] : null;
-    query("#selected-part").textContent = instance ? `${CATALOG.parts[instance.definitionId].name}${part ? ` · 旋转 ${part.rotation}° / 朝向 ${part.facing}°` : " · 点击格子摆放"}` : "选择部件后点格摆放，或直接拖拽";
+    query("#selected-part").textContent = instance ? `${CATALOG.parts[instance.definitionId].name} · ${durabilityText(instance.hp, CATALOG.parts[instance.definitionId].hp)}${part ? ` · 旋转 ${part.rotation}° / 朝向 ${part.facing}°` : " · 点击格子摆放"}` : "选择部件后点格摆放，或直接拖拽";
     for (const id of ["rotate-part", "face-part", "remove-part"]) query<HTMLButtonElement>(`#${id}`).disabled = !part;
     query<HTMLButtonElement>("#upgrade-part").disabled = !instance || instance.level >= 5;
     query("#upgrade-part").textContent = instance && instance.level < 5 ? `升级 L${instance.level + 1} · ${50 * (instance.level + 1)} / ${10 * (instance.level + 1)}` : "升级";

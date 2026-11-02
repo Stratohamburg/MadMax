@@ -134,6 +134,17 @@ describe("装配派生", () => {
     expect(destroyed.summary.canDrive).toBe(false);
     expect(destroyed.profile.mass).toBe(base.profile.mass);
   });
+  it.each([
+    ["driver-seat", "驾驶座"], ["engine-l4", "发动机"], ["gearbox", "变速箱"], ["fuel-tank", "油箱"],
+  ])("%s 区分未安装、毁坏与维修后可用", (partId, name) => {
+    const loadout = stockLoadout("sports-car"), part = loadout.parts.find(p => p.partId === partId)!;
+    const missing = compose({ ...loadout, parts: loadout.parts.filter(p => p !== part) });
+    expect(missing.summary.issues).toContain(`缺少可用${name}`);
+    const destroyed = compose(loadout, { health: { [part.instanceId]: 0 } });
+    expect(destroyed.summary.issues).toEqual([`${name}已安装但已毁坏（耐久为0），请维修或更换`]);
+    expect(destroyed.summary.canDrive).toBe(false);
+    expect(compose(loadout, { health: { [part.instanceId]: 1 } }).summary.canDrive).toBe(true);
+  });
 });
 
 describe("动力链和喷射控制", () => {

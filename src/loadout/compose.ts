@@ -104,10 +104,13 @@ export function compose(loadout: Loadout, options: ComposeOptions = {}) {
   resources.powerSufficient = resources.powerDraw <= resources.maxOutput;
   const driver = components.find(c => c.definition.seat === "driver" && c.performance > 0);
   const issues: string[] = [];
-  if (!driver) issues.push("缺少可用驾驶座");
-  if (!engine) issues.push("缺少可用发动机");
-  if (!gearbox) issues.push("缺少可用变速箱");
-  if (resources.fuelCapacity <= 0) issues.push("缺少可用油箱");
+  const unavailable = (name: string, installed: boolean) => issues.push(installed
+    ? `${name}已安装但已毁坏（耐久为0），请维修或更换`
+    : `缺少可用${name}`);
+  if (!driver) unavailable("驾驶座", components.some(c => c.definition.seat === "driver"));
+  if (!engine) unavailable("发动机", components.some(c => !!c.definition.engine));
+  if (!gearbox) unavailable("变速箱", components.some(c => !!c.definition.gearbox));
+  if (resources.fuelCapacity <= 0) unavailable("油箱", components.some(c => (c.definition.fuelCapacity ?? 0) > 0));
   const frontX = Math.max(...chassis.layers.inner.map(c => c.x)) * chassis.cellSize;
   const limitedVision = !!driver && driver.x < frontX * 0.5 && !components.some(c => c.definition.tags.includes("vision") && c.performance > 0);
   const boosts = components.filter(c => c.definition.boost && c.performance > 0);

@@ -19,7 +19,7 @@ import { enemySpawn } from "../../combat/enemies";
 export interface PveHooks {
   initialLoadout?: Loadout;
   settle?: (result: Settlement) => Promise<string>;
-  garage?: (loadout: Loadout, onUse: (next: Loadout) => void) => void;
+  garage?: (loadout: Loadout, onUse: (next: Loadout) => void) => HTMLDialogElement;
   configuration?: (loadout: Loadout) => SessionOptions;
   stock?: (chassisId: string) => Loadout;
   sanitize?: (loadout: Loadout) => Loadout;
@@ -66,7 +66,14 @@ export function mountPve(hooks: PveHooks = {}): void {
   };
   select.addEventListener("change", () => setLoadout(hooks.stock?.(select.value) ?? stockLoadout(select.value)));
   app.querySelector<HTMLButtonElement>("#garage")!.disabled = !hooks.garage;
-  app.querySelector("#garage")!.addEventListener("click", () => hooks.garage?.(loadout, setLoadout));
+  app.querySelector("#garage")!.addEventListener("click", () => {
+    let applied = false;
+    const garage = hooks.garage?.(loadout, next => { applied = true; setLoadout(next); });
+    garage?.addEventListener("close", () => {
+      // 维修和升级即时入档；未保存的工作台布局仍使用原出击装配。
+      if (!applied) setLoadout(loadout);
+    }, { once: true });
+  });
   summarize(); prepare.showModal();
   if (hooks.notice) { const notice = document.createElement("p"); notice.setAttribute("role", "status"); notice.textContent = hooks.notice; prepare.prepend(notice); }
   app.querySelector("#deploy")!.addEventListener("click", () => {

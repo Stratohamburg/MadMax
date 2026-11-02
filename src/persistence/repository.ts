@@ -61,6 +61,13 @@ export class ProfileRepository {
       return { records: { primary: envelope(profile), backup: loaded.source }, value: profile };
     });
   }
+  /** 显式 GM 重置同时清理备份和 pending，避免旧结算在重启后复活。 */
+  async reset(): Promise<Profile> {
+    return this.store.transaction(() => {
+      const profile = newProfile(), fresh = envelope(profile);
+      return { records: { primary: fresh, backup: fresh }, value: profile };
+    });
+  }
   async stage(result: Settlement): Promise<void> {
     return this.store.transaction(records => {
       const loaded = read(records);

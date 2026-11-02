@@ -1,8 +1,8 @@
 import { rad } from "./math";
 
-export const MODEL_VERSION = "vehicle-physics-4" as const;
-export const PROFILE_SCHEMA_VERSION = "vehicle-profile-4" as const;
-export const CONTROLLER_VERSION = "route-assist-3" as const;
+export const MODEL_VERSION = "vehicle-physics-5" as const;
+export const PROFILE_SCHEMA_VERSION = "vehicle-profile-5" as const;
+export const CONTROLLER_VERSION = "route-assist-4" as const;
 export interface PhysicsRules {
   modelVersion: typeof MODEL_VERSION;
   units: { length: "game-L"; mass: "game-M"; time: "s" };
@@ -50,9 +50,12 @@ export interface VehicleProfile {
   };
   mass: number;
   kYaw: number;
+  controller: { speedResponse: number; stopSpeed: number; stopYawGain: number; lowSpeed: number; shiftUpFraction: number; shiftDownFraction: number; downshiftLimit: number; boostSpeedFraction: number; boostAlignment: number };
+  contact: { friction: number; restitution: number; bounceThreshold: number };
   power: {
     driveForce: number;
     brakeForce: number;
+    handbrakeForce: number;
     accelerationCurve: number;
     maxSpeed: number;
     driveFront: number;
@@ -109,7 +112,7 @@ export const REFERENCE_PROFILE: VehicleProfile = {
   modelVersion: MODEL_VERSION,
   profileSchemaVersion: PROFILE_SCHEMA_VERSION,
   profileId: "sports-car",
-  profileRevision: "4",
+  profileRevision: "5",
   label: "跑车",
   category: "sports-car",
   geometry: {
@@ -124,9 +127,12 @@ export const REFERENCE_PROFILE: VehicleProfile = {
   },
   mass: 1,
   kYaw: 0.22,
+  controller: { speedResponse: 0.55, stopSpeed: 0.8, stopYawGain: 0.1, lowSpeed: 1.2, shiftUpFraction: 0.86, shiftDownFraction: 0.35, downshiftLimit: 0.8, boostSpeedFraction: 0.95, boostAlignment: Math.PI / 3 },
+  contact: { friction: 0.25, restitution: 0, bounceThreshold: 0.5 },
   power: {
     driveForce: 6,
     brakeForce: 8,
+    handbrakeForce: 8,
     accelerationCurve: 2,
     maxSpeed: 12,
     driveFront: 0,
@@ -188,7 +194,13 @@ rules("L", 0.05, 4, "width track");
 rules("L", 0, 3, "frontOverhang rearOverhang heightCG");
 rules("M", 0.1, 50, "mass");
 rules("1", 0.08, 1, "kYaw");
-rules("ML/T²", 0.01, 3000, "driveForce brakeForce");
+rules("ML/T²", 0.01, 3000, "driveForce brakeForce handbrakeForce");
+rules("s", 0.02, 3, "speedResponse");
+rules("L/T", 0.01, 10, "stopSpeed lowSpeed bounceThreshold");
+rules("s", 0, 2, "stopYawGain");
+rules("1", 0, 1, "shiftUpFraction shiftDownFraction downshiftLimit boostSpeedFraction restitution");
+rules("1", 0, 2, "friction");
+rules("rad", 0, Math.PI, "boostAlignment");
 rules("1", 0, 10, "accelerationCurve");
 rules("L/T", 0.1, 40, "maxSpeed");
 rules(
@@ -306,8 +318,9 @@ export function validateProfile(value: unknown, rules = RULES): string[] {
       "profile.modelVersion: 不兼容；拒绝baseline-1与axle-dynamics-1",
     );
   if (p?.profileSchemaVersion !== PROFILE_SCHEMA_VERSION)
-    errors.push("profile.profileSchemaVersion: 必须为vehicle-profile-4");
+    errors.push("profile.profileSchemaVersion: 必须为vehicle-profile-5");
   if (errors.length) return errors;
+  if (!(p.controller.shiftDownFraction < p.controller.shiftUpFraction && p.controller.downshiftLimit < 1)) errors.push("profile.controller: 换挡阈值须有滞回且降挡后低于红线");
   const g = p.geometry;
   if (g.track > g.width)
     errors.push("profile.geometry.track/width: 轮距不能超过车宽");
@@ -359,12 +372,13 @@ export type PhysicalProfile = Pick<
   | "mass"
   | "kYaw"
   | "power"
+  | "contact"
   | "tires"
   | "steering"
   | "wheels"
 >;
 export function physicalProfile(p: VehicleProfile): PhysicalProfile {
-  const { modelVersion, geometry, mass, kYaw, power, tires, steering, wheels } =
+  const { modelVersion, geometry, mass, kYaw, power, contact, tires, steering, wheels } =
     p;
-  return { modelVersion, geometry, mass, kYaw, power, tires, steering, wheels };
+  return { modelVersion, geometry, mass, kYaw, power, contact, tires, steering, wheels };
 }

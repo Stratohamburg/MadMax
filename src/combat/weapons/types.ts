@@ -19,6 +19,7 @@ export interface WeaponDefinition {
   burn?: { dps: number; duration: number };
 }
 export interface WeaponRuntime {
+  charge: number;
   angle: number; cooldown: number; heat: number; overheated: boolean;
   lockTarget: number | null; lockProgress: number; lastEventSequence: number; shots: number;
 }
@@ -47,4 +48,6 @@ export interface WeaponOptions {
   events?: readonly PassiveEvent[];
   modifiers?: readonly AttributeModifier[];
   definitions?: Readonly<Record<string, WeaponDefinition>>;
+  /** 本步由共享电力调度器分配的最大输出；省略时使用装配总上限。 */
+  powerAvailable?: number;
 }

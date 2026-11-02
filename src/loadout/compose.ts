@@ -6,6 +6,7 @@ import { CATALOG, compareId, mounts, occupiedCells, validateLoadout } from "./mo
 import { resourceBudget } from "./resources";
 import { KG_PER_GAME_MASS } from "./types";
 import type { Loadout } from "./types";
+import { massProperties } from "../vehicle/physics/mass-properties";
 import { NM_PER_GAME_TORQUE, validateDrivetrain } from "../vehicle/physics/mechanics";
 
 export interface ComposeOptions {
@@ -23,17 +24,17 @@ export function compose(loadout: Loadout, options: ComposeOptions = {}) {
     const definition = CATALOG.parts[part.partId], cells = occupiedCells(part);
     const hp = options.health?.[part.instanceId] ?? 1;
     if (!Number.isFinite(hp) || hp < 0 || hp > 1) throw new Error(`health.${part.instanceId}: 须在0～1`);
+    const mass = definition.massKg / KG_PER_GAME_MASS;
+    const x = cells.reduce((sum, c) => sum + c.x, 0) / cells.length * chassis.cellSize;
+    const y = cells.reduce((sum, c) => sum + c.y, 0) / cells.length * chassis.cellSize;
+    const inertia = definition.yawInertia ?? cells.reduce((sum, cell) => sum + mass / cells.length * ((cell.x * chassis.cellSize - x) ** 2 + (cell.y * chassis.cellSize - y) ** 2 + chassis.cellSize ** 2 / 6), 0);
     return { part, definition, hp, performance: hp <= 0 ? 0 : hp <= 0.5 ? 0.5 : 1,
-      mass: definition.massKg / KG_PER_GAME_MASS,
-      x: cells.reduce((sum, c) => sum + c.x, 0) / cells.length * chassis.cellSize,
-      y: cells.reduce((sum, c) => sum + c.y, 0) / cells.length * chassis.cellSize };
+      mass, x, y, z: definition.height ?? base.geometry.heightCG + (part.layer === "outer" ? 0.12 : 0), inertia };
   });
-  const mass = base.mass + components.reduce((sum, c) => sum + c.mass, 0);
-  const centerOfMass = { x: components.reduce((sum, c) => sum + c.mass * c.x, 0) / mass,
-    y: components.reduce((sum, c) => sum + c.mass * c.y, 0) / mass };
-  const inertia = derived(base).inertia + base.mass * (centerOfMass.x ** 2 + centerOfMass.y ** 2) +
-    components.reduce((sum, c) => sum + c.mass * ((c.x - centerOfMass.x) ** 2 + (c.y - centerOfMass.y) ** 2), 0);
+  const properties = massProperties([{ mass: base.mass, x: 0, y: 0, z: base.geometry.heightCG, inertia: derived(base).inertia }, ...components]);
+  const { mass, inertia } = properties, centerOfMass = properties.center;
   profile.mass = mass;
+  if (components.length) profile.geometry.heightCG = centerOfMass.z;
   profile.geometry.cgFromRear = base.geometry.cgFromRear + centerOfMass.x / base.geometry.wheelbase;
   profile.geometry.cgLateral = centerOfMass.y;
   if (components.length) profile.kYaw = inertia / (mass * profile.geometry.wheelbase ** 2);
@@ -110,6 +111,9 @@ export function compose(loadout: Loadout, options: ComposeOptions = {}) {
   const frontX = Math.max(...chassis.layers.inner.map(c => c.x)) * chassis.cellSize;
   const limitedVision = !!driver && driver.x < frontX * 0.5 && !components.some(c => c.definition.tags.includes("vision") && c.performance > 0);
   const boosts = components.filter(c => c.definition.boost && c.performance > 0);
+  const thrusters = boosts.map(c => ({ id: c.part.instanceId, point: { x: c.x - centerOfMass.x, y: c.y - centerOfMass.y },
+    direction: { x: Math.cos(c.part.facing * Math.PI / 180), y: Math.sin(c.part.facing * Math.PI / 180) },
+    parameters: { ...c.definition.boost!, force: c.definition.boost!.force * c.performance } }));
   const boost = { force: boosts.reduce((sum, c) => sum + c.definition.boost!.force * c.performance, 0),
     duration: Math.max(0, ...boosts.map(c => c.definition.boost!.duration)),
     cooldown: Math.max(0, ...boosts.map(c => c.definition.boost!.cooldown)),
@@ -124,6 +128,7 @@ export function compose(loadout: Loadout, options: ComposeOptions = {}) {
     canDrive: issues.length === 0, canControl: !!driver, limitedVision, issues, resources, clamped,
     inertia: d.inertia };
   return { loadout, profile, centerOfMass, inertia: d.inertia, summary, resources, engine, gearbox, boost,
+    thrusters, auxiliaryPower: components.reduce((n, c) => n + (c.performance > 0 && !c.definition.weaponId && !c.definition.boost ? c.definition.powerDraw : 0), 0),
     mounts: mounts(loadout).map(mount => ({ ...mount, position: { x: mount.position.x - centerOfMass.x, y: mount.position.y - centerOfMass.y } })),
     components, modifiers };
 }

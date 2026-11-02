@@ -8,13 +8,15 @@ import { CATALOG } from "../../loadout/model";
 import { activeModifiers, advanceModifiers, chooseUpgrade, createModifierRun, offerChoices } from "../../progression/modifiers/run";
 import { adjacencyModifiers } from "../../progression/modifiers/adjacency";
 import { advanceAssemblyDrive, createAssemblyDrive, migrateAssemblyDrive } from "../../vehicle/assembly-drive";
-import { applyExternalImpulse } from "../../vehicle/physics/physical";
+import { applyImpulseEvents } from "../../vehicle/physics/forces";
 import { stateFrom } from "../../vehicle/physics/state";
 import type { Intent } from "../../vehicle/physics/state";
 import { geometry } from "../../vehicle/physics/geometry";
 import { sweepVehicle } from "../../scene/contacts";
 import { WORLD } from "../../scene/world";
 import { resolveBodyContact } from "../../vehicle/physics/body-contact";
+import { resolveVehicleContact } from "../../vehicle/physics/vehicle-contact";
+import { enemyComposition } from "../../combat/enemy-vehicles";
 import { motionEvents } from "../../combat/motion-events";
 import { ENEMIES } from "../../combat/enemies";
 import { SCRAPYARD, generateLevel } from "./level";
@@ -114,14 +116,20 @@ export class PveSession {
       if (id === null) break;
       if (spawn.boss) this.bossIds.add(id); this.spawned++;
     }
-    this.world.advanceEnemies(dt);
+    this.world.advanceEnemies(dt, WORLD);
     for (let i = 0; i < p.capacity; i++) if (p.active[i] && p.faction[i] === 1) {
-      const result = resolveBodyContact(this.drive.vehicle, this.composition.profile, {
+      const enemy = this.world.enemyVehicles.get(p.id[i]);
+      const result = enemy ? resolveVehicleContact(this.drive.vehicle, this.composition.profile, enemy.vehicle, enemyComposition(ENEMIES[p.archetype[i]]).profile) : resolveBodyContact(this.drive.vehicle, this.composition.profile, {
         position: { x: p.x[i], y: p.y[i] }, velocity: { x: p.vx[i], y: p.vy[i] }, mass: p.mass[i], radius: p.radius[i] });
       if (!result.contact) continue;
       this.drive.vehicle = stateFrom({ ...result.vehicle, assist: this.drive.vehicle.assist });
-      p.x[i] = result.other.position.x; p.y[i] = result.other.position.y;
-      p.vx[i] = result.other.velocity.x; p.vy[i] = result.other.velocity.y;
+      if (enemy && "worldVelocity" in result.other) {
+        enemy.vehicle = stateFrom({ ...result.other, assist: enemy.vehicle.assist });
+        this.world.syncEnemyVehicle(i);
+      } else if ("velocity" in result.other) {
+        p.x[i] = result.other.position.x; p.y[i] = result.other.position.y;
+        p.vx[i] = result.other.velocity.x; p.vy[i] = result.other.velocity.y;
+      }
       // 伤害冷却不干涉连续接触冲量；静态重叠或擦身不会产生撞击伤害。
       if (result.contact.closingSpeed > 1 && result.contact.impulse > 0 && (this.collisionCooldown.get(p.id[i]) ?? 0) <= this.run.time) {
         const raw = calculateDamage(result.contact.impulse * 6, this.modifiers, ["collision"]).final;
@@ -141,10 +149,19 @@ export class PveSession {
     this.world.rebuild();
     const movement = motionEvents(this.drive.vehicle, this.drive.output.boostForce, this.sequence, dt);
     this.events.push(...movement); this.sequence += movement.length;
-    const shot = stepWeapons(this.weapons, this.drive.vehicle, this.composition, this.world, { modifiers: this.modifiers, events: this.events });
+    const shot = stepWeapons(this.weapons, this.drive.vehicle, this.composition, this.world, {
+      modifiers: this.modifiers, events: this.events,
+      powerAvailable: this.drive.output.powerAvailable ?? 0,
+    });
     this.events = []; this.weapons = shot.state; this.visuals = shot.visuals;
     this.world.emit(shot.fire, this.world.playerId, 0, this.modifiers);
-    for (const recoil of shot.recoil) this.drive.vehicle = stateFrom({ ...applyExternalImpulse(this.drive.vehicle, this.composition.profile, recoil.impulse, recoil.point), assist: this.drive.vehicle.assist });
+    if (shot.recoil.length) {
+      const applied = applyImpulseEvents(this.drive.vehicle, this.composition.profile, this.drive.effects ?? { lastSequence: {} }, Math.round(this.run.time * 120),
+        shot.recoil.map((recoil, index) => ({ tick: Math.round(this.run.time * 120), source: recoil.weaponInstanceId, sequence: this.sequence + index, impulse: recoil.impulse, point: recoil.point, frame: "world" as const })));
+      this.drive.vehicle = stateFrom({ ...applied.state, assist: this.drive.vehicle.assist });
+      this.drive.effects = applied.history;
+      this.sequence += shot.recoil.length;
+    }
     this.world.step(false, true);
     for (const event of this.world.events) {
       if (event.type === "damage" && event.targetId !== this.world.playerId) this.damage += event.amount;

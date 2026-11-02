@@ -1,7 +1,7 @@
 import { test, expect } from "@playwright/test";
 import { mkdir, writeFile } from "node:fs/promises";
 
-const evidence = "openspec/changes/add-vehicle-ui/evidence";
+const evidence = "openspec/changes/add-assembly-physics/evidence/vehicle-physics-5/web/ui";
 for (const width of [320, 390, 430]) test(`${width} 战斗中可见双方真实武器、弹丸和敌人`, async ({ page }) => {
   const errors: string[] = []; page.on("pageerror", e => errors.push(e.message));
   await page.setViewportSize({ width, height: 844 }); await page.goto("/?mode=pve&test=1");

@@ -7,7 +7,7 @@ test("验证模式可切换十车型并从一致出生状态重置", async ({ pa
   await page.waitForFunction(
     () =>
       window.__driving?.snapshot().version?.modelVersion ===
-      "vehicle-physics-4",
+      "vehicle-physics-5",
   );
   await expect(page.locator("#validation-panel")).toBeVisible();
   await page.locator("#validation-panel summary").click();
@@ -35,15 +35,15 @@ test("验证模式可切换十车型并从一致出生状态重置", async ({ pa
     expect(current.state.speed).toBe(0);
     expect(current.state.x).toBe(-11);
     expect(current.state.y).toBe(19);
-    const directory = `openspec/changes/add-assembly-physics/evidence/vehicle-physics-4/web/${id}/3`;
+    const directory = `openspec/changes/add-assembly-physics/evidence/vehicle-physics-5/web/${id}/${current.version!.profileRevision}`;
     await mkdir(directory, { recursive: true });
     await writeFile(
       `${directory}/snapshot.json`,
       JSON.stringify(
         {
           profileId: id,
-          profileRevision: current.version?.profileRevision ?? "3",
-          modelVersion: current.version?.modelVersion ?? "vehicle-physics-4",
+          profileRevision: current.version!.profileRevision,
+          modelVersion: current.version?.modelVersion ?? "vehicle-physics-5",
           surfaceVersion:
             current.version?.surfaceVersion ?? "vehicle-surface-1",
           sceneVersion: current.version?.sceneVersion ?? "driving-playground-3",
@@ -58,7 +58,7 @@ test("验证模式可切换十车型并从一致出生状态重置", async ({ pa
   await expect(page.locator("#telemetry")).toContainText(
     "前轴 α / Fy / 利用率",
   );
-  await expect(page.locator("#telemetry")).toContainText("vehicle-physics-4");
+  await expect(page.locator("#telemetry")).toContainText("vehicle-physics-5");
 });
 
 test("普通页面保持简洁，场景版本和三路面采样写入开发快照", async ({ page }) => {

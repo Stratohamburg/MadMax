@@ -14,7 +14,7 @@ import { evaluateAttribute } from "../../src/stats/modifiers";
 describe("v3 质心、外力与版本", () => {
   it("拒绝 v2 profile 与 snapshot，v3 快照可继续逐步一致地模拟", () => {
     const p = getProfile("sports-car"), state = createState(p);
-    expect(MODEL_VERSION).toBe("vehicle-physics-4");
+    expect(MODEL_VERSION).toBe("vehicle-physics-5");
     expect(validateProfile({ ...p, modelVersion: "vehicle-physics-2", profileSchemaVersion: "vehicle-profile-2" }).length).toBeGreaterThan(0);
     expect(applyProfile(p, { ...p, profileSchemaVersion: "vehicle-profile-2" }).profile).toBe(p);
     const snapshot = createVehicleSnapshot(state, p, "assembly-test");
@@ -80,7 +80,8 @@ describe("v2 行为基线", () => {
         expect(state.theta).toBeCloseTo(expected.theta, 9);
         expect(state.r).toBeCloseTo(expected.r, 9);
         expect(state.delta).toBeCloseTo(expected.delta, 9);
-        expect(state.wheelSpeeds).toEqual(expected.wheelSpeeds);
+        expect(state.wheelSpeeds.front).toBeCloseTo(expected.wheelSpeeds.front, 12);
+        expect(state.wheelSpeeds.rear).toBeCloseTo(expected.wheelSpeeds.rear, 12);
       }
     }
   });

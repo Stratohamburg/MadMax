@@ -1,3 +1,4 @@
+import { vehicleSources } from "./vehicle-sources.ts";
 import assert from "node:assert/strict";
 import { createHash } from "node:crypto";
 import { mkdirSync, readFileSync, readdirSync, writeFileSync } from "node:fs";
@@ -8,9 +9,9 @@ import { PROFILES } from "../src/vehicle/physics/profiles.ts";
 import { MODEL_VERSION, CONTROLLER_VERSION } from "../src/vehicle/physics/config.ts";
 import { assemblyNormalMatrix } from "../src/vehicle/assembly-benchmarks.ts";
 
-const output = resolve(process.argv[2] ?? "openspec/changes/add-assembly-physics/evidence/vehicle-physics-4");
+const output = resolve(process.argv[2] ?? "openspec/changes/add-assembly-physics/evidence/vehicle-physics-5");
 const sources = ["src/vehicle/assembly-drive.ts", "src/vehicle/assembly-benchmarks.ts", "src/stats/modifiers.ts", "scripts/assembly-physics-audit.ts",
-  ...["src/vehicle/physics", "src/loadout"].flatMap(dir => readdirSync(dir).filter(f => f.endsWith(".ts")).map(f => `${dir}/${f}`))].sort();
+  ...vehicleSources, ...["src/loadout"].flatMap(dir => readdirSync(dir).filter(f => f.endsWith(".ts")).map(f => `${dir}/${f}`))].sort();
 const hash = createHash("sha256");
 for (const path of sources) hash.update(path).update(readFileSync(path));
 const cases = PROFILES.map(p => ({ name: `${p.profileId}:stock`, loadout: stockLoadout(p.profileId) }));

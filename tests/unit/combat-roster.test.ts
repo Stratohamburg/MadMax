@@ -53,7 +53,7 @@ describe("武器配置与完整反馈", () => {
     world.playerId = world.entities.spawn({ position: vehicle.position, hp: 10000, faction: 0 })!;
     const enemy = world.entities.spawn({ position: { x: mount.position.x + .65, y: mount.position.y }, hp: 10000, attack: 0 })!; world.rebuild();
     let state = createWeaponSystem(c);
-    for (let i = 0; i < 150; i++) {
+    for (let i = 0; i < 360; i++) {
       const result = stepWeapons(state, vehicle, c, world, { events: [{ sequence: i, type: id === "spikes" ? "collision" : "hit", magnitude: 10 }] });
       state = result.state; world.emit(result.fire); world.step();
     }
@@ -103,7 +103,7 @@ describe("敌人配置与真实攻击", () => {
     const d = ENEMIES[id], world = new CombatWorld(7), position = { x: Math.cos(d.facing) * 3, y: Math.sin(d.facing) * 3 };
     world.playerId = world.entities.spawn({ position, hp: 10000, faction: 0 })!;
     const enemy = world.entities.spawn(enemySpawn(id, { x: 0, y: 0 }))!, slot = world.entities.slot(enemy);
-    for (let i = 0; i < 240; i++) world.step();
+    for (let i = 0; i < 600; i++) world.step();
     expect(world.projectiles.emittedDamage).toBeGreaterThan(0); expect(world.entities.hp[world.entities.slot(world.playerId)]).toBeLessThan(10000);
     expect(world.presentation.some(e => e.faction === 1 && e.type === "muzzle")).toBe(true);
     expect(world.presentation.some(e => e.faction === 1 && e.type === "impact")).toBe(true);

@@ -1,4 +1,4 @@
-# v4 物理与网页接入
+# v5 物理与网页接入
 
 核心入口为 `src/vehicle/physics/index.ts`，网页通过 `src/vehicle/model.ts` 使用同一权威状态。`step`组合控制器与物理；`advancePhysical`只接受物理状态、执行器、物理参数、步长和路面。普通/漂移模式、期望速度、路线和目标侧滑不进入内核。
 
@@ -19,10 +19,19 @@ flowchart LR
 
 四轮胎痕按所属轴的实际接地点侧向/纵向滑速与摩擦功产生，不以质心速度或质心侧滑角为必要条件，能表达纯旋转及动力空转。低速无滑直行不留痕；容量与寿命有界。
 
-快照格式为 `vehicle-snapshot-4`，保存完整有效profile、模拟时间、轮速、力历史、加速度历史、控制历史和能量；恢复不按profile ID重新加载默认参数。拒绝旧版本、缺失状态和重复派生来源。自定义同ID参数与时间相关路面有精确续算测试。
+快照格式为 `vehicle-snapshot-5`，保存完整有效profile、模拟时间、轮速、力历史、加速度历史、控制历史和能量；恢复不按profile ID重新加载默认参数。拒绝旧版本、缺失状态和重复派生来源。自定义同ID参数与时间相关路面有精确续算测试。
 
 验证面板显示控制请求、实际前轮、转向包络、饱和、轮速、滑移与能量；普通页面用“最高目标速度”和“漂移辅助”表达期望。`/?test=1`仅在开发模式允许注入完整物理初态；普通输入不具有状态修改权限。
 
-检查入口：`npm run typecheck`、`npx vitest run`、`npm run build`、`npm run test:e2e`、`npm run physics:benchmark`、`npm run physics:audit`、`npm run validation:replay`。v4 结果记录在 `add-assembly-physics/acceptance-v4.md`，核心与网页证据分别进入该变更 `evidence/vehicle-physics-4/core/` 和 `web/`，不覆盖驾驶验证变更的 v1/v2/v3 历史证据。
+检查入口：`npm run typecheck`、`npx vitest run`、`npm run build`、`npm run test:e2e`、`npm run physics:benchmark`、`npm run physics:audit`、`npm run validation:replay`。v5 结果写入 `add-assembly-physics/evidence/vehicle-physics-5/`；`acceptance-v4.md` 和 `vehicle-physics-4/` 保留为历史证据，不覆盖驾驶验证变更的 v1/v2/v3 历史证据。
 
-真实手机驾驶尚未执行，核心及桌面浏览器通过不代表手机手感通过。两个变更保持进行中，不在本次自动归档或发布。
+真实手机驾驶与战斗性能验收尚未执行，核心及桌面浏览器通过不代表手机手感和性能通过。相关变更保留当前未归档状态，真机任务继续在原驾驶与战斗变更中跟踪。
+
+
+## v5 架构与物理边界
+
+输入器只产生世界运动方向、目标速度和漂移/助推请求；`src/vehicle/control/` 负责路线、速度、自动挡和助推策略。物理核心只接收有限执行器、有效 profile、路面和外部作用，统一计算传动、轮胎、刚体、场景接触与能量。场景只提供接触几何，战斗只提交带 tick/source/sequence 的外部冲量，重复事件由核心入口去重。
+
+装配使用核心质量属性函数派生三维重心、二维质心、部件自身惯量和逐实例喷射挂点；电池、常驻设备、喷射和武器共享输出预算。敌方车辆的 AI 只生成 `Intent`，通过同一控制、传动和轮胎核心推进。
+
+当前仍采用平面刚体与等效前后轴；完整悬挂、翻车、倒挡、动态燃油/弹药质量及附加外挂碰撞轮廓留作后续能力。

@@ -5,6 +5,7 @@ import { ENEMIES, enemySpawn } from "../src/combat/enemies.ts";
 import { DAMAGE_KINDS } from "../src/combat/pools.ts";
 import { CombatEffects } from "../src/render/combat.ts";
 import { nextRandom } from "../src/simulation/random.ts";
+import { MODEL_VERSION } from "../src/vehicle/physics/config.ts";
 
 const enemyCount = 128, bulletCapacity = 2048, iterations = 600, warmup = 120;
 const world = new CombatWorld(123, bulletCapacity, enemyCount), effects = new CombatEffects(), ids = Object.keys(ENEMIES);
@@ -29,12 +30,13 @@ for (let step = 0; step < warmup + iterations; step++) {
 }
 samples.sort((a, b) => a - b);
 const p95Ms = samples[Math.floor(samples.length * .95)];
-const report = { benchmarkVersion: "combat-roster-benchmark-1", seed: 123, iterations, warmup, enemyCount, bulletCapacity,
+const report = { benchmarkVersion: "combat-roster-benchmark-2", modelVersion: MODEL_VERSION, seed: 123, iterations, warmup, enemyCount, bulletCapacity,
+  physicsVehicleCount: world.enemyVehicles.size,
   archetypes: ids, peakBullets, peakEffects, peakPresentation, p50Ms: samples[Math.floor(samples.length / 2)], p95Ms, maxMs: samples.at(-1),
   enemyShots: [...world.enemyWeapons.values()].reduce((sum, state) => sum + Object.values(state.weapons).reduce((n, w) => n + w.shots, 0), 0),
   aggregated: world.projectiles.aggregated, targetP95Ms: 4, withinEngineeringTarget: p95Ms <= 4, mobileVerified: false,
   environment: `Node.js ${process.version} / ${process.platform} / ${process.arch}`,
-  measured: "固定步模拟、128个真实敌方武器状态及展示事件消费；不含Canvas绘制和预填弹丸开销", };
-const folder = resolve("openspec/changes/add-combat-damage/evidence"); mkdirSync(folder, { recursive: true });
+  measured: "固定步模拟、共用车辆物理与碰撞、128个真实敌方武器状态及展示事件消费；不含Canvas绘制和预填弹丸开销", };
+const folder = resolve(process.argv[2] ?? "openspec/changes/add-combat-damage/evidence"); mkdirSync(folder, { recursive: true });
 writeFileSync(resolve(folder, "desktop-roster-benchmark.json"), JSON.stringify(report, null, 2) + "\n");
 console.log(JSON.stringify(report));

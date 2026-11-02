@@ -31,6 +31,9 @@ export interface PartDefinition {
   slots: readonly Slot[];
   maxCount: number;
   massKg: number;
+  /** 米制换算后的游戏高度；省略时内层为底盘重心，外层为底盘重心加0.12。 */
+  height?: number;
+  yawInertia?: number;
   hp: number;
   powerDraw: number;
   tags: readonly string[];

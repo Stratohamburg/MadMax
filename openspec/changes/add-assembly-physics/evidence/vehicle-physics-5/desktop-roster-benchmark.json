@@ -1,0 +1,32 @@
+{
+  "benchmarkVersion": "combat-roster-benchmark-2",
+  "modelVersion": "vehicle-physics-5",
+  "seed": 123,
+  "iterations": 600,
+  "warmup": 120,
+  "enemyCount": 128,
+  "bulletCapacity": 2048,
+  "physicsVehicleCount": 54,
+  "archetypes": [
+    "rifleman",
+    "rocketeer",
+    "raider-pickup",
+    "armored-car",
+    "bunker",
+    "rocket-tower",
+    "iron-warlord"
+  ],
+  "peakBullets": 2047,
+  "peakEffects": 256,
+  "peakPresentation": 512,
+  "p50Ms": 11.330199999999877,
+  "p95Ms": 14.771699999999328,
+  "maxMs": 18.003999999999905,
+  "enemyShots": 1491,
+  "aggregated": 1886,
+  "targetP95Ms": 4,
+  "withinEngineeringTarget": false,
+  "mobileVerified": false,
+  "environment": "Node.js v25.9.0 / win32 / x64",
+  "measured": "固定步模拟、共用车辆物理与碰撞、128个真实敌方武器状态及展示事件消费；不含Canvas绘制和预填弹丸开销"
+}

@@ -1,6 +1,6 @@
 import { test, expect, type Page } from "@playwright/test";
 import { mkdir, writeFile } from "node:fs/promises";
-const evidence = "openspec/changes/add-driving-hub/evidence";
+const evidence = "openspec/changes/add-assembly-physics/evidence/vehicle-physics-5/web/hub";
 const snapshot = (page: Page): Promise<any> => page.evaluate(() => (window as any).__hub.snapshot());
 async function load(page: Page) {
   await page.goto("/?mode=hub&test=1"); await page.waitForFunction(() => (window as any).__hub?.snapshot().geometry.radius > 5);
@@ -41,12 +41,12 @@ test("商店真实交易、模态暂停和装备保存后立即更新车辆及�
   await expect(page.locator("#garage-message")).toContainText("装配已更新");
   await page.locator("#blueprint-name").fill("营地装甲车"); await page.locator("#garage-use").click();
   await expect(page.locator("#workbench")).toHaveCount(0); const used = await snapshot(page);
-  expect(used.mass).toBe(paused.mass + 80); expect(used.loadout.parts).toHaveLength(paused.loadout.parts.length + 1);
+  expect(used.mass).toBeCloseTo(paused.mass + 80, 10); expect(used.loadout.parts).toHaveLength(paused.loadout.parts.length + 1);
   used.footprint.forEach((point: { x: number; y: number }, i: number) => {
     expect(point.x).toBeCloseTo(paused.footprint[i].x, 10); expect(point.y).toBeCloseTo(paused.footprint[i].y, 10);
   }); expect(used.speed).toBe(0);
   await page.reload(); await page.waitForFunction(() => (window as any).__hub);
-  expect((await snapshot(page)).mass).toBe(used.mass); expect((await snapshot(page)).loadout).toEqual(used.loadout);
+  expect((await snapshot(page)).mass).toBeCloseTo(used.mass, 10); expect((await snapshot(page)).loadout).toEqual(used.loadout);
 });
 
 test("关闭营地界面保留完整运动、挡位、资源和冷却，拖车不补给", async ({ page }) => {

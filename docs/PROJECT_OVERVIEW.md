@@ -1,6 +1,6 @@
 # MadMax 项目总览
 
-更新时间：2026-11-01。`vehicle-physics-4` 已接入驾驶验证场与废弃货场副本；装配、自动战斗、肉鸽、搜打撤、本地存档和工作台形成可玩的闭环。`baseline-1` 与旧物理证据保留为历史，真实手机驾驶及战斗压测仍待验收。当前实施清单见 [实施与验证记录](IMPLEMENTATION_STATUS.md)。
+更新时间：2026-11-02。`vehicle-physics-5` 已接入驾驶验证场与废弃货场副本；输入、控制、装配、触发、物理、自动战斗、肉鸽、搜打撤、本地存档和工作台形成可玩的闭环。`baseline-1` 与旧物理证据保留为历史，真实手机驾驶及战斗压测仍待验收。当前实施清单见 [实施与验证记录](IMPLEMENTATION_STATUS.md)。
 
 本文件集中说明项目大纲、核心规则、技术路线与阶段规划。已确认的产品规则、当前运行时行为和升级目标分别标注；公式和验收门槛以第一阶段 [详细设计](../openspec/changes/validate-driving-prototype/design.md) 及 [车辆物理说明](VEHICLE_PHYSICS.md) 为准。
 
@@ -87,18 +87,18 @@ Enter Playground --> Drive --> Observe --> Reset / Tune
 | --- | --- | --- |
 | 页面与布局 | 竖屏视图比例、安全区、可见视口变化 | 实现 |
 | 驾驶输入 | 单活跃触点、距离与方向映射、漂移分区及中断清理 | 实现 |
-| 车辆运动 | 速度向量、前轮角、轮胎力、横摆积分与固定子步 | vehicle-physics-4 已实现 |
-| 漂移与抓地 | 统一组合轮胎接触、真实侧滑、有限反打与恢复请求 | vehicle-physics-4 已实现 |
+| 车辆运动 | 速度向量、前轮角、轮胎力、横摆积分与固定子步 | vehicle-physics-5 已实现 |
+| 漂移与抓地 | 统一组合轮胎接触、真实侧滑、有限反打与恢复请求 | vehicle-physics-5 已实现 |
 | 车辆参数 | 按几何、质量惯量、动力、轮胎路面、转向、漂移、辅助分组 | 十车型和验证面板已实现 |
 | 场地与碰撞 | 练习区域、边界、静态障碍与最小碰撞处理 | 实现 |
 | 镜头与渲染 | 固定方向跟随、场地与车辆绘制 | 实现 |
 | 驾驶反馈 | 油门状态、漂移状态、速度与轮胎拖尾 | 实现 |
-| 验证工具 | 重置、成组参数调整、路线/车头/运动、前轮、横摆、轴侧偏/力、抓地预算、路面和能量观测 | vehicle-physics-4 面板已实现 |
+| 验证工具 | 重置、成组参数调整、路线/车头/运动、前轮、横摆、轴侧偏/力、抓地预算、路面和能量观测 | vehicle-physics-5 面板已实现 |
 | 冒险与事件 | 地图目标、探索流程、交互事件 | 后续提案 |
 | 车辆获取与成长 | 车型、获得方式、成长或改装规则 | 后续提案 |
 | 存档与服务 | 持久进度、账号或联网能力 | 按后续需求决定 |
 
-桌面自动化和核心回放已有 `vehicle-physics-4` 证据；真实手机手感仍需单独验收。
+桌面自动化和核心回放已有 `vehicle-physics-5` 证据；真实手机手感仍需单独验收。
 
 ## 6. 技术路线
 
@@ -111,9 +111,9 @@ Enter Playground --> Drive --> Observe --> Reset / Tune
 | 场景渲染 | Canvas 2D | 满足单车、静态场地和拖尾绘制，便于控制物理与绘制边界 |
 | 界面 | HTML、CSS、DOM 控件 | 承载摇杆、HUD、安全区布局和验证面板 |
 | 输入 | Pointer Events | 统一触摸与鼠标，支持活跃触点捕获及取消清理 |
-| 车辆模拟 | `vehicle-physics-4` TypeScript 平面刚体、等效轮速、组合接触冲量与固定子步 | 核心与网页固定时钟回放已实现 |
+| 车辆模拟 | `vehicle-physics-5` TypeScript 平面刚体、等效轮速、组合接触冲量与固定子步 | 核心与网页固定时钟回放已实现 |
 | 时间推进 | 1/120 秒固定物理步长，requestAnimationFrame 渲染与插值 | 减少不同渲染频率造成的操控差异 |
-| 碰撞 | 真实车身 OBB 对静态矩形与边界扫掠、对实体圆接触，冲量改变动量与横摆并记录耗散 | vehicle-physics-4 接入已实现 |
+| 碰撞 | 真实车身 OBB 对静态矩形与边界扫掠、对实体圆接触，冲量改变动量与横摆并记录耗散 | vehicle-physics-5 接入已实现 |
 | 行为测试 | Vitest | 验证速度、角度、模式切换及跨时间输入结果 |
 | 浏览器测试 | Playwright | 验证竖屏布局、触控生命周期与整体交互 |
 | 需求与规划 | OpenSpec 1.15.0、spec-driven | 用提案、规范、设计和任务管理行为变更 |
@@ -123,9 +123,9 @@ Enter Playground --> Drive --> Observe --> Reset / Tune
 
 Canvas 2D 适合当前场景规模小、物理规则明确的验证场。车辆升级采用单轨/自行车模型而非通用物理引擎，是为了让轴距、轮胎力、横摆、辅助和游戏代价可以分别观测；这仍是可调的游戏近似，不是真实车型标定。未来若地图组织、动画与资源管理复杂度增加，再评估引入 Phaser 等框架；车辆行为合同和独立测试应继续保留。
 
-### 6.1 vehicle-physics-4 模块与兼容
+### 6.1 vehicle-physics-5 模块与兼容
 
-车辆模块按几何、轮胎、转向控制器和动力积分职责拆分。权威物理状态包含世界速度、车头、横摆、机械前轮、等效轮速、接触历史和能量；漂移混合量属于控制历史；`speed` 与 `motion` 只读派生。碰撞、四轮绘制、胎痕和验证面板读取同一套轴几何。
+车辆模块按输入、控制、机械执行器、物理核心、装备和触发职责拆分。权威物理状态包含世界速度、车头、横摆、机械前轮、等效轮速、接触历史和能量；漂移混合量属于控制历史；`speed` 与 `motion` 只读派生。碰撞、四轮绘制、胎痕和验证面板读取同一套轴几何。
 
 旧 `baseline-1` 的 `normalTurn`、`driftTurn`、`normalGrip`、`driftGrip` 不能直接解释为新版前轮角或轮胎刚度；被取代的 `axle-dynamics-1` 也明确拒绝。当前 profile 通过 `validateProfile/applyProfile` 原子应用，迁移规则和当前局限见 [车辆物理说明](VEHICLE_PHYSICS.md) 与 [参数说明](PARAMETERS.md)。
 
@@ -133,19 +133,25 @@ Canvas 2D 适合当前场景规模小、物理规则明确的验证场。车辆�
 
 ### 7.1 模块边界
 
-```text
-Touch / Mouse --> Input Intent --> Fixed Physics --> Vehicle State
-                      |                 |                  |
-                      v                 v                  v
-                Input Feedback    Static Collision     Canvas View
-                                                            |
-                                                            v
-                                                      HUD / Debug
+```mermaid
+flowchart LR
+  Input[玩家输入 / AI] --> Intent[意图]
+  Intent --> Control[驾驶控制器]
+  Control --> Mechanics[机械执行器]
+  Mechanics --> Physics[车辆物理核心]
+  Equipment[装备参数 / 供给] --> Mechanics
+  Equipment --> Physics
+  Trigger[场景几何 / 后坐力 / 外部冲量] --> Physics
+  Physics --> State[权威车辆状态]
+  State --> Control
+  State --> View[绘制 / HUD / 调试]
 ```
 
-- 输入层只负责输出目标速度、目标方向、方向是否有效和漂移状态，不直接移动或旋转车辆。
-- 模拟层读取输入与车辆 profile，输出权威位置、世界速度、车头、前轮、横摆、漂移混合及可观测的动力贡献。
-- 场景层提供边界与障碍，碰撞处理与车辆位移共同完成每个模拟步。
+- 输入器只负责输出 `Intent`：世界运动方向、目标速度、漂移和助推请求，不直接移动或旋转车辆；玩家与 AI 可使用同一合同。
+- 控制器读取意图、实际车辆观测和装备能力，输出有限转向、驱动、制动、换挡与助推命令；控制历史每个固定控制步只更新一次。
+- 机械执行器把控制命令转换为挡位、轮端扭矩、转角、喷射力等物理输入；物理核心统一推进传动、轮胎、刚体、质量属性、接触和能量。
+- 装备层只派生质量、三维/二维重心、惯量、挂点、性能和供给；场景/战斗/武器只提交几何或带来源与序号的外部力和冲量。
+- 场景层提供接触几何，碰撞和车辆位移由物理核心完成每个固定步；触发层消费冲量、接近速度等实际结果计算伤害。
 - 绘制层读取状态及镜头，不使用绘制帧数改变物理结果。
 - 验证层观察同一份状态，参数修改经过合法性检查后通过重置应用。
 
@@ -157,7 +163,7 @@ Touch / Mouse --> Input Intent --> Fixed Physics --> Vehicle State
 
 ### 7.3 参数与资源
 
-车辆使用一组集中参数描述最高速度、加减速曲线、普通与漂移转向曲线、抓地、侧滑上限和转向减速。新增车型优先增加参数配置，沿用同一套行为规则。
+车辆使用集中参数描述最高目标速度、发动机与齿比、轮胎抓地、质量惯量、接触材质和控制响应。侧滑与实际速度不受目标硬截断。新增车型优先增加参数配置，沿用同一套行为规则。
 
 场地、车辆与拖尾先使用简洁几何表现，资源随客户端静态加载。正式美术、声音与内容资源管理在后续内容需求明确后扩展。第一阶段不建立账号、联网或进度存档服务。
 
@@ -251,7 +257,7 @@ MadMax/
 
 当前三份能力规范属于进行中的变更，尚未归档成为 `openspec/specs/` 中的生效规范。网页消费者迁移和桌面回归已完成，真实手机人工驾驶尚未完成，因此第一阶段整体验收保持未完成。
 
-核心物理的独立入口是 `src/vehicle/physics/index.ts`，运行 `npm run physics:benchmark` 和 `npm run physics:audit` 可复核 `vehicle-physics-4`、`vehicle-profile-4`、`vehicle-surface-1`、十车型以及干硬路、松散地、湿滑地证据。`build-vehicle-physics` 只负责无 DOM 物理核心和基准；`validate-driving-prototype` 负责输入、网页场景、碰撞、绘制、触控和手机接入。核心报告通过不能替代消费者迁移或真实手机验收。
+核心物理的独立入口是 `src/vehicle/physics/index.ts`，运行 `npm run physics:benchmark` 和 `npm run physics:audit` 可复核 `vehicle-physics-5`、`vehicle-profile-5`、`vehicle-surface-1`、十车型以及干硬路、松散地、湿滑地证据。`src/vehicle/control/` 负责意图到执行器命令，`src/loadout/compose.ts` 负责装备派生，`src/vehicle/physics/forces.ts` 接收战斗和场景外部作用；`build-vehicle-physics` 维护无 DOM 物理核心和基准；`validate-driving-prototype` 负责输入、网页场景、绘制、触控和手机接入。核心报告通过不能替代消费者迁移或真实手机验收。
 
 ## 参考资料
 

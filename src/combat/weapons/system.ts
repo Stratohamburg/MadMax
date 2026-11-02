@@ -8,9 +8,10 @@ import type { Vec2 } from "../../vehicle/physics/math";
 import type { VehicleState } from "../../vehicle/physics/state";
 import { WEAPONS } from "./definitions";
 import { muzzleOffset } from "./presentation";
+import { consumePower, powerBudget } from "../../vehicle/physics/supply";
 import type { FireEvent, RecoilEvent, Target, TargetQuery, WeaponDefinition, WeaponOptions, WeaponRuntime, WeaponSystemState, WeaponVisual } from "./types";
 
-export const newWeaponRuntime = (): WeaponRuntime => ({ angle: 0, cooldown: 0, heat: 0, overheated: false, lockTarget: null, lockProgress: 0, lastEventSequence: -1, shots: 0 });
+export const newWeaponRuntime = (): WeaponRuntime => ({ charge: 0, angle: 0, cooldown: 0, heat: 0, overheated: false, lockTarget: null, lockProgress: 0, lastEventSequence: -1, shots: 0 });
 export function createWeaponSystem(composition: Composition, seed = 1): WeaponSystemState {
   return { random: seedState(seed), weapons: {}, ammo: { ...composition.resources.ammo }, energy: composition.resources.capacity };
 }
@@ -32,8 +33,8 @@ export function stepWeapons(current: WeaponSystemState, vehicle: Pick<VehicleSta
   const next: WeaponSystemState = { random: current.random, weapons: {}, ammo: { ...current.ammo }, energy: current.energy };
   const fire: FireEvent[] = [], recoil: RecoilEvent[] = [], visuals: WeaponVisual[] = [];
   const mounts = composition.mounts.filter(m => m.weaponId && definitions[m.weaponId]).sort((a, b) => compareId(a.instanceId, b.instanceId));
-  const demand = mounts.reduce((sum, m) => sum + definitions[m.weaponId!].powerDraw, 0);
-  const powerRatio = demand > 0 ? Math.min(1, composition.resources.maxOutput / demand) : 1;
+  const available = Math.min(composition.resources.maxOutput, options.powerAvailable ?? Math.max(0, composition.resources.maxOutput - composition.auxiliaryPower));
+  let budget = powerBudget(next.energy, available, dt);
   for (const mount of mounts) {
     const definition = definitions[mount.weaponId!];
     const component = composition.components.find(c => c.part.instanceId === mount.instanceId)!;
@@ -42,7 +43,17 @@ export function stepWeapons(current: WeaponSystemState, vehicle: Pick<VehicleSta
     const modifiers = options.modifiers ?? composition.modifiers;
     const attribute = (base: number, name: string) => evaluateAttribute(base, modifiers, "weapon", name, definition.tags, mount.instanceId).value;
     const range = Math.max(0.01, attribute(definition.range, "range"));
-    const fireRate = Math.max(0, attribute(definition.fireRate, "fireRate") * component.performance * (definition.powerDraw > 0 ? powerRatio : 1));
+    const fireRate = Math.max(0, attribute(definition.fireRate, "fireRate") * component.performance);
+    const energyCost = definition.powerDraw / definition.fireRate;
+    state.charge = clamp(state.charge ?? 0, 0, energyCost);
+    let chargeAllowance = energyCost * fireRate * dt;
+    const charge = () => {
+      const charging = consumePower(budget, Math.min(Math.max(0, energyCost - state.charge), chargeAllowance));
+      budget = charging.budget;
+      chargeAllowance = Math.max(0, chargeAllowance - charging.granted);
+      state.charge = Math.min(energyCost, state.charge + charging.granted);
+    };
+    charge();
     const damage = Math.max(0, attribute(definition.damage, "damage"));
     const pellets = Math.max(1, Math.floor(attribute(definition.pellets, "pellets")));
     const spread = Math.max(0, attribute(definition.spread, "spread") * (component.performance < 1 ? 2 : 1));
@@ -80,10 +91,9 @@ export function stepWeapons(current: WeaponSystemState, vehicle: Pick<VehicleSta
     const aimAngle = baseAngle + state.angle;
     while (trigger && state.cooldown <= 1e-10 && !state.overheated && fireRate > 0) {
       const ammo = definition.ammoType, cost = definition.ammoCost;
-      const energyCost = definition.powerDraw / definition.fireRate;
-      if ((ammo && (next.ammo[ammo] ?? 0) < cost) || next.energy + 1e-10 < energyCost) break;
+      if ((ammo && (next.ammo[ammo] ?? 0) < cost) || state.charge + 1e-10 < energyCost || (energyCost > 0 && available <= 0)) break;
       if (ammo) next.ammo[ammo] -= cost;
-      next.energy = Math.max(0, next.energy - energyCost);
+      state.charge = Math.max(0, state.charge - energyCost);
       const bullets = [];
       for (let i = 0; i < pellets; i++) {
         const random = nextRandom(next.random); next.random = random.state;
@@ -96,6 +106,7 @@ export function stepWeapons(current: WeaponSystemState, vehicle: Pick<VehicleSta
       fire.push({ weaponInstanceId: mount.instanceId, weaponId: definition.id, origin: { x: origin.x + Math.cos(aimAngle) * muzzle, y: origin.y + Math.sin(aimAngle) * muzzle }, angle: aimAngle, targetId: target?.id ?? null, bullets, tags: definition.tags });
       recoil.push({ weaponInstanceId: mount.instanceId, point: { ...origin }, impulse: { x: -Math.cos(aimAngle) * definition.recoil, y: -Math.sin(aimAngle) * definition.recoil } });
       state.cooldown += 1 / fireRate; state.heat += definition.heatPerShot; state.shots++;
+      charge();
       if (state.heat >= definition.heatMax) state.overheated = true;
       if (definition.trigger === "guided") { state.lockProgress = 0; trigger = false; }
       if (definition.trigger === "passive") trigger = false;
@@ -108,5 +119,6 @@ export function stepWeapons(current: WeaponSystemState, vehicle: Pick<VehicleSta
       heatProgress: clamp(state.heat / definition.heatMax, 0, 1), overheated: state.overheated,
       lockProgress: definition.lockTime > 0 ? clamp(state.lockProgress / definition.lockTime, 0, 1) : 0, target: target ? { ...target.position } : null });
   }
-  return { state: next, fire, recoil, visuals };
+  next.energy = budget.energy;
+  return { state: next, fire, recoil, visuals, powerConsumed: budget.consumed, powerAvailable: budget.remainingPower };
 }

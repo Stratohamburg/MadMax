@@ -1,19 +1,33 @@
 import type { PhysicalProfile, VehicleProfile } from "./config";
 import type { Vec2 } from "./math";
 import { dot, forward, norm, right, wrap } from "./math";
+/** angle 是世界运动方向期望（desiredTravelDirection），不是车头角。 */
 export interface Intent {
   targetSpeed: number;
   angle: number | null;
   drift: boolean;
+  boost?: boolean;
+  /** 可选独立手刹请求；未提供时保持 0。 */
+  handbrake?: boolean;
 }
 export const IDLE: Intent = { targetSpeed: 0, angle: null, drift: false };
-export interface Actuation {
+export interface ControlCommand {
   steeringTarget: number;
   drive: number;
   brake: number;
   rearBrake: number;
+  handbrake?: number;
+}
+/** 仅物理执行器与试验入口使用，普通控制器不能提交外部力。 */
+export interface Actuation extends ControlCommand {
+  steeringTarget: number;
+  drive: number;
+  brake: number;
+  rearBrake: number;
+  handbrake?: number;
   driveForce?: number;
   boostForce?: number;
+  forces?: readonly import("./forces").AppliedForce[];
   externalForce?: Vec2;
   externalTorque?: number;
 }
@@ -95,67 +109,46 @@ export const emptyEnergy = (): EnergyLedger => ({
   collisionDissipation: 0,
   numericalResidual: 0,
 });
-export function physicalFrom(data: PhysicalData): PhysicalState {
+/** 不可变子对象可安全共享；派生量在创建时计算一次，仍只通过只读 getter 暴露。 */
+const immutable = <T extends object>(value: T): Readonly<T> => Object.isFrozen(value) ? value : Object.freeze({ ...value });
+function buildState(data: PhysicalData, assist?: AssistHistory): PhysicalState | VehicleState {
   const { theta, r, delta, previousLongAcceleration, time } = data;
+  const position = immutable(data.position), worldVelocity = immutable(data.worldVelocity);
+  const speed = norm(worldVelocity), motion = speed === 0 ? theta : Math.atan2(worldVelocity.y, worldVelocity.x);
+  const beta = speed === 0 ? 0 : wrap(motion - theta);
+  const u = dot(worldVelocity, forward(theta)), v = dot(worldVelocity, right(theta));
   const result: PhysicalState = {
     theta,
     r,
     delta,
     previousLongAcceleration,
     time,
-    position: Object.freeze({ ...data.position }),
-    worldVelocity: Object.freeze({ ...data.worldVelocity }),
-    wheelSpeeds: Object.freeze({ ...data.wheelSpeeds }),
-    tires: Object.freeze({ ...data.tires }),
-    longitudinalForces: Object.freeze({ ...data.longitudinalForces }),
-    energy: Object.freeze({ ...data.energy }),
-    get speed() {
-      return norm(this.worldVelocity);
-    },
-    get motion() {
-      return this.speed === 0
-        ? this.theta
-        : Math.atan2(this.worldVelocity.y, this.worldVelocity.x);
-    },
-    get beta() {
-      return this.speed === 0 ? 0 : wrap(this.motion - this.theta);
-    },
-    get u() {
-      return dot(this.worldVelocity, forward(this.theta));
-    },
-    get v() {
-      return dot(this.worldVelocity, right(this.theta));
-    },
+    position,
+    worldVelocity,
+    wheelSpeeds: immutable(data.wheelSpeeds),
+    tires: immutable(data.tires),
+    longitudinalForces: immutable(data.longitudinalForces),
+    energy: immutable(data.energy),
+    get speed() { return speed; },
+    get motion() { return motion; },
+    get beta() { return beta; },
+    get u() { return u; },
+    get v() { return v; },
   };
+  if (assist) {
+    const history = immutable(assist);
+    Object.defineProperties(result, {
+      assist: { value: history, enumerable: true },
+      h: { get: () => history.driftBlend, enumerable: true },
+    });
+  }
   return Object.freeze(result);
 }
+export function physicalFrom(data: PhysicalData): PhysicalState {
+  return buildState(data);
+}
 export function stateFrom(data: AuthoritativeState): VehicleState {
-  const physical = physicalFrom(data);
-  const result: VehicleState = {
-    ...physical,
-    assist: Object.freeze({ ...data.assist }),
-    get speed() {
-      return norm(this.worldVelocity);
-    },
-    get motion() {
-      return this.speed === 0
-        ? this.theta
-        : Math.atan2(this.worldVelocity.y, this.worldVelocity.x);
-    },
-    get beta() {
-      return this.speed === 0 ? 0 : wrap(this.motion - this.theta);
-    },
-    get u() {
-      return dot(this.worldVelocity, forward(this.theta));
-    },
-    get v() {
-      return dot(this.worldVelocity, right(this.theta));
-    },
-    get h() {
-      return this.assist.driftBlend;
-    },
-  };
-  return Object.freeze(result);
+  return buildState(data, data.assist) as VehicleState;
 }
 export function createState(
   profile: PhysicalProfile,

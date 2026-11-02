@@ -1,6 +1,6 @@
-# 装配物理与核心接入 v4
+# 装配物理与核心接入 v5
 
-当前核心为 `vehicle-physics-4` / `vehicle-profile-4`，快照为 `vehicle-snapshot-4`，控制器为 `route-assist-3`。v2/v3 证据保留，旧配置和快照不能静默解释为 v4。
+当前核心为 `vehicle-physics-5` / `vehicle-profile-5`，快照为 `vehicle-snapshot-5`，控制器为 `route-assist-4`。v2/v3/v4 证据保留，旧配置和快照不能静默解释为 v5。
 
 ## 归属与参数派生
 
@@ -28,7 +28,7 @@
 
 营地开关界面暂停/恢复同一状态；停车需同时满足速度和横摆阈值。拖车和更换底盘是显式生命周期事件，允许重置位姿/运动，保留资源和冷却。只有初次创建、明确补给或维修区规则能够补给。副本每步先更新部件和迁移参数，再推进驾驶、场景/实体接触、实际运动事件、武器与伤害；末尾再同步伤害带来的装配变化。
 
-装配续算必须保存完整 `AssemblyDriveState` 及有效 Composition，包含 drivetrain/boost/energy；基础 `VehicleSnapshot` 只保存其声明的物理/控制器状态和 profile，不能单独代表装配局内存档。
+装配续算必须保存完整 `AssemblyDriveState` 及有效 Composition，包含 drivetrain、逐实例 thrusters、兼容 boost 汇总、energy 和外力事件去重 effects；带武器续算还需保存 `WeaponSystemState` 中每件武器的充能、冷却、热量、锁定和随机状态。基础 `VehicleSnapshot` 只保存其声明的物理/控制器状态和 profile，不能单独代表装配局内存档。
 
 ## 验证与证据
 
@@ -41,4 +41,13 @@ npm run validation:replay
 npm run test:e2e
 ```
 
-旧 `tests/fixtures/vehicle-physics-2-baseline.json` 不更新，继续核对十车型三场景空装配行为。v4 核心/网页证据在 `openspec/changes/add-assembly-physics/evidence/vehicle-physics-4/`，验收记录见同变更 `acceptance-v4.md`。真实装配矩阵使用实际发动机和变速箱，覆盖十车型出厂装配及跑车/卡车左右偏置重炮共 378 个普通驾驶工况，验收阈值不进入物理求解。
+旧 `tests/fixtures/vehicle-physics-2-baseline.json` 不更新，继续核对十车型三场景空装配行为。v5 核心/网页证据在 `openspec/changes/add-assembly-physics/evidence/vehicle-physics-5/`，v4 验收记录和证据目录保持历史只读。真实装配矩阵使用实际发动机和变速箱，覆盖十车型出厂装配及跑车/卡车左右偏置重炮共 378 个普通驾驶工况，验收阈值不进入物理求解。
+
+
+## v5 架构与物理边界
+
+输入器只产生世界运动方向、目标速度和漂移/助推请求；`src/vehicle/control/` 负责路线、速度、自动挡和助推策略。物理核心只接收有限执行器、有效 profile、路面和外部作用，统一计算传动、轮胎、刚体、场景接触与能量。场景只提供接触几何，战斗只提交带 tick/source/sequence 的外部冲量，重复事件由核心入口去重。
+
+装配使用核心质量属性函数派生三维重心、二维质心、部件自身惯量和逐实例喷射挂点；电池、常驻设备、喷射和武器共享输出预算。敌方车辆的 AI 只生成 `Intent`，通过同一控制、传动和轮胎核心推进。
+
+当前仍采用平面刚体与等效前后轴；完整悬挂、翻车、倒挡、动态燃油/弹药质量及附加外挂碰撞轮廓留作后续能力。

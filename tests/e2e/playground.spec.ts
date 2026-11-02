@@ -3,7 +3,7 @@ import { start, snapshot, drag } from "./helpers";
 import { mkdir } from "node:fs/promises";
 
 const evidence =
-  "openspec/changes/add-assembly-physics/evidence/vehicle-physics-4/web/sports-car/2/browser-regression";
+  "openspec/changes/add-assembly-physics/evidence/vehicle-physics-5/web/sports-car/5/browser-regression";
 for (const viewport of [
   { width: 320, height: 568 },
   { width: 360, height: 640 },
@@ -21,13 +21,13 @@ for (const viewport of [
         .toBeGreaterThan(4);
       const before = await snapshot(page);
       await drag(page, g, 1.45, 0);
+      let during = before;
       await expect
-        .poll(async () => Math.abs((await snapshot(page)).state.beta))
-        .toBeGreaterThan(0.05);
-      await expect
-        .poll(async () => (await snapshot(page)).trails)
-        .toBeGreaterThan(0);
-      const during = await snapshot(page);
+        .poll(async () => {
+          during = await snapshot(page);
+          return Math.abs(during.state.beta) > 0.05 && during.trails > 0;
+        })
+        .toBe(true);
       expect(
         Math.abs(during.state.heading - during.state.motion),
       ).toBeGreaterThan(0.05);
